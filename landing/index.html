@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#030303">
+  <meta name="description" content="KnexMail — Free encrypted email where your address IS your Web3 wallet. Get paid to receive email.">
+  <meta name="keywords" content="encrypted email, web3 email, crypto wallet, knexcoin, privacy email, decentralized email">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="KnexMail — Email That Pays You">
+  <meta property="og:description" content="Free encrypted email where your @knexmail.com address IS your Web3 wallet.">
+  <meta property="og:image" content="https://knexmail.com/assets/og-image.png">
+  <meta property="og:url" content="https://knexmail.com">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KnexMail — Email That Pays You">
+  <meta name="twitter:description" content="Free encrypted email where your @knexmail.com address IS your Web3 wallet.">
+
+  <title>KnexMail — Email That Pays You</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/knex-icon-cyan.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <img src="assets/knex-icon-cyan.png" alt="KnexMail" class="nav-logo">
+        <span class="nav-title">KNEXMAIL</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#tokenomics" class="nav-link">Rewards</a>
+        <a href="https://knexcoin.com" class="nav-link" target="_blank">KnexCoin</a>
+      </div>
+      <div class="nav-actions">
+        <a href="#waitlist" class="btn btn-primary">Get Early Access</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#features" class="mobile-link">Features</a>
+    <a href="#how-it-works" class="mobile-link">How It Works</a>
+    <a href="#tokenomics" class="mobile-link">Rewards</a>
+    <a href="https://knexcoin.com" class="mobile-link" target="_blank">KnexCoin</a>
+    <a href="#waitlist" class="btn btn-primary btn-block">Get Early Access</a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>NOW IN DEVELOPMENT</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-line">EMAIL THAT</span>
+        <span class="title-line highlight">PAYS YOU</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Your <span class="text-cyan">@knexmail.com</span> address is your encrypted inbox
+        <span class="text-magenta">AND</span> your Web3 wallet. One signup. One passphrase.
+        <span class="text-yellow">Infinite possibilities.</span>
+      </p>
+
+      <div class="hero-demo">
+        <div class="demo-card">
+          <div class="demo-header">
+            <span class="demo-dot red"></span>
+            <span class="demo-dot yellow"></span>
+            <span class="demo-dot green"></span>
+            <span class="demo-title">// YOUR EMAIL = YOUR WALLET</span>
+          </div>
+          <div class="demo-content">
+            <div class="demo-line">
+              <span class="demo-label">Email</span>
+              <span class="demo-value typing" id="demoEmail">david@knexmail.com</span>
+            </div>
+            <div class="demo-line">
+              <span class="demo-label">Wallet</span>
+              <span class="demo-value text-cyan">knex_3t6k35gi...cuohr3</span>
+            </div>
+            <div class="demo-line">
+              <span class="demo-label">Balance</span>
+              <span class="demo-value text-neon"><span id="demoBalance">1,247.50</span> KNEX</span>
+            </div>
+            <div class="demo-divider"></div>
+            <div class="demo-action">
+              <span class="text-muted">Send crypto to anyone with just their email →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="#waitlist" class="btn btn-large btn-primary">
+          <span>Claim Your Handle</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <p class="hero-bonus">
+          <span class="text-neon">+10 KNEX</span> signup bonus for first 100,000 users
+        </p>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value" id="waitlistCount">12,847</span>
+          <span class="stat-label">On Waitlist</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">$0</span>
+          <span class="stat-label">Forever Free</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Encrypted</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section class="section section-problem" id="problem">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// THE PROBLEM</span>
+        <h2 class="section-title">Gmail Reads Your <span class="text-red">Everything</span></h2>
+        <p class="section-subtitle">
+          You are the product. Your emails are scanned, your data is sold,
+          and you get nothing in return.
+        </p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </div>
+          <h3>Mass Surveillance</h3>
+          <p>Every email scanned by AI. Every attachment analyzed. Every contact mapped.</p>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3>You Are The Product</h3>
+          <p>Your data sold to advertisers. $200+ per user per year. You get: $0.</p>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h3>No Real Privacy</h3>
+          <p>"Encryption" they control. Keys they hold. Access they grant to anyone who asks.</p>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+            </svg>
+          </div>
+          <h3>Censorship Ready</h3>
+          <p>One policy violation. Account deleted. Years of emails gone. No appeal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section section-solution" id="solution">
+    <div class="container">
+      <div class="solution-content">
+        <div class="section-header align-left">
+          <span class="section-tag">// THE SOLUTION</span>
+          <h2 class="section-title">Email Reimagined for <span class="text-cyan">Web3</span></h2>
+          <p class="section-subtitle">
+            KnexMail combines the simplicity of email with the power of cryptocurrency.
+            Your inbox is your wallet. Your address is your identity.
+          </p>
+        </div>
+
+        <div class="solution-equation">
+          <div class="eq-item">
+            <span class="eq-icon">📧</span>
+            <span class="eq-text">Encrypted Email</span>
+          </div>
+          <span class="eq-operator">+</span>
+          <div class="eq-item">
+            <span class="eq-icon">💰</span>
+            <span class="eq-text">Crypto Wallet</span>
+          </div>
+          <span class="eq-operator">+</span>
+          <div class="eq-item">
+            <span class="eq-icon">🆔</span>
+            <span class="eq-text">Web3 Identity</span>
+          </div>
+          <span class="eq-operator">=</span>
+          <div class="eq-result">
+            <span class="eq-icon">✨</span>
+            <span class="eq-text text-neon">KnexMail</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section section-features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// FEATURES</span>
+        <h2 class="section-title">Everything You Need, <span class="text-neon">Nothing You Don't</span></h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card feature-large">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h3>Quantum-Proof Encryption</h3>
+          <p>End-to-end encrypted with NIST post-quantum cryptography. Not even we can read your emails. Not now, not ever — not even with future quantum computers.</p>
+          <div class="feature-tag">FALCON + Kyber + Dilithium</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3>Email = Wallet</h3>
+          <p>Your @knexmail.com address receives KNEX cryptocurrency. Send money as easily as sending an email.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-magenta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3>Free Forever</h3>
+          <p>No ads. No premium tiers for basic features. No hidden fees. We make money when the network grows, not from your data.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-yellow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <h3>Referral Rewards</h3>
+          <p>Earn 5 KNEX for every friend you invite. No limits. Build your network, build your wealth.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3>Self-Custody Keys</h3>
+          <p>Your keys never leave your device. 12-word recovery phrase is your master key. We can't access your account — only you can.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3>Full Email Support</h3>
+          <p>Send and receive from any email address. Gmail, Outlook, Yahoo — we bridge the gap between Web2 and Web3.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section section-how" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// HOW IT WORKS</span>
+        <h2 class="section-title">Three Steps to <span class="text-magenta">Freedom</span></h2>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <h3>Choose Your Handle</h3>
+            <p>Pick your unique @knexmail.com address. It's your email and your wallet address in one.</p>
+            <div class="step-example">
+              <code>yourname@knexmail.com</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-connector">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <h3>Secure Your Keys</h3>
+            <p>We generate a 12-word recovery phrase in your browser. Write it down. This IS your account.</p>
+            <div class="step-example">
+              <code>word word word ... word</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-connector">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <h3>Start Earning</h3>
+            <p>Receive your 10 KNEX welcome bonus. Send encrypted emails. Get paid when friends join.</p>
+            <div class="step-example">
+              <code>+10 KNEX → Your Wallet</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tokenomics Section -->
+  <section class="section section-tokenomics" id="tokenomics">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// REWARDS</span>
+        <h2 class="section-title">Get Paid to <span class="text-yellow">Use Email</span></h2>
+        <p class="section-subtitle">
+          KnexMail rewards early adopters and active users with KNEX tokens.
+        </p>
+      </div>
+
+      <div class="rewards-grid">
+        <div class="reward-card">
+          <div class="reward-amount">+10 <span class="reward-unit">KNEX</span></div>
+          <div class="reward-label">Welcome Bonus</div>
+          <div class="reward-desc">First 100,000 users</div>
+        </div>
+
+        <div class="reward-card">
+          <div class="reward-amount">+5 <span class="reward-unit">KNEX</span></div>
+          <div class="reward-label">Per Referral</div>
+          <div class="reward-desc">Unlimited invites</div>
+        </div>
+
+        <div class="reward-card reward-og">
+          <div class="reward-badge">OG STATUS</div>
+          <div class="reward-amount">+50 <span class="reward-unit">KNEX</span></div>
+          <div class="reward-label">First 10,000 Users</div>
+          <div class="reward-desc">Exclusive OG badge forever</div>
+        </div>
+      </div>
+
+      <div class="tokenomics-note">
+        <p>
+          <span class="text-cyan">KNEX</span> is the native token of the KnexCoin network —
+          a Proof-of-Bandwidth blockchain with zero transaction fees.
+          <a href="https://knexcoin.com" target="_blank">Learn more →</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waitlist Section -->
+  <section class="section section-waitlist" id="waitlist">
+    <div class="container">
+      <div class="waitlist-content">
+        <div class="section-header">
+          <span class="section-tag">// JOIN THE WAITLIST</span>
+          <h2 class="section-title">Claim Your <span class="text-neon">@knexmail.com</span></h2>
+          <p class="section-subtitle">
+            Reserve your handle before someone else does. First come, first served.
+          </p>
+        </div>
+
+        <form class="waitlist-form" id="waitlistForm">
+          <div class="form-row">
+            <div class="input-group">
+              <input
+                type="text"
+                id="handleInput"
+                placeholder="yourname"
+                pattern="[a-z0-9_]+"
+                minlength="3"
+                maxlength="20"
+                required
+                autocomplete="off"
+                autocapitalize="off"
+              >
+              <span class="input-suffix">@knexmail.com</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <input
+                type="email"
+                id="emailInput"
+                placeholder="your@email.com (for launch notification)"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <input
+                type="text"
+                id="referralInput"
+                placeholder="Referral code (optional)"
+              >
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-large btn-primary btn-block">
+            <span>Reserve My Handle</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+
+          <p class="form-note">
+            No credit card required. We'll notify you when KnexMail launches.
+          </p>
+        </form>
+
+        <div class="waitlist-success" id="waitlistSuccess" style="display: none;">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3>You're on the list!</h3>
+          <p class="success-handle" id="successHandle">david@knexmail.com</p>
+          <p class="success-message">We'll email you when KnexMail is ready.</p>
+          <div class="referral-box">
+            <p>Share your referral link to skip the line:</p>
+            <div class="referral-link-box">
+              <input type="text" id="referralLink" readonly value="https://knexmail.com/join/abc123">
+              <button class="btn btn-small" id="copyReferral">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section class="section section-comparison" id="comparison">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// COMPARISON</span>
+        <h2 class="section-title">Why <span class="text-neon">KnexMail</span> Wins</h2>
+      </div>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight-col">KnexMail</th>
+              <th>Gmail</th>
+              <th>ProtonMail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>End-to-End Encryption</td>
+              <td class="highlight-col"><span class="check">✓</span> Default</td>
+              <td><span class="cross">✗</span> No</td>
+              <td><span class="check">✓</span> Yes</td>
+            </tr>
+            <tr>
+              <td>Quantum-Resistant</td>
+              <td class="highlight-col"><span class="check">✓</span> Yes</td>
+              <td><span class="cross">✗</span> No</td>
+              <td><span class="cross">✗</span> No</td>
+            </tr>
+            <tr>
+              <td>Built-in Wallet</td>
+              <td class="highlight-col"><span class="check">✓</span> Yes</td>
+              <td><span class="cross">✗</span> No</td>
+              <td><span class="cross">✗</span> No</td>
+            </tr>
+            <tr>
+              <td>Earn Crypto</td>
+              <td class="highlight-col"><span class="check">✓</span> Yes</td>
+              <td><span class="cross">✗</span> No</td>
+              <td><span class="cross">✗</span> No</td>
+            </tr>
+            <tr>
+              <td>Referral Rewards</td>
+              <td class="highlight-col"><span class="check">✓</span> 5 KNEX</td>
+              <td><span class="cross">✗</span> No</td>
+              <td><span class="cross">✗</span> 1 month</td>
+            </tr>
+            <tr>
+              <td>Free Forever</td>
+              <td class="highlight-col"><span class="check">✓</span> Yes</td>
+              <td><span class="check">✓</span> Ad-supported</td>
+              <td><span class="partial">◐</span> Limited</td>
+            </tr>
+            <tr>
+              <td>Self-Custody Keys</td>
+              <td class="highlight-col"><span class="check">✓</span> Yes</td>
+              <td><span class="cross">✗</span> No</td>
+              <td><span class="cross">✗</span> No</td>
+            </tr>
+            <tr>
+              <td>Reads Your Emails</td>
+              <td class="highlight-col"><span class="check">✓</span> Impossible</td>
+              <td><span class="cross">✗</span> Yes</td>
+              <td><span class="partial">◐</span> Metadata</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section section-faq" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// FAQ</span>
+        <h2 class="section-title">Questions? <span class="text-cyan">Answers.</span></h2>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>How is this free?</h3>
+          <p>KnexMail is part of the KnexCoin ecosystem. We're incentivized to grow the network, not sell your data. The more users, the more valuable the network becomes for everyone.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>What if I lose my recovery phrase?</h3>
+          <p>Your account is unrecoverable. We don't have your keys — that's the point. Write your phrase down and store it somewhere safe. This is true ownership.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Can I send emails to Gmail users?</h3>
+          <p>Yes! KnexMail bridges to traditional email. You can send and receive from any email address. Encryption is automatic between KnexMail users.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>What is KNEX?</h3>
+          <p>KNEX is the native cryptocurrency of the KnexCoin blockchain — a Proof-of-Bandwidth network with zero transaction fees. <a href="https://knexcoin.com" target="_blank">Learn more →</a></p>
+        </div>
+
+        <div class="faq-item">
+          <h3>When does KnexMail launch?</h3>
+          <p>We're targeting Q2 2026 for public beta. Join the waitlist to get early access and reserve your handle before launch.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Is this open source?</h3>
+          <p>Yes. All client-side code will be open source so you can verify that we can't access your emails. Trust, but verify.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section section-cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">The Future of Email <span class="text-neon">Pays You</span></h2>
+        <p class="cta-subtitle">Don't let someone else claim your @knexmail.com handle.</p>
+        <a href="#waitlist" class="btn btn-large btn-primary">
+          <span>Reserve Your Handle Now</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/knex-icon-cyan.png" alt="KnexMail" class="footer-logo">
+          <span class="footer-title">KNEXMAIL</span>
+          <p class="footer-tagline">Email that pays you.</p>
+        </div>
+
+        <div class="footer-links">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#tokenomics">Rewards</a>
+          <a href="#faq">FAQ</a>
+        </div>
+
+        <div class="footer-links">
+          <h4>Ecosystem</h4>
+          <a href="https://knexcoin.com" target="_blank">KnexCoin</a>
+          <a href="https://knexpay.com" target="_blank">KnexPay</a>
+          <a href="https://ayedex.com" target="_blank">AyeDEX</a>
+          <a href="https://github.com/knexcoin" target="_blank">GitHub</a>
+        </div>
+
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 KnexCoin. All rights reserved.</p>
+        <p class="footer-crypto">Built on the <a href="https://knexcoin.com" target="_blank">KnexCoin</a> Proof-of-Bandwidth blockchain.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/particles.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

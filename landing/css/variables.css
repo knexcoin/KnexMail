@@ -1,0 +1,151 @@
+/* ============================================
+   KNEXMAIL - CSS VARIABLES
+   Cyberpunk Design System
+   ============================================ */
+
+:root {
+  /* ============ COLORS ============ */
+
+  /* Backgrounds */
+  --black: #000000;
+  --pitch-black: #030303;
+  --dark: #0a0a0a;
+  --darker: #050505;
+  --panel: #0d0d0d;
+  --card: #101015;
+  --card-hover: #15151a;
+
+  /* Text */
+  --ink: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: #888888;
+  --text-dim: #555555;
+
+  /* Borders */
+  --border: rgba(0, 255, 136, 0.2);
+  --border-bright: rgba(0, 255, 136, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+
+  /* ============ NEON COLORS ============ */
+  --neon: #00ff88;
+  --neon-bright: #00ff66;
+  --neon-glow: #00cc66;
+  --neon-dark: #00aa55;
+
+  --neon-cyan: #00ffff;
+  --neon-cyan-dark: #00cccc;
+
+  --neon-magenta: #ff00ff;
+  --neon-magenta-dark: #cc00cc;
+
+  --neon-yellow: #ffff00;
+  --neon-yellow-dark: #cccc00;
+
+  --neon-orange: #ff8800;
+  --neon-orange-dark: #cc6600;
+
+  --neon-red: #ff3333;
+  --neon-red-dark: #cc2222;
+
+  /* ============ GLOW EFFECTS ============ */
+  --glow-neon: 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px rgba(0, 255, 136, 0.5);
+  --glow-neon-soft: 0 0 5px rgba(0, 255, 136, 0.5), 0 0 15px rgba(0, 255, 136, 0.3);
+  --glow-neon-text: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+  --glow-neon-intense: 0 0 20px #00ff88, 0 0 40px #00ff88, 0 0 60px #00ff88, 0 0 80px rgba(0, 255, 136, 0.5);
+
+  --glow-cyan: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.5);
+  --glow-cyan-soft: 0 0 5px rgba(0, 255, 255, 0.5), 0 0 15px rgba(0, 255, 255, 0.3);
+
+  --glow-magenta: 0 0 10px #ff00ff, 0 0 20px rgba(255, 0, 255, 0.5);
+  --glow-magenta-soft: 0 0 5px rgba(255, 0, 255, 0.5), 0 0 15px rgba(255, 0, 255, 0.3);
+
+  --glow-yellow: 0 0 10px #ffff00, 0 0 20px rgba(255, 255, 0, 0.5);
+  --glow-yellow-soft: 0 0 5px rgba(255, 255, 0, 0.5), 0 0 15px rgba(255, 255, 0, 0.3);
+
+  --glow-orange: 0 0 10px #ff8800, 0 0 20px rgba(255, 136, 0, 0.5);
+  --glow-red: 0 0 10px #ff3333, 0 0 20px rgba(255, 51, 51, 0.5);
+
+  /* ============ SHADOWS ============ */
+  --shadow: 0 10px 40px rgba(0, 255, 136, 0.1);
+  --shadow-lg: 0 20px 60px rgba(0, 255, 136, 0.15);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+  /* ============ TYPOGRAPHY ============ */
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+  --text-6xl: 3.75rem;   /* 60px */
+  --text-7xl: 4.5rem;    /* 72px */
+
+  /* ============ SPACING ============ */
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* ============ LAYOUT ============ */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+  --container-2xl: 1400px;
+
+  --radius: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* ============ TRANSITIONS ============ */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 500ms ease;
+
+  /* ============ Z-INDEX ============ */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+}
+
+/* ============ UTILITY CLASSES ============ */
+
+/* Text Colors */
+.text-neon { color: var(--neon); }
+.text-cyan { color: var(--neon-cyan); }
+.text-magenta { color: var(--neon-magenta); }
+.text-yellow { color: var(--neon-yellow); }
+.text-orange { color: var(--neon-orange); }
+.text-red { color: var(--neon-red); }
+.text-muted { color: var(--text-muted); }
+.text-dim { color: var(--text-dim); }
+
+/* Text Glow */
+.glow-neon { text-shadow: var(--glow-neon-text); }
+.glow-cyan { text-shadow: var(--glow-cyan); }
+.glow-magenta { text-shadow: var(--glow-magenta); }
+.glow-yellow { text-shadow: var(--glow-yellow); }
