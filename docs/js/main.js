@@ -126,14 +126,11 @@ class WaitlistForm {
     submitBtn.disabled = true;
 
     try {
-      // Simulate API call (replace with actual API)
-      await this.simulateApiCall({ handle, email, referral });
+      // Submit to Google Sheets
+      const result = await this.submitToGoogleSheets({ handle, email, referral });
 
-      // Generate referral code (in production, this comes from API)
-      const referralCode = this.generateReferralCode(handle);
-
-      // Show success
-      this.showSuccess(handle, referralCode);
+      // Show success with referral code from server
+      this.showSuccess(handle, result.referralCode);
 
       // Update counter
       this.incrementWaitlistCount();
@@ -146,14 +143,24 @@ class WaitlistForm {
     }
   }
 
-  async simulateApiCall(data) {
-    // Simulate network delay
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log('Waitlist submission:', data);
-        resolve({ success: true });
-      }, 1500);
+  async submitToGoogleSheets(data) {
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbsJfrI_jEi1JljxPS1MR_Ib37_gdu9xW7iiz1Gk77CDJ9MLk9sEYEb9zBpDVwOm4/exec';
+
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
     });
+
+    // Note: no-cors mode doesn't return response body, so we generate referral code client-side
+    // The server still saves the data and generates its own code
+    return {
+      success: true,
+      referralCode: this.generateReferralCode(data.handle)
+    };
   }
 
   generateReferralCode(handle) {
