@@ -42,6 +42,11 @@
     top: 64px; /* Standard nav height */
   }
 
+  /* Hide nav button on tablet/mobile - use hamburger menu instead */
+  .nav-actions {
+    display: none;
+  }
+
   /* Hero */
   .hero-title {
     font-size: clamp(2rem, 6vw, 3.5rem);
@@ -142,6 +147,12 @@
 
 /* ============ MOBILE LARGE (640px - 767px) ============ */
 @media (max-width: 767px) {
+  /* Navigation - adjust for mobile */
+  .nav-container {
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2);
+  }
+
   /* Typography */
   h1 { font-size: var(--text-3xl); }
   h2 { font-size: var(--text-2xl); }
@@ -292,7 +303,7 @@
 
   /* Hide the nav button on small mobile - use hamburger menu instead */
   .nav-actions {
-    display: none;
+    display: none !important;
   }
 
   /* Ensure hamburger is visible and clickable */
