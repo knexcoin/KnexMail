@@ -494,10 +494,13 @@ class StatsLookup {
       ? tierProgress.unlockedTiers.map(t => `<span class="unlocked-tier">${this.getTierIconSvg(t.icon)} ${t.reward}</span>`).join('')
       : '<span class="no-tiers">Start referring to unlock rewards!</span>';
 
+    // Remove @ from handle if it exists
+    const cleanHandle = data.handle.replace(/^@/, '');
+
     this.resultEl.innerHTML = `
       <div class="stats-card">
         <div class="stats-header">
-          <span class="stats-handle">${data.handle}@knexmail.com</span>
+          <span class="stats-handle">${cleanHandle}@knexmail.com</span>
         </div>
         <div class="stats-body">
           <div class="stats-big-number">
