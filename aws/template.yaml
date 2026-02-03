@@ -44,16 +44,43 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref WaitlistTable
       Events:
+        # Signup endpoint
         ApiPost:
           Type: Api
           Properties:
             Path: /signup
             Method: POST
             RestApiId: !Ref WaitlistApi
-        ApiOptions:
+        ApiPostOptions:
           Type: Api
           Properties:
             Path: /signup
+            Method: OPTIONS
+            RestApiId: !Ref WaitlistApi
+        # Stats endpoint
+        ApiStats:
+          Type: Api
+          Properties:
+            Path: /stats
+            Method: GET
+            RestApiId: !Ref WaitlistApi
+        ApiStatsOptions:
+          Type: Api
+          Properties:
+            Path: /stats
+            Method: OPTIONS
+            RestApiId: !Ref WaitlistApi
+        # Leaderboard endpoint
+        ApiLeaderboard:
+          Type: Api
+          Properties:
+            Path: /leaderboard
+            Method: GET
+            RestApiId: !Ref WaitlistApi
+        ApiLeaderboardOptions:
+          Type: Api
+          Properties:
+            Path: /leaderboard
             Method: OPTIONS
             RestApiId: !Ref WaitlistApi
 
@@ -64,14 +91,26 @@ Resources:
       Name: knexmail-waitlist-api
       StageName: prod
       Cors:
-        AllowMethods: "'POST, OPTIONS'"
+        AllowMethods: "'GET, POST, OPTIONS'"
         AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
 
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
+    Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+
+  SignupUrl:
+    Description: Signup endpoint
     Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/signup"
+
+  StatsUrl:
+    Description: Stats endpoint
+    Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/stats"
+
+  LeaderboardUrl:
+    Description: Leaderboard endpoint
+    Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/leaderboard"
 
   TableName:
     Description: DynamoDB table name

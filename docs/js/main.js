@@ -3,6 +3,9 @@
    Navigation, Forms, Interactions
    ============================================ */
 
+// API Base URL
+const API_BASE = 'https://p46ez1okte.execute-api.us-east-1.amazonaws.com/prod';
+
 // ============ NAVIGATION ============
 class Navigation {
   constructor() {
@@ -75,8 +78,7 @@ class Navigation {
 // ============ WAITLIST FORM ============
 class WaitlistForm {
   constructor() {
-    // API URL - UPDATE THIS AFTER AWS DEPLOYMENT
-    this.API_URL = 'https://p46ez1okte.execute-api.us-east-1.amazonaws.com/prod/signup';
+    this.API_URL = `${API_BASE}/signup`;
 
     this.form = document.getElementById('waitlistForm');
     this.handleInput = document.getElementById('handleInput');
@@ -151,8 +153,8 @@ class WaitlistForm {
       });
 
       if (result.success) {
-        // Show success with referral code from server
-        this.showSuccess(handle, result.referralCode);
+        // Show success with referral code and tier progress
+        this.showSuccess(handle, result.referralCode, result.tierProgress);
         // Update counter
         this.incrementWaitlistCount();
       } else {
@@ -218,10 +220,14 @@ class WaitlistForm {
     setTimeout(() => errorEl.remove(), 5000);
   }
 
-  showSuccess(handle, referralCode) {
+  showSuccess(handle, referralCode, tierProgress) {
     // Hide form, show success
     this.form.style.display = 'none';
     this.successEl.style.display = 'block';
+
+    // Hide stats lookup when showing success
+    const statsLookup = document.getElementById('statsLookup');
+    if (statsLookup) statsLookup.style.display = 'none';
 
     // Update success content
     if (this.successHandle) {
@@ -232,8 +238,48 @@ class WaitlistForm {
       this.referralLink.value = `https://knexmail.com?ref=${referralCode}`;
     }
 
+    // Update tier progress
+    this.updateTierProgress(tierProgress);
+
     // Animate in
     this.successEl.style.animation = 'scaleIn 0.5s ease-out';
+  }
+
+  updateTierProgress(tierProgress) {
+    if (!tierProgress) return;
+
+    const tierCount = document.getElementById('tierCount');
+    const tierBarFill = document.getElementById('tierBarFill');
+    const tierNext = document.getElementById('tierNext');
+    const rewardTiers = document.getElementById('rewardTiers');
+
+    if (tierCount) {
+      tierCount.textContent = `${tierProgress.referralCount} referral${tierProgress.referralCount !== 1 ? 's' : ''}`;
+    }
+
+    if (tierBarFill && tierProgress.nextTier) {
+      tierBarFill.style.width = `${tierProgress.nextTier.progress}%`;
+    }
+
+    if (tierNext && tierProgress.nextTier) {
+      tierNext.innerHTML = `
+        <span class="tier-icon">${tierProgress.nextTier.icon}</span>
+        <span>${tierProgress.nextTier.remaining} more for <strong>${tierProgress.nextTier.reward}</strong></span>
+      `;
+    } else if (tierNext) {
+      tierNext.innerHTML = '<span class="text-neon">🎉 All tiers unlocked!</span>';
+    }
+
+    // Mark unlocked tiers
+    if (rewardTiers && tierProgress.unlockedTiers) {
+      const tierItems = rewardTiers.querySelectorAll('.tier-item');
+      tierItems.forEach(item => {
+        const count = parseInt(item.dataset.count);
+        if (tierProgress.referralCount >= count) {
+          item.classList.add('unlocked');
+        }
+      });
+    }
   }
 
   async copyReferralLink() {
@@ -268,6 +314,210 @@ class WaitlistForm {
 }
 
 
+// ============ STATS LOOKUP ============
+class StatsLookup {
+  constructor() {
+    this.API_URL = `${API_BASE}/stats`;
+
+    this.showBtn = document.getElementById('showStatsForm');
+    this.statsForm = document.getElementById('statsForm');
+    this.handleInput = document.getElementById('statsHandleInput');
+    this.checkBtn = document.getElementById('checkStatsBtn');
+    this.resultEl = document.getElementById('statsResult');
+
+    if (!this.showBtn) return;
+
+    this.init();
+  }
+
+  init() {
+    // Show/hide form
+    this.showBtn.addEventListener('click', () => {
+      this.statsForm.style.display = this.statsForm.style.display === 'none' ? 'flex' : 'none';
+    });
+
+    // Handle input formatting
+    if (this.handleInput) {
+      this.handleInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value
+          .toLowerCase()
+          .replace(/[^a-z0-9_]/g, '')
+          .slice(0, 20);
+      });
+
+      // Enter key to submit
+      this.handleInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.checkStats();
+        }
+      });
+    }
+
+    // Check button
+    if (this.checkBtn) {
+      this.checkBtn.addEventListener('click', () => this.checkStats());
+    }
+  }
+
+  async checkStats() {
+    const handle = this.handleInput?.value.trim();
+    if (!handle) return;
+
+    this.checkBtn.textContent = 'Loading...';
+    this.checkBtn.disabled = true;
+
+    try {
+      const response = await fetch(`${this.API_URL}?handle=${encodeURIComponent(handle)}`, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Not found');
+      }
+
+      this.showResult(result);
+    } catch (error) {
+      this.showError(error.message);
+    } finally {
+      this.checkBtn.textContent = 'Check Stats';
+      this.checkBtn.disabled = false;
+    }
+  }
+
+  showResult(data) {
+    const tierProgress = data.tierProgress;
+    const nextTierText = tierProgress?.nextTier
+      ? `${tierProgress.nextTier.remaining} more for ${tierProgress.nextTier.reward}`
+      : 'All tiers unlocked! 🎉';
+
+    this.resultEl.innerHTML = `
+      <div class="stats-card">
+        <div class="stats-header">
+          <span class="stats-handle">${data.handle}@knexmail.com</span>
+        </div>
+        <div class="stats-body">
+          <div class="stats-row">
+            <span class="stats-label">Referrals</span>
+            <span class="stats-value text-neon">${data.referralCount}</span>
+          </div>
+          <div class="stats-row">
+            <span class="stats-label">Your Code</span>
+            <span class="stats-value">${data.referralCode}</span>
+          </div>
+          <div class="stats-row">
+            <span class="stats-label">Next Reward</span>
+            <span class="stats-value">${nextTierText}</span>
+          </div>
+        </div>
+        <div class="stats-footer">
+          <input type="text" value="${data.referralLink}" readonly class="stats-link">
+          <button class="btn btn-small copy-stats-link">Copy Link</button>
+        </div>
+      </div>
+    `;
+    this.resultEl.style.display = 'block';
+
+    // Add copy functionality
+    const copyBtn = this.resultEl.querySelector('.copy-stats-link');
+    const linkInput = this.resultEl.querySelector('.stats-link');
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(linkInput.value);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy Link', 2000);
+      } catch (e) {
+        linkInput.select();
+        document.execCommand('copy');
+      }
+    });
+  }
+
+  showError(message) {
+    this.resultEl.innerHTML = `
+      <div class="stats-error">
+        ${message === 'Handle not found'
+          ? '⚠️ This handle is not on the waitlist.'
+          : '⚠️ ' + message}
+      </div>
+    `;
+    this.resultEl.style.display = 'block';
+  }
+}
+
+
+// ============ LEADERBOARD ============
+class Leaderboard {
+  constructor() {
+    this.API_URL = `${API_BASE}/leaderboard`;
+    this.container = document.getElementById('leaderboardTable');
+    this.totalEl = document.getElementById('totalWaitlist');
+
+    if (!this.container) return;
+
+    this.init();
+  }
+
+  init() {
+    this.loadLeaderboard();
+  }
+
+  async loadLeaderboard() {
+    try {
+      const response = await fetch(this.API_URL, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) throw new Error('Failed to load');
+
+      const data = await response.json();
+      this.render(data);
+    } catch (error) {
+      console.error('Leaderboard error:', error);
+      this.container.innerHTML = '<div class="leaderboard-error">Unable to load leaderboard</div>';
+    }
+  }
+
+  render(data) {
+    // Update total count
+    if (this.totalEl) {
+      this.totalEl.textContent = data.totalWaitlist?.toLocaleString() || '-';
+    }
+
+    // Render leaderboard
+    if (!data.leaderboard || data.leaderboard.length === 0) {
+      this.container.innerHTML = `
+        <div class="leaderboard-empty">
+          <p>No referrals yet. Be the first!</p>
+        </div>
+      `;
+      return;
+    }
+
+    const rows = data.leaderboard.map((item, index) => {
+      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+      return `
+        <div class="leaderboard-row ${index < 3 ? 'top-three' : ''}">
+          <span class="lb-rank">${medal || item.rank}</span>
+          <span class="lb-handle">${item.handle}</span>
+          <span class="lb-count">${item.referralCount} referral${item.referralCount !== 1 ? 's' : ''}</span>
+        </div>
+      `;
+    }).join('');
+
+    this.container.innerHTML = `
+      <div class="leaderboard-header">
+        <span class="lb-rank">Rank</span>
+        <span class="lb-handle">Handle</span>
+        <span class="lb-count">Referrals</span>
+      </div>
+      ${rows}
+    `;
+  }
+}
+
+
 // ============ HANDLE AVAILABILITY CHECK ============
 class HandleChecker {
   constructor() {
@@ -291,7 +541,6 @@ class HandleChecker {
     if (handle.length < 3) return;
 
     // TODO: Call API to check availability
-    // For now, simulate check
     console.log(`Checking availability for: ${handle}@knexmail.com`);
   }
 }
@@ -328,6 +577,8 @@ document.addEventListener('DOMContentLoaded', () => {
   new Navigation();
   new WaitlistForm();
   new HandleChecker();
+  new StatsLookup();
+  new Leaderboard();
 
   // Easter egg
   showConsoleEasterEgg();

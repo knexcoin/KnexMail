@@ -48,10 +48,38 @@ Resources:
             Method: POST
             RestApiId:
               Ref: WaitlistApi
-        ApiOptions:
+        ApiPostOptions:
           Type: Api
           Properties:
             Path: /signup
+            Method: OPTIONS
+            RestApiId:
+              Ref: WaitlistApi
+        ApiStats:
+          Type: Api
+          Properties:
+            Path: /stats
+            Method: GET
+            RestApiId:
+              Ref: WaitlistApi
+        ApiStatsOptions:
+          Type: Api
+          Properties:
+            Path: /stats
+            Method: OPTIONS
+            RestApiId:
+              Ref: WaitlistApi
+        ApiLeaderboard:
+          Type: Api
+          Properties:
+            Path: /leaderboard
+            Method: GET
+            RestApiId:
+              Ref: WaitlistApi
+        ApiLeaderboardOptions:
+          Type: Api
+          Properties:
+            Path: /leaderboard
             Method: OPTIONS
             RestApiId:
               Ref: WaitlistApi
@@ -63,14 +91,26 @@ Resources:
       Name: knexmail-waitlist-api
       StageName: prod
       Cors:
-        AllowMethods: '''POST, OPTIONS'''
+        AllowMethods: '''GET, POST, OPTIONS'''
         AllowHeaders: '''Content-Type'''
         AllowOrigin: '''*'''
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
     Value:
+      Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod
+  SignupUrl:
+    Description: Signup endpoint
+    Value:
       Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/signup
+  StatsUrl:
+    Description: Stats endpoint
+    Value:
+      Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/stats
+  LeaderboardUrl:
+    Description: Leaderboard endpoint
+    Value:
+      Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/leaderboard
   TableName:
     Description: DynamoDB table name
     Value:

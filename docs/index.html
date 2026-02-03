@@ -515,13 +515,86 @@
           <h3>You're on the list!</h3>
           <p class="success-handle" id="successHandle">david@knexmail.com</p>
           <p class="success-message">We'll email you when KnexMail is ready.</p>
+
+          <!-- Tier Progress -->
+          <div class="tier-progress" id="tierProgress">
+            <div class="tier-header">
+              <span class="tier-label">Referral Progress</span>
+              <span class="tier-count" id="tierCount">0 referrals</span>
+            </div>
+            <div class="tier-bar">
+              <div class="tier-bar-fill" id="tierBarFill" style="width: 0%"></div>
+            </div>
+            <div class="tier-next" id="tierNext">
+              <span class="tier-icon">⚡</span>
+              <span>5 more for <strong>Priority Access</strong></span>
+            </div>
+          </div>
+
           <div class="referral-box">
-            <p>Share your referral link to skip the line:</p>
+            <p>Share your referral link to earn rewards:</p>
             <div class="referral-link-box">
-              <input type="text" id="referralLink" readonly value="https://knexmail.com/join/abc123">
+              <input type="text" id="referralLink" readonly value="https://knexmail.com?ref=KNEX-XXXXXX">
               <button class="btn btn-small" id="copyReferral">Copy</button>
             </div>
           </div>
+
+          <!-- Reward Tiers -->
+          <div class="reward-tiers" id="rewardTiers">
+            <div class="tier-item" data-count="5">
+              <span class="tier-icon">⚡</span>
+              <span class="tier-reward">Priority Access</span>
+              <span class="tier-requirement">5 referrals</span>
+            </div>
+            <div class="tier-item" data-count="10">
+              <span class="tier-icon">🏆</span>
+              <span class="tier-reward">Founding Member Badge</span>
+              <span class="tier-requirement">10 referrals</span>
+            </div>
+            <div class="tier-item" data-count="25">
+              <span class="tier-icon">💎</span>
+              <span class="tier-reward">1 Year Premium Free</span>
+              <span class="tier-requirement">25 referrals</span>
+            </div>
+            <div class="tier-item" data-count="50">
+              <span class="tier-icon">👑</span>
+              <span class="tier-reward">Lifetime VIP Status</span>
+              <span class="tier-requirement">50 referrals</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Lookup -->
+        <div class="stats-lookup" id="statsLookup">
+          <p class="stats-lookup-label">Already signed up? <button class="link-btn" id="showStatsForm">Check your referral stats</button></p>
+          <div class="stats-form" id="statsForm" style="display: none;">
+            <div class="input-group">
+              <input type="text" id="statsHandleInput" placeholder="yourname" autocomplete="off" autocapitalize="off">
+              <span class="input-suffix">@knexmail.com</span>
+            </div>
+            <button class="btn btn-small" id="checkStatsBtn">Check Stats</button>
+          </div>
+          <div class="stats-result" id="statsResult" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leaderboard Section -->
+  <section class="section section-leaderboard" id="leaderboard">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">// LEADERBOARD</span>
+        <h2 class="section-title">Top <span class="text-yellow">Referrers</span></h2>
+        <p class="section-subtitle">The most active community members earning rewards.</p>
+      </div>
+
+      <div class="leaderboard-container">
+        <div class="leaderboard-table" id="leaderboardTable">
+          <div class="leaderboard-loading">Loading leaderboard...</div>
+        </div>
+        <div class="leaderboard-footer">
+          <span class="total-waitlist">Total on waitlist: <strong id="totalWaitlist">-</strong></span>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -10,9 +10,17 @@ const TABLE_NAME = process.env.TABLE_NAME || 'knexmail-waitlist';
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Content-Type': 'application/json'
 };
+
+// Referral reward tiers
+const REWARD_TIERS = [
+  { count: 5, reward: 'Priority Access', icon: '⚡' },
+  { count: 10, reward: 'Founding Member Badge', icon: '🏆' },
+  { count: 25, reward: '1 Year Premium Free', icon: '💎' },
+  { count: 50, reward: 'Lifetime VIP Status', icon: '👑' }
+];
 
 // Generate unique referral code: KNEX-XXXXXX
 function generateReferralCode() {
@@ -45,21 +53,152 @@ function normalizeHandle(handle) {
   return normalized;
 }
 
+// Calculate tier progress
+function getTierProgress(referralCount) {
+  const unlockedTiers = REWARD_TIERS.filter(t => referralCount >= t.count);
+  const nextTier = REWARD_TIERS.find(t => referralCount < t.count);
+
+  return {
+    referralCount,
+    unlockedTiers,
+    nextTier: nextTier ? {
+      ...nextTier,
+      remaining: nextTier.count - referralCount,
+      progress: Math.round((referralCount / nextTier.count) * 100)
+    } : null,
+    allTiers: REWARD_TIERS
+  };
+}
+
 exports.handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
 
-  // Only accept POST
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
+  const path = event.path || event.resource || '';
+
+  // Route: GET /stats - Get user stats by handle
+  if (event.httpMethod === 'GET' && path.includes('/stats')) {
+    return handleGetStats(event);
   }
 
+  // Route: GET /leaderboard - Get top referrers
+  if (event.httpMethod === 'GET' && path.includes('/leaderboard')) {
+    return handleGetLeaderboard(event);
+  }
+
+  // Route: POST /signup - Create new signup
+  if (event.httpMethod === 'POST') {
+    return handleSignup(event);
+  }
+
+  return {
+    statusCode: 405,
+    headers,
+    body: JSON.stringify({ error: 'Method not allowed' })
+  };
+};
+
+// GET /stats?handle=@username
+async function handleGetStats(event) {
+  try {
+    let handle = event.queryStringParameters?.handle || '';
+    handle = normalizeHandle(handle);
+
+    if (!handle || !isValidHandle(handle)) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid handle format' })
+      };
+    }
+
+    const result = await docClient.send(new GetCommand({
+      TableName: TABLE_NAME,
+      Key: { handle }
+    }));
+
+    if (!result.Item) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({ error: 'Handle not found' })
+      };
+    }
+
+    const user = result.Item;
+    const tierProgress = getTierProgress(user.referralCount);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        handle: user.handle,
+        referralCode: user.referralCode,
+        referralLink: `https://knexmail.com?ref=${user.referralCode}`,
+        referralCount: user.referralCount,
+        joinedAt: user.createdAt,
+        tierProgress
+      })
+    };
+
+  } catch (error) {
+    console.error('Stats error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Internal server error' })
+    };
+  }
+}
+
+// GET /leaderboard?limit=10
+async function handleGetLeaderboard(event) {
+  try {
+    const limit = Math.min(parseInt(event.queryStringParameters?.limit) || 10, 25);
+
+    // Scan and sort (for small datasets this is fine)
+    const result = await docClient.send(new ScanCommand({
+      TableName: TABLE_NAME,
+      ProjectionExpression: 'handle, referralCount'
+    }));
+
+    const leaderboard = (result.Items || [])
+      .filter(item => item.referralCount > 0)
+      .sort((a, b) => b.referralCount - a.referralCount)
+      .slice(0, limit)
+      .map((item, index) => ({
+        rank: index + 1,
+        handle: item.handle,
+        referralCount: item.referralCount
+      }));
+
+    // Get total waitlist count
+    const totalCount = result.Items?.length || 0;
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        leaderboard,
+        totalWaitlist: totalCount,
+        rewardTiers: REWARD_TIERS
+      })
+    };
+
+  } catch (error) {
+    console.error('Leaderboard error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Internal server error' })
+    };
+  }
+}
+
+// POST /signup
+async function handleSignup(event) {
   try {
     const body = JSON.parse(event.body);
     let { handle, email, referral } = body;
@@ -170,7 +309,9 @@ exports.handler = async (event) => {
       Item: newUser
     }));
 
-    // Return success with referral code
+    // Return success with referral code and tier info
+    const tierProgress = getTierProgress(0);
+
     return {
       statusCode: 200,
       headers,
@@ -179,6 +320,8 @@ exports.handler = async (event) => {
         handle,
         referralCode,
         referralLink: `https://knexmail.com?ref=${referralCode}`,
+        referralCount: 0,
+        tierProgress,
         message: referredBy
           ? 'Welcome! You were referred by a friend.'
           : 'Welcome to the KnexMail waitlist!'
@@ -193,4 +336,4 @@ exports.handler = async (event) => {
       body: JSON.stringify({ error: 'Internal server error' })
     };
   }
-};
+}
