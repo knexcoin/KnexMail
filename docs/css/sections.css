@@ -7,6 +7,8 @@
 .hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height - accounts for mobile browser chrome */
+  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -928,15 +930,18 @@
 
 /* ============ STATS LOOKUP ============ */
 .stats-lookup {
-  margin-top: var(--space-6);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  background: rgba(0, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   text-align: center;
 }
 
 .stats-lookup-label {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
 }
 
 .link-btn {
@@ -947,23 +952,68 @@
   text-decoration: underline;
   font-size: inherit;
   font-family: inherit;
+  font-weight: 500;
+  transition: all var(--transition-base);
 }
 
 .link-btn:hover {
   color: var(--neon);
+  text-shadow: var(--glow-neon-soft);
+}
+
+/* Direct stats button - shown initially */
+.stats-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--space-3) var(--space-6);
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-top: var(--space-3);
+}
+
+.stats-toggle-btn:hover {
+  background: var(--cyan);
+  color: var(--black);
+  box-shadow: var(--glow-cyan);
+}
+
+.stats-toggle-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .stats-form {
   display: flex;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
+  gap: var(--space-3);
+  margin-top: var(--space-4);
   justify-content: center;
   flex-wrap: wrap;
+  align-items: stretch;
 }
 
 .stats-form .input-group {
   flex: 1;
-  max-width: 250px;
+  max-width: 280px;
+  min-width: 200px;
+}
+
+.stats-form .input-group input {
+  height: 48px;
+}
+
+.stats-form .btn {
+  height: 48px;
+  padding: 0 var(--space-6);
+  white-space: nowrap;
 }
 
 .stats-result {
@@ -1035,13 +1085,100 @@
   font-size: var(--text-xs);
 }
 
-.stats-error {
+/* Enhanced stats card styles */
+.stats-big-number {
+  text-align: center;
+  padding: var(--space-4) 0;
+}
+
+.stats-big-number .big-count {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  font-weight: 900;
+  color: var(--neon);
+  text-shadow: var(--glow-neon);
+  line-height: 1;
+}
+
+.stats-big-number .big-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.stats-progress {
+  margin: var(--space-4) 0;
+}
+
+.stats-progress-bar {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: var(--space-2);
+}
+
+.stats-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon), var(--cyan));
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+.stats-progress-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.stats-progress-text .tier-icon {
+  font-size: 1.2em;
+}
+
+.stats-unlocked {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
   padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.stats-unlocked .unlocked-tier {
+  padding: var(--space-1) var(--space-2);
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--neon);
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  color: var(--neon);
+}
+
+.stats-unlocked .no-tiers {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.stats-code {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.stats-error {
+  padding: var(--space-4);
   background: rgba(255, 68, 68, 0.1);
   border: 1px solid rgba(255, 68, 68, 0.3);
-  border-radius: 6px;
+  border-radius: 8px;
   color: #ff6b6b;
   font-size: var(--text-sm);
+  text-align: center;
 }
 
 /* ============ LEADERBOARD SECTION ============ */

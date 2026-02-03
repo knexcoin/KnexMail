@@ -158,10 +158,12 @@
     padding: 0 var(--space-4);
   }
 
-  /* Hero */
+  /* Hero - use dvh for better mobile support */
   .hero {
     padding: var(--space-16) var(--space-4);
     padding-top: calc(var(--space-16) + 64px);
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
   }
 
   .hero-title {
@@ -436,6 +438,146 @@
   .feature-card,
   .input-group input {
     border-width: 0.5px;
+  }
+}
+
+/* ============ MOBILE VIEWPORT FIX ============ */
+/* Prevent layout shift from address bar show/hide */
+@supports (height: 100dvh) {
+  .hero {
+    min-height: 100dvh;
+  }
+}
+
+/* ============ iOS SPECIFIC FIXES ============ */
+@supports (-webkit-touch-callout: none) {
+  /* Fix iOS input zoom - must be 16px to prevent zoom */
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Smoother scrolling on iOS */
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Fallback for older iOS - use html wrapper */
+html {
+  /* Prevent content shift when address bar shows/hides */
+  overflow-x: hidden;
+}
+
+/* ============ FORM INPUT MOBILE OPTIMIZATION ============ */
+@media (max-width: 767px) {
+  /* Prevent iOS zoom on input focus */
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  textarea {
+    font-size: 16px !important;
+    /* Ensure smooth scrolling to focused input */
+    scroll-margin-top: 100px;
+  }
+
+  /* Waitlist form mobile optimization */
+  .waitlist-form .form-row {
+    margin-bottom: var(--space-3);
+  }
+
+  .waitlist-form .btn-large {
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  /* Stats form mobile */
+  .stats-form {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .stats-form .input-group {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .stats-form .btn {
+    width: 100%;
+  }
+
+  /* Success card mobile */
+  .waitlist-success {
+    padding: var(--space-6);
+  }
+
+  .referral-link-box {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .referral-link-box input {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .referral-link-box .btn {
+    width: 100%;
+  }
+
+  /* Tier progress mobile */
+  .tier-progress {
+    padding: var(--space-3);
+  }
+
+  .tier-item {
+    flex-wrap: wrap;
+    padding: var(--space-2);
+  }
+
+  .tier-item .tier-requirement {
+    width: 100%;
+    text-align: center;
+    margin-top: var(--space-1);
+  }
+
+  /* Leaderboard mobile */
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 50px 1fr 80px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .lb-handle {
+    font-size: var(--text-sm);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lb-count {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ============ SAFE AREA INSETS (Notched phones) ============ */
+@supports (padding: max(0px)) {
+  .nav {
+    padding-left: max(var(--space-4), env(safe-area-inset-left));
+    padding-right: max(var(--space-4), env(safe-area-inset-right));
+  }
+
+  .footer {
+    padding-bottom: max(var(--space-8), env(safe-area-inset-bottom));
+  }
+
+  .mobile-menu {
+    padding-left: max(var(--space-6), env(safe-area-inset-left));
+    padding-right: max(var(--space-6), env(safe-area-inset-right));
   }
 }
 

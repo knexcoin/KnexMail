@@ -1,10 +1,14 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
+const sesClient = new SESClient({});
 
 const TABLE_NAME = process.env.TABLE_NAME || 'knexmail-waitlist';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'hello@knexmail.com';
+const EMAILS_ENABLED = process.env.EMAILS_ENABLED === 'true';
 
 // CORS headers for browser requests
 const headers = {
@@ -68,6 +72,223 @@ function getTierProgress(referralCount) {
     } : null,
     allTiers: REWARD_TIERS
   };
+}
+
+// Email Templates
+function getWelcomeEmailHtml(handle, referralCode, referralLink) {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to KnexMail!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0a0a0f;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0f; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%); border-radius: 16px; border: 1px solid rgba(0, 212, 255, 0.2);">
+          <!-- Header -->
+          <tr>
+            <td style="padding: 40px 40px 20px; text-align: center;">
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #00d4ff, #00ff88); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                KnexMail
+              </h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 20px 40px;">
+              <h2 style="margin: 0 0 20px; color: #ffffff; font-size: 24px;">Welcome to the Waitlist! 🎉</h2>
+              <p style="margin: 0 0 20px; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
+                Hey <strong style="color: #00d4ff;">${handle}</strong>,
+              </p>
+              <p style="margin: 0 0 20px; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
+                You've successfully reserved your handle on KnexMail! You're now part of an exclusive group getting early access to the future of email.
+              </p>
+
+              <!-- Referral Box -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background: rgba(0, 212, 255, 0.1); border-radius: 12px; border: 1px solid rgba(0, 212, 255, 0.3); margin: 30px 0;">
+                <tr>
+                  <td style="padding: 24px;">
+                    <p style="margin: 0 0 10px; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Your Referral Code</p>
+                    <p style="margin: 0 0 20px; color: #00d4ff; font-size: 28px; font-weight: 700; font-family: monospace;">${referralCode}</p>
+                    <p style="margin: 0 0 10px; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Your Referral Link</p>
+                    <p style="margin: 0; color: #00ff88; font-size: 14px; word-break: break-all;">
+                      <a href="${referralLink}" style="color: #00ff88; text-decoration: none;">${referralLink}</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Rewards -->
+              <p style="margin: 0 0 15px; color: #ffffff; font-size: 18px; font-weight: 600;">Earn Rewards by Referring Friends:</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td style="padding: 8px 0; color: #b0b0b0; font-size: 14px;">⚡ 5 referrals → Priority Access</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #b0b0b0; font-size: 14px;">🏆 10 referrals → Founding Member Badge</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #b0b0b0; font-size: 14px;">💎 25 referrals → 1 Year Premium Free</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #b0b0b0; font-size: 14px;">👑 50 referrals → Lifetime VIP Status</td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 30px; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
+                Share your link with friends and climb the leaderboard!
+              </p>
+
+              <!-- CTA Button -->
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background: linear-gradient(135deg, #00d4ff, #00ff88); border-radius: 8px;">
+                    <a href="https://knexmail.com" style="display: inline-block; padding: 14px 32px; color: #000000; font-size: 16px; font-weight: 600; text-decoration: none;">
+                      Check Your Stats
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+              <p style="margin: 0; color: #666666; font-size: 12px;">
+                © 2025 KnexMail. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function getReferralNotificationHtml(handle, newReferralCount, referrerCode) {
+  const tierProgress = getTierProgress(newReferralCount);
+  const nextTierText = tierProgress.nextTier
+    ? `Only ${tierProgress.nextTier.remaining} more to unlock "${tierProgress.nextTier.reward}"!`
+    : "You've unlocked all tiers! 🎉";
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Referral!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0a0a0f;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0f; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%); border-radius: 16px; border: 1px solid rgba(0, 255, 136, 0.2);">
+          <!-- Header -->
+          <tr>
+            <td style="padding: 40px 40px 20px; text-align: center;">
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #00d4ff, #00ff88); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                KnexMail
+              </h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 20px 40px;">
+              <h2 style="margin: 0 0 20px; color: #00ff88; font-size: 28px; text-align: center;">🎉 New Referral!</h2>
+              <p style="margin: 0 0 20px; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
+                Hey <strong style="color: #00d4ff;">${handle}</strong>,
+              </p>
+              <p style="margin: 0 0 20px; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
+                Someone just joined the KnexMail waitlist using your referral code! 🚀
+              </p>
+
+              <!-- Stats Box -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background: rgba(0, 255, 136, 0.1); border-radius: 12px; border: 1px solid rgba(0, 255, 136, 0.3); margin: 30px 0;">
+                <tr>
+                  <td style="padding: 24px; text-align: center;">
+                    <p style="margin: 0 0 10px; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Total Referrals</p>
+                    <p style="margin: 0 0 20px; color: #00ff88; font-size: 48px; font-weight: 700;">${newReferralCount}</p>
+                    <p style="margin: 0; color: #b0b0b0; font-size: 14px;">${nextTierText}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 30px; color: #b0b0b0; font-size: 16px; line-height: 1.6; text-align: center;">
+                Keep sharing your link to unlock more rewards!
+              </p>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background: linear-gradient(135deg, #00d4ff, #00ff88); border-radius: 8px;">
+                          <a href="https://knexmail.com" style="display: inline-block; padding: 14px 32px; color: #000000; font-size: 16px; font-weight: 600; text-decoration: none;">
+                            View Leaderboard
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+              <p style="margin: 0; color: #666666; font-size: 12px;">
+                © 2025 KnexMail. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+// Send email via SES
+async function sendEmail(toEmail, subject, htmlBody) {
+  if (!EMAILS_ENABLED) {
+    console.log('Emails disabled, skipping:', subject, 'to', toEmail);
+    return;
+  }
+
+  try {
+    await sesClient.send(new SendEmailCommand({
+      Source: FROM_EMAIL,
+      Destination: {
+        ToAddresses: [toEmail]
+      },
+      Message: {
+        Subject: {
+          Data: subject,
+          Charset: 'UTF-8'
+        },
+        Body: {
+          Html: {
+            Data: htmlBody,
+            Charset: 'UTF-8'
+          }
+        }
+      }
+    }));
+    console.log('Email sent successfully to:', toEmail);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    // Don't throw - email failure shouldn't break signup
+  }
 }
 
 exports.handler = async (event) => {
@@ -281,6 +502,7 @@ async function handleSignup(event) {
 
     // Validate referral code if provided
     let referredBy = null;
+    let referrerToNotify = null;
     if (referral && referral.startsWith('KNEX-')) {
       const referrerQuery = await docClient.send(new QueryCommand({
         TableName: TABLE_NAME,
@@ -295,6 +517,7 @@ async function handleSignup(event) {
         // Prevent self-referral
         if (referrer.handle !== handle) {
           referredBy = referral;
+          referrerToNotify = referrer;
 
           // Increment referrer's count
           await docClient.send(new UpdateCommand({
@@ -321,6 +544,24 @@ async function handleSignup(event) {
       TableName: TABLE_NAME,
       Item: newUser
     }));
+
+    // Send welcome email to new user
+    const referralLink = `https://knexmail.com?ref=${referralCode}`;
+    await sendEmail(
+      email,
+      '🎉 Welcome to KnexMail - You\'re on the Waitlist!',
+      getWelcomeEmailHtml(handle, referralCode, referralLink)
+    );
+
+    // Send notification to referrer if applicable
+    if (referrerToNotify && referrerToNotify.email && !referrerToNotify.reserved) {
+      const newCount = (referrerToNotify.referralCount || 0) + 1;
+      await sendEmail(
+        referrerToNotify.email,
+        `🎉 Someone joined KnexMail using your referral! (${newCount} total)`,
+        getReferralNotificationHtml(referrerToNotify.handle, newCount, referrerToNotify.referralCode)
+      );
+    }
 
     // Return success with referral code and tier info
     const tierProgress = getTierProgress(0);

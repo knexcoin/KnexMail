@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#030303">
   <meta name="description" content="KnexMail — Free encrypted email where your address IS your Web3 wallet. Get paid to receive email.">
   <meta name="keywords" content="encrypted email, web3 email, crypto wallet, knexcoin, privacy email, decentralized email">
@@ -566,13 +566,27 @@
 
         <!-- Stats Lookup -->
         <div class="stats-lookup" id="statsLookup">
-          <p class="stats-lookup-label">Already signed up? <button class="link-btn" id="showStatsForm">Check your referral stats</button></p>
+          <p class="stats-lookup-label">Already on the waitlist?</p>
+          <button class="stats-toggle-btn" id="showStatsForm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Check Your Referral Stats
+          </button>
           <div class="stats-form" id="statsForm" style="display: none;">
             <div class="input-group">
               <input type="text" id="statsHandleInput" placeholder="yourname" autocomplete="off" autocapitalize="off">
               <span class="input-suffix">@knexmail.com</span>
             </div>
-            <button class="btn btn-small" id="checkStatsBtn">Check Stats</button>
+            <button class="btn btn-primary" id="checkStatsBtn">
+              <span>Check Stats</span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
           </div>
           <div class="stats-result" id="statsResult" style="display: none;"></div>
         </div>

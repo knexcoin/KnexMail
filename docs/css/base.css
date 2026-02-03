@@ -13,10 +13,13 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Fix mobile viewport height issues */
+  height: -webkit-fill-available;
 }
 
 body {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   background: var(--pitch-black);
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -27,6 +30,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior-y: none;
+  /* Prevent text zooming on input focus in iOS */
+  touch-action: manipulation;
 }
 
 /* ============ BACKGROUND EFFECTS ============ */

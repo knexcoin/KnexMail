@@ -40,9 +40,18 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref WaitlistTable
+          FROM_EMAIL: hello@knexmail.com
+          EMAILS_ENABLED: 'false'
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref WaitlistTable
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: '*'
       Events:
         # Signup endpoint
         ApiPost:

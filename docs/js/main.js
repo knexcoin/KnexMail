@@ -331,9 +331,33 @@ class StatsLookup {
   }
 
   init() {
-    // Show/hide form
+    // Show/hide form with animation
     this.showBtn.addEventListener('click', () => {
-      this.statsForm.style.display = this.statsForm.style.display === 'none' ? 'flex' : 'none';
+      const isHidden = this.statsForm.style.display === 'none';
+      if (isHidden) {
+        this.statsForm.style.display = 'flex';
+        this.statsForm.style.animation = 'fadeIn 0.3s ease-out';
+        this.showBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+          Hide Stats Form
+        `;
+        // Focus the input
+        this.handleInput?.focus();
+      } else {
+        this.statsForm.style.display = 'none';
+        this.resultEl.style.display = 'none';
+        this.showBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Check Your Referral Stats
+        `;
+      }
     });
 
     // Handle input formatting
@@ -348,6 +372,7 @@ class StatsLookup {
       // Enter key to submit
       this.handleInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+          e.preventDefault();
           this.checkStats();
         }
       });
@@ -361,9 +386,14 @@ class StatsLookup {
 
   async checkStats() {
     const handle = this.handleInput?.value.trim();
-    if (!handle) return;
+    if (!handle) {
+      this.handleInput?.focus();
+      return;
+    }
 
-    this.checkBtn.textContent = 'Loading...';
+    // Show loading state
+    const originalHTML = this.checkBtn.innerHTML;
+    this.checkBtn.innerHTML = '<span class="spinner"></span> Loading...';
     this.checkBtn.disabled = true;
 
     try {
@@ -381,7 +411,7 @@ class StatsLookup {
     } catch (error) {
       this.showError(error.message);
     } finally {
-      this.checkBtn.textContent = 'Check Stats';
+      this.checkBtn.innerHTML = originalHTML;
       this.checkBtn.disabled = false;
     }
   }
@@ -391,6 +421,13 @@ class StatsLookup {
     const nextTierText = tierProgress?.nextTier
       ? `${tierProgress.nextTier.remaining} more for ${tierProgress.nextTier.reward}`
       : 'All tiers unlocked! 🎉';
+    const nextTierIcon = tierProgress?.nextTier?.icon || '🎉';
+    const progressPercent = tierProgress?.nextTier?.progress || 100;
+
+    // Build unlocked tiers display
+    const unlockedTiersHTML = tierProgress?.unlockedTiers?.length
+      ? tierProgress.unlockedTiers.map(t => `<span class="unlocked-tier">${t.icon} ${t.reward}</span>`).join('')
+      : '<span class="no-tiers">Start referring to unlock rewards!</span>';
 
     this.resultEl.innerHTML = `
       <div class="stats-card">
@@ -398,26 +435,37 @@ class StatsLookup {
           <span class="stats-handle">${data.handle}@knexmail.com</span>
         </div>
         <div class="stats-body">
-          <div class="stats-row">
-            <span class="stats-label">Referrals</span>
-            <span class="stats-value text-neon">${data.referralCount}</span>
+          <div class="stats-big-number">
+            <span class="big-count">${data.referralCount}</span>
+            <span class="big-label">Referrals</span>
+          </div>
+          <div class="stats-progress">
+            <div class="stats-progress-bar">
+              <div class="stats-progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="stats-progress-text">
+              <span class="tier-icon">${nextTierIcon}</span>
+              <span>${nextTierText}</span>
+            </div>
+          </div>
+          <div class="stats-unlocked">
+            ${unlockedTiersHTML}
           </div>
           <div class="stats-row">
             <span class="stats-label">Your Code</span>
-            <span class="stats-value">${data.referralCode}</span>
-          </div>
-          <div class="stats-row">
-            <span class="stats-label">Next Reward</span>
-            <span class="stats-value">${nextTierText}</span>
+            <span class="stats-value stats-code">${data.referralCode}</span>
           </div>
         </div>
         <div class="stats-footer">
           <input type="text" value="${data.referralLink}" readonly class="stats-link">
-          <button class="btn btn-small copy-stats-link">Copy Link</button>
+          <button class="btn btn-primary copy-stats-link">
+            <span>Copy Link</span>
+          </button>
         </div>
       </div>
     `;
     this.resultEl.style.display = 'block';
+    this.resultEl.style.animation = 'fadeIn 0.3s ease-out';
 
     // Add copy functionality
     const copyBtn = this.resultEl.querySelector('.copy-stats-link');
@@ -425,8 +473,14 @@ class StatsLookup {
     copyBtn?.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(linkInput.value);
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => copyBtn.textContent = 'Copy Link', 2000);
+        copyBtn.innerHTML = '<span>Copied! ✓</span>';
+        copyBtn.style.background = 'var(--neon)';
+        copyBtn.style.color = 'var(--black)';
+        setTimeout(() => {
+          copyBtn.innerHTML = '<span>Copy Link</span>';
+          copyBtn.style.background = '';
+          copyBtn.style.color = '';
+        }, 2000);
       } catch (e) {
         linkInput.select();
         document.execCommand('copy');
@@ -571,8 +625,56 @@ function monitorPerformance() {
 }
 
 
+// ============ MOBILE VIEWPORT FIX ============
+class MobileViewportFix {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    // Set CSS custom property for viewport height (fixes iOS address bar issues)
+    this.setViewportHeight();
+    window.addEventListener('resize', () => this.setViewportHeight());
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => this.setViewportHeight(), 100);
+    });
+
+    // Prevent scroll jump when keyboard opens on mobile
+    this.preventKeyboardScrollJump();
+  }
+
+  setViewportHeight() {
+    // Set --vh custom property for use in CSS
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+
+  preventKeyboardScrollJump() {
+    // On mobile, when keyboard opens, the viewport shrinks
+    // This can cause the page to jump. We prevent this by using smooth scroll
+    const inputs = document.querySelectorAll('input, textarea');
+
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        // Small delay to let keyboard open
+        setTimeout(() => {
+          // Scroll input into view smoothly
+          input.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }, 300);
+      });
+    });
+  }
+}
+
+
 // ============ INITIALIZE ============
 document.addEventListener('DOMContentLoaded', () => {
+  // Mobile viewport fix (run first)
+  new MobileViewportFix();
+
   // Core functionality
   new Navigation();
   new WaitlistForm();
