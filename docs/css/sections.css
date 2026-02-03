@@ -70,6 +70,11 @@
 /* Hero Demo Card */
 .hero-demo {
   margin-bottom: var(--space-10);
+  /* Fixed height to prevent layout shift during typing animation */
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .demo-card {
@@ -80,6 +85,9 @@
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  /* Fixed dimensions to prevent layout shift */
+  min-width: 320px;
+  min-height: 200px;
 }
 
 .demo-header {

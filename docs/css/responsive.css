@@ -175,8 +175,15 @@
     font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
 
+  /* Demo card - fixed height for mobile */
+  .hero-demo {
+    min-height: 240px;
+  }
+
   .demo-card {
     width: 100%;
+    min-width: unset;
+    min-height: 220px;
   }
 
   .demo-line {
