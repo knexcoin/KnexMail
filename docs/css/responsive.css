@@ -614,7 +614,7 @@ textarea {
 
   .nav-container {
     /* Ensure content doesn't overlap with dynamic island */
-    min-height: 56px;
+    min-height: 48px;
   }
 
   .footer {
