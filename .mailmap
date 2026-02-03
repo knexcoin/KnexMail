@@ -1,0 +1,5 @@
+# Git mailmap file to standardize author names
+# Format: Proper Name <proper@email.com> Commit Name <commit@email.com>
+
+SystemThreat <noreply@knexcoin.io> davidotero <noreply@knexcoin.io>
+SystemThreat <noreply@knexcoin.io> david <noreply@knexcoin.io>
