@@ -285,6 +285,17 @@ class WaitlistForm {
     this.successEl.style.animation = 'scaleIn 0.5s ease-out';
   }
 
+  getTierIconSvg(icon) {
+    const iconMap = {
+      '⚡': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>',
+      '🏆': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>',
+      '💎': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 3L2 7V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V7L18 3H6M12 10C14.2091 10 16 11.7909 16 14C16 16.2091 14.2091 18 12 18C9.79086 18 8 16.2091 8 14C8 11.7909 9.79086 10 12 10Z"/></svg>',
+      '👑': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5M19 19C19 19.6 18.6 20 18 20H6C5.4 20 5 19.6 5 19V18H19V19Z"/></svg>',
+      '🎉': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>'
+    };
+    return iconMap[icon] || icon;
+  }
+
   updateTierProgress(tierProgress) {
     if (!tierProgress) return;
 
@@ -302,12 +313,14 @@ class WaitlistForm {
     }
 
     if (tierNext && tierProgress.nextTier) {
+      const iconSvg = this.getTierIconSvg(tierProgress.nextTier.icon);
       tierNext.innerHTML = `
-        <span class="tier-icon">${tierProgress.nextTier.icon}</span>
+        <span class="tier-icon">${iconSvg}</span>
         <span>${tierProgress.nextTier.remaining} more for <strong>${tierProgress.nextTier.reward}</strong></span>
       `;
     } else if (tierNext) {
-      tierNext.innerHTML = '<span class="text-neon">🎉 All tiers unlocked!</span>';
+      const celebrationSvg = '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>';
+      tierNext.innerHTML = `<span class="text-neon">${celebrationSvg} All tiers unlocked!</span>`;
     }
 
     // Mark unlocked tiers
@@ -456,17 +469,29 @@ class StatsLookup {
     }
   }
 
+  getTierIconSvg(icon) {
+    const iconMap = {
+      '⚡': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>',
+      '🏆': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>',
+      '💎': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 3L2 7V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V7L18 3H6M12 10C14.2091 10 16 11.7909 16 14C16 16.2091 14.2091 18 12 18C9.79086 18 8 16.2091 8 14C8 11.7909 9.79086 10 12 10Z"/></svg>',
+      '👑': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5M19 19C19 19.6 18.6 20 18 20H6C5.4 20 5 19.6 5 19V18H19V19Z"/></svg>',
+      '🎉': '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>'
+    };
+    return iconMap[icon] || icon;
+  }
+
   showResult(data) {
     const tierProgress = data.tierProgress;
+    const celebrationSvg = '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>';
     const nextTierText = tierProgress?.nextTier
       ? `${tierProgress.nextTier.remaining} more for ${tierProgress.nextTier.reward}`
-      : 'All tiers unlocked! 🎉';
-    const nextTierIcon = tierProgress?.nextTier?.icon || '🎉';
+      : `All tiers unlocked! ${celebrationSvg}`;
+    const nextTierIcon = tierProgress?.nextTier?.icon ? this.getTierIconSvg(tierProgress.nextTier.icon) : celebrationSvg;
     const progressPercent = tierProgress?.nextTier?.progress || 100;
 
     // Build unlocked tiers display
     const unlockedTiersHTML = tierProgress?.unlockedTiers?.length
-      ? tierProgress.unlockedTiers.map(t => `<span class="unlocked-tier">${t.icon} ${t.reward}</span>`).join('')
+      ? tierProgress.unlockedTiers.map(t => `<span class="unlocked-tier">${this.getTierIconSvg(t.icon)} ${t.reward}</span>`).join('')
       : '<span class="no-tiers">Start referring to unlock rewards!</span>';
 
     this.resultEl.innerHTML = `

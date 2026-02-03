@@ -633,6 +633,9 @@
   font-size: var(--text-xl);
   color: var(--neon-cyan);
   margin-bottom: var(--space-4);
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .success-message {
@@ -664,6 +667,27 @@
   background: var(--dark);
   border: 1px solid var(--border);
   color: var(--neon-cyan);
+  min-width: 0;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tier icons SVG styling */
+.tier-icon svg {
+  display: inline-block;
+  vertical-align: middle;
+  color: var(--neon);
+}
+
+.tier-item .tier-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tier-next .tier-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* ============ COMPARISON SECTION ============ */
