@@ -107,8 +107,10 @@
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 100;
+  z-index: 10000;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+  touch-action: manipulation;
 }
 
 .nav-toggle span {
@@ -148,14 +150,17 @@
   z-index: 9998;
   transform: translateY(-100%);
   opacity: 0;
-  transition: all var(--transition-slow);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   max-height: calc(100vh - 64px);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: none;
 }
 
 .mobile-menu.open {
   transform: translateY(0);
   opacity: 1;
+  pointer-events: auto;
 }
 
 .mobile-link {
@@ -165,9 +170,13 @@
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--border-subtle);
   text-decoration: none;
+  transition: color var(--transition-base);
+  -webkit-tap-highlight-color: rgba(0, 255, 136, 0.2);
+  touch-action: manipulation;
 }
 
-.mobile-link:hover {
+.mobile-link:hover,
+.mobile-link:active {
   color: var(--neon);
   text-decoration: none;
 }

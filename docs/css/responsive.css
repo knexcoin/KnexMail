@@ -201,11 +201,19 @@
     flex-direction: column;
     gap: var(--space-1);
     /* Ensure consistent height even on mobile */
-    min-height: 44px;
+    min-height: 50px;
+    align-items: flex-start;
   }
 
   .demo-value {
-    /* Fixed height to prevent jumping during typing animation on mobile */
+    /* Fixed dimensions to prevent jumping during typing animation on mobile */
+    min-height: 24px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .demo-value.typing {
+    min-width: 180px;
     min-height: 24px;
   }
 

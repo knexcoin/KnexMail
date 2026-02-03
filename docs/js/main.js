@@ -14,7 +14,18 @@ class Navigation {
     this.mobileMenu = document.getElementById('mobileMenu');
     this.mobileLinks = document.querySelectorAll('.mobile-link');
 
-    if (!this.nav) return;
+    if (!this.nav) {
+      console.warn('Navigation: nav element not found');
+      return;
+    }
+
+    if (!this.navToggle) {
+      console.warn('Navigation: navToggle element not found');
+    }
+
+    if (!this.mobileMenu) {
+      console.warn('Navigation: mobileMenu element not found');
+    }
 
     this.init();
   }
@@ -24,14 +35,28 @@ class Navigation {
     this.handleScroll();
     window.addEventListener('scroll', () => this.handleScroll());
 
-    // Mobile menu toggle
+    // Mobile menu toggle - handle both click and touch events
     if (this.navToggle) {
-      this.navToggle.addEventListener('click', () => this.toggleMobileMenu());
+      this.navToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleMobileMenu();
+      });
+
+      // Add touch event for better mobile support
+      this.navToggle.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleMobileMenu();
+      }, { passive: false });
     }
 
     // Close menu on link click
     this.mobileLinks.forEach((link) => {
-      link.addEventListener('click', () => this.closeMobileMenu());
+      link.addEventListener('click', (e) => {
+        this.closeMobileMenu();
+        // Let the link navigation happen naturally
+      });
     });
 
     // Close menu on outside click
@@ -62,15 +87,30 @@ class Navigation {
   }
 
   toggleMobileMenu() {
-    this.navToggle.classList.toggle('active');
-    this.mobileMenu.classList.toggle('open');
-    document.body.style.overflow = this.mobileMenu.classList.contains('open') ? 'hidden' : '';
+    const isOpen = this.mobileMenu.classList.contains('open');
+
+    if (isOpen) {
+      this.closeMobileMenu();
+    } else {
+      this.openMobileMenu();
+    }
+  }
+
+  openMobileMenu() {
+    this.navToggle?.classList.add('active');
+    this.mobileMenu?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Prevent body scroll on iOS
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
   }
 
   closeMobileMenu() {
     this.navToggle?.classList.remove('active');
     this.mobileMenu?.classList.remove('open');
     document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
   }
 }
 

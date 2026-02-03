@@ -119,6 +119,8 @@
 
 .demo-content {
   padding: var(--space-5);
+  /* Fixed minimum height to prevent jumping during animations */
+  min-height: 160px;
 }
 
 .demo-line {
@@ -139,10 +141,16 @@
 
 .demo-value {
   color: var(--text-primary);
-  /* Fixed height for typing animation to prevent layout shift */
+  /* Fixed dimensions for typing animation to prevent layout shift */
   min-height: 20px;
-  display: flex;
-  align-items: center;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Fixed width for the typing email element to prevent layout shift */
+.demo-value.typing {
+  min-width: 200px;
+  display: inline-block;
 }
 
 .demo-divider {
