@@ -980,6 +980,7 @@
   padding: var(--space-3) var(--space-6);
   background: rgba(0, 255, 255, 0.1);
   border: 1px solid var(--cyan);
+  border-radius: 6px;
   color: var(--cyan);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -990,6 +991,12 @@
   background: var(--cyan);
   color: var(--black);
   box-shadow: var(--glow-cyan);
+}
+
+.stats-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .stats-toggle-btn svg {

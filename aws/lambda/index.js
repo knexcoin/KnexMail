@@ -36,10 +36,31 @@ function generateReferralCode() {
   return code;
 }
 
-// Validate email format
+// Allowed email providers
+const ALLOWED_EMAIL_DOMAINS = [
+  'gmail.com',
+  'yahoo.com',
+  'aol.com',
+  'outlook.com',
+  'live.com',
+  'icloud.com',
+  'protonmail.com',
+  'proton.me'
+];
+
+// Validate email format and provider
 function isValidEmail(email) {
+  // Basic format check
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  if (!emailRegex.test(email)) {
+    return false;
+  }
+
+  // Extract domain from email
+  const domain = email.toLowerCase().split('@')[1];
+
+  // Check if domain is in allowed list
+  return ALLOWED_EMAIL_DOMAINS.includes(domain);
 }
 
 // Validate handle format (@username)
