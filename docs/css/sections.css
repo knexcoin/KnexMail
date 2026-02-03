@@ -7,8 +7,6 @@
 .hero {
   position: relative;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height - accounts for mobile browser chrome */
-  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   justify-content: center;
