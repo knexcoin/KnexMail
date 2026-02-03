@@ -161,10 +161,13 @@ async function handleGetLeaderboard(event) {
     // Scan and sort (for small datasets this is fine)
     const result = await docClient.send(new ScanCommand({
       TableName: TABLE_NAME,
-      ProjectionExpression: 'handle, referralCount'
+      ProjectionExpression: 'handle, referralCount, reserved'
     }));
 
-    const leaderboard = (result.Items || [])
+    // Filter out reserved handles
+    const realUsers = (result.Items || []).filter(item => !item.reserved);
+
+    const leaderboard = realUsers
       .filter(item => item.referralCount > 0)
       .sort((a, b) => b.referralCount - a.referralCount)
       .slice(0, limit)
@@ -174,8 +177,8 @@ async function handleGetLeaderboard(event) {
         referralCount: item.referralCount
       }));
 
-    // Get total waitlist count
-    const totalCount = result.Items?.length || 0;
+    // Get total waitlist count (excluding reserved)
+    const totalCount = realUsers.length;
 
     return {
       statusCode: 200,
@@ -234,6 +237,16 @@ async function handleSignup(event) {
     }));
 
     if (existingUser.Item) {
+      // Check if it's a reserved system handle
+      if (existingUser.Item.reserved) {
+        return {
+          statusCode: 409,
+          headers,
+          body: JSON.stringify({
+            error: 'This handle is reserved and not available'
+          })
+        };
+      }
       return {
         statusCode: 409,
         headers,
