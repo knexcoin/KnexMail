@@ -296,7 +296,18 @@
 }
 
 .eq-icon {
-  font-size: var(--text-3xl);
+  width: 48px;
+  height: 48px;
+  color: var(--neon-cyan);
+}
+
+.eq-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.eq-result .eq-icon {
+  color: var(--neon);
 }
 
 .eq-text {

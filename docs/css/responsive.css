@@ -43,6 +43,7 @@
 
   .hero-subtitle {
     font-size: var(--text-base);
+    padding: 0 var(--space-4);
   }
 
   .hero-stats {
@@ -77,6 +78,25 @@
     margin-top: var(--space-4);
   }
 
+  /* Solution Equation */
+  .solution-equation {
+    gap: var(--space-3);
+    padding: var(--space-6);
+  }
+
+  .eq-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .eq-text {
+    font-size: var(--text-xs);
+  }
+
+  .eq-operator {
+    font-size: var(--text-xl);
+  }
+
   /* Steps */
   .steps-grid {
     flex-direction: column;
@@ -90,6 +110,7 @@
 
   .step-card {
     max-width: 100%;
+    width: 100%;
   }
 
   /* Rewards */
@@ -174,11 +195,31 @@
   /* Solution Equation */
   .solution-equation {
     flex-direction: column;
-    padding: var(--space-6);
+    padding: var(--space-5);
+    gap: var(--space-2);
+  }
+
+  .eq-item {
+    padding: var(--space-3);
+  }
+
+  .eq-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .eq-text {
+    font-size: var(--text-xs);
   }
 
   .eq-operator {
     transform: rotate(90deg);
+    font-size: var(--text-lg);
+    padding: var(--space-1) 0;
+  }
+
+  .eq-result {
+    padding: var(--space-3) var(--space-5);
   }
 
   /* Comparison Table */
@@ -283,8 +324,26 @@
 
   .problem-icon,
   .feature-icon {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .eq-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .solution-equation {
+    padding: var(--space-4);
+    gap: var(--space-1);
+  }
+
+  .eq-item {
+    padding: var(--space-2);
+  }
+
+  .eq-operator {
+    font-size: var(--text-base);
   }
 
   .step-number {
