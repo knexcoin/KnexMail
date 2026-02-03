@@ -200,21 +200,33 @@
   .demo-line {
     flex-direction: column;
     gap: var(--space-1);
-    /* Ensure consistent height even on mobile */
-    min-height: 50px;
+    /* Fixed height to prevent jumping on mobile */
+    min-height: 52px;
+    height: 52px;
     align-items: flex-start;
+    justify-content: center;
   }
 
   .demo-value {
     /* Fixed dimensions to prevent jumping during typing animation on mobile */
     min-height: 24px;
+    height: 24px;
     width: 100%;
     max-width: 100%;
+    line-height: 24px;
   }
 
   .demo-value.typing {
     min-width: 180px;
     min-height: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  /* Maintain height when empty on mobile */
+  .demo-value.typing:empty::before {
+    content: "\200b";
+    display: inline-block;
   }
 
   .hero-stats {

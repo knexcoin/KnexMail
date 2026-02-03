@@ -126,12 +126,14 @@
 .demo-line {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: var(--space-8);
   padding: var(--space-2) 0;
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  /* Fixed minimum height to prevent jumping during typing animation */
-  min-height: 24px;
+  /* Fixed height to prevent jumping during typing animation */
+  min-height: 28px;
+  height: 28px;
 }
 
 .demo-label {
@@ -145,11 +147,21 @@
   min-height: 20px;
   display: inline-block;
   vertical-align: middle;
+  line-height: 20px;
 }
 
-/* Fixed width for the typing email element to prevent layout shift */
+/* Fixed width and height for the typing email element to prevent layout shift */
 .demo-value.typing {
   min-width: 200px;
+  min-height: 20px;
+  height: 20px;
+  display: inline-block;
+  line-height: 20px;
+}
+
+/* Add invisible character to maintain height when empty */
+.demo-value.typing:empty::before {
+  content: "\200b"; /* Zero-width space */
   display: inline-block;
 }
 
@@ -673,11 +685,10 @@
   text-overflow: ellipsis;
 }
 
-/* Tier icons SVG styling */
+/* Tier icons SVG styling with rainbow colors */
 .tier-icon svg {
   display: inline-block;
   vertical-align: middle;
-  color: var(--neon);
 }
 
 .tier-item .tier-icon svg {
@@ -688,6 +699,58 @@
 .tier-next .tier-icon svg {
   width: 16px;
   height: 16px;
+  animation: rainbow-pulse 2s ease-in-out infinite;
+}
+
+/* Rainbow colors for different tier icons */
+.tier-item[data-count="5"] .tier-icon svg {
+  color: #00ffff; /* Cyan */
+}
+
+.tier-item[data-count="10"] .tier-icon svg {
+  color: #ffd700; /* Gold */
+}
+
+.tier-item[data-count="25"] .tier-icon svg {
+  color: #ff00ff; /* Magenta */
+}
+
+.tier-item[data-count="50"] .tier-icon svg {
+  color: #ff6600; /* Orange */
+}
+
+/* Unlocked state gets green glow */
+.tier-item.unlocked .tier-icon svg {
+  color: var(--neon);
+  filter: drop-shadow(0 0 8px var(--neon));
+}
+
+/* Rainbow pulse animation for next tier icon */
+@keyframes rainbow-pulse {
+  0%, 100% {
+    color: #ff0000; /* Red */
+    filter: drop-shadow(0 0 6px #ff0000);
+  }
+  16% {
+    color: #ff7f00; /* Orange */
+    filter: drop-shadow(0 0 6px #ff7f00);
+  }
+  33% {
+    color: #ffff00; /* Yellow */
+    filter: drop-shadow(0 0 6px #ffff00);
+  }
+  50% {
+    color: #00ff00; /* Green */
+    filter: drop-shadow(0 0 6px #00ff00);
+  }
+  66% {
+    color: #0000ff; /* Blue */
+    filter: drop-shadow(0 0 6px #0000ff);
+  }
+  83% {
+    color: #8b00ff; /* Violet */
+    filter: drop-shadow(0 0 6px #8b00ff);
+  }
 }
 
 /* ============ COMPARISON SECTION ============ */
