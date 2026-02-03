@@ -753,6 +753,15 @@
   }
 }
 
+/* Stats progress icon animation */
+.stats-progress-text .tier-icon svg {
+  width: 16px;
+  height: 16px;
+  animation: rainbow-pulse 2s ease-in-out infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 /* ============ COMPARISON SECTION ============ */
 .comparison-table-wrapper {
   overflow-x: auto;
