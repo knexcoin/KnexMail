@@ -75,6 +75,9 @@ class Navigation {
 // ============ WAITLIST FORM ============
 class WaitlistForm {
   constructor() {
+    // API URL - UPDATE THIS AFTER AWS DEPLOYMENT
+    this.API_URL = 'https://p46ez1okte.execute-api.us-east-1.amazonaws.com/prod/signup';
+
     this.form = document.getElementById('waitlistForm');
     this.handleInput = document.getElementById('handleInput');
     this.emailInput = document.getElementById('emailInput');
@@ -90,6 +93,9 @@ class WaitlistForm {
   }
 
   init() {
+    // Check for referral code in URL
+    this.checkReferralFromURL();
+
     // Handle input formatting
     if (this.handleInput) {
       this.handleInput.addEventListener('input', (e) => {
@@ -110,6 +116,17 @@ class WaitlistForm {
     }
   }
 
+  checkReferralFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+
+    if (refCode && this.referralInput) {
+      this.referralInput.value = refCode;
+      // Highlight referral field to show it was auto-filled
+      this.referralInput.style.borderColor = 'var(--neon)';
+    }
+  }
+
   async handleSubmit(e) {
     e.preventDefault();
 
@@ -126,51 +143,79 @@ class WaitlistForm {
     submitBtn.disabled = true;
 
     try {
-      // Submit to Google Sheets
-      const result = await this.submitToGoogleSheets({ handle, email, referral });
+      // Submit to AWS API
+      const result = await this.submitToAPI({
+        handle: '@' + handle,
+        email,
+        referral
+      });
 
-      // Show success with referral code from server
-      this.showSuccess(handle, result.referralCode);
-
-      // Update counter
-      this.incrementWaitlistCount();
+      if (result.success) {
+        // Show success with referral code from server
+        this.showSuccess(handle, result.referralCode);
+        // Update counter
+        this.incrementWaitlistCount();
+      } else {
+        throw new Error(result.error || 'Submission failed');
+      }
 
     } catch (error) {
       console.error('Waitlist submission error:', error);
-      alert('Something went wrong. Please try again.');
+      this.showError(error.message);
       submitBtn.innerHTML = originalText;
       submitBtn.disabled = false;
     }
   }
 
-  async submitToGoogleSheets(data) {
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbsJfrI_jEi1JljxPS1MR_Ib37_gdu9xW7iiz1Gk77CDJ9MLk9sEYEb9zBpDVwOm4/exec';
-
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
+  async submitToAPI(data) {
+    const response = await fetch(this.API_URL, {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data)
     });
 
-    // Note: no-cors mode doesn't return response body, so we generate referral code client-side
-    // The server still saves the data and generates its own code
-    return {
-      success: true,
-      referralCode: this.generateReferralCode(data.handle)
-    };
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || `HTTP ${response.status}`);
+    }
+
+    return result;
   }
 
-  generateReferralCode(handle) {
-    // Simple referral code generation (replace with server-side generation)
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
+  showError(message) {
+    // Create error element if it doesn't exist
+    let errorEl = document.getElementById('formError');
+    if (!errorEl) {
+      errorEl = document.createElement('div');
+      errorEl.id = 'formError';
+      errorEl.style.cssText = `
+        color: #ff4444;
+        background: rgba(255, 68, 68, 0.1);
+        border: 1px solid #ff4444;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+      `;
+      this.form.insertBefore(errorEl, this.form.firstChild);
     }
-    return code;
+
+    // Show appropriate message
+    if (message.includes('already reserved')) {
+      errorEl.textContent = '⚠️ This handle is already taken. Try another one!';
+    } else if (message.includes('Invalid handle')) {
+      errorEl.textContent = '⚠️ Invalid handle. Use letters, numbers, and underscores only.';
+    } else if (message.includes('Invalid email')) {
+      errorEl.textContent = '⚠️ Please enter a valid email address.';
+    } else {
+      errorEl.textContent = '⚠️ ' + message;
+    }
+
+    // Remove after 5 seconds
+    setTimeout(() => errorEl.remove(), 5000);
   }
 
   showSuccess(handle, referralCode) {
@@ -184,7 +229,7 @@ class WaitlistForm {
     }
 
     if (this.referralLink) {
-      this.referralLink.value = `https://knexmail.com/join/${referralCode}`;
+      this.referralLink.value = `https://knexmail.com?ref=${referralCode}`;
     }
 
     // Animate in
