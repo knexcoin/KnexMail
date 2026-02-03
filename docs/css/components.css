@@ -9,8 +9,8 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: var(--z-fixed);
-  background: rgba(3, 3, 3, 0.95);
+  z-index: 9999;
+  background: rgba(3, 3, 3, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
@@ -145,7 +145,7 @@
   padding: var(--space-6);
   flex-direction: column;
   gap: var(--space-4);
-  z-index: var(--z-fixed);
+  z-index: 9998;
   transform: translateY(-100%);
   opacity: 0;
   transition: all var(--transition-slow);

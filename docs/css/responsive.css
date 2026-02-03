@@ -177,18 +177,25 @@
 
   /* Demo card - fixed height for mobile */
   .hero-demo {
-    min-height: 240px;
+    min-height: 280px;
   }
 
   .demo-card {
     width: 100%;
     min-width: unset;
-    min-height: 220px;
+    min-height: 240px;
   }
 
   .demo-line {
     flex-direction: column;
     gap: var(--space-1);
+    /* Ensure consistent height even on mobile */
+    min-height: 44px;
+  }
+
+  .demo-value {
+    /* Fixed height to prevent jumping during typing animation on mobile */
+    min-height: 24px;
   }
 
   .hero-stats {
@@ -570,6 +577,13 @@ textarea {
   .nav {
     padding-left: max(var(--space-4), env(safe-area-inset-left));
     padding-right: max(var(--space-4), env(safe-area-inset-right));
+    /* Add top padding for devices with dynamic island or notch */
+    padding-top: max(8px, env(safe-area-inset-top));
+  }
+
+  .nav-container {
+    /* Ensure content doesn't overlap with dynamic island */
+    min-height: 56px;
   }
 
   .footer {
@@ -579,6 +593,13 @@ textarea {
   .mobile-menu {
     padding-left: max(var(--space-6), env(safe-area-inset-left));
     padding-right: max(var(--space-6), env(safe-area-inset-right));
+    /* Adjust top position for devices with notch/dynamic island */
+    top: calc(64px + env(safe-area-inset-top));
+  }
+
+  /* Hero section padding for safe area */
+  .hero {
+    padding-top: calc(var(--space-16) + 64px + env(safe-area-inset-top));
   }
 }
 

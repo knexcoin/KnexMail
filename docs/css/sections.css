@@ -128,14 +128,21 @@
   padding: var(--space-2) 0;
   font-family: var(--font-mono);
   font-size: var(--text-sm);
+  /* Fixed minimum height to prevent jumping during typing animation */
+  min-height: 24px;
 }
 
 .demo-label {
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 .demo-value {
   color: var(--text-primary);
+  /* Fixed height for typing animation to prevent layout shift */
+  min-height: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .demo-divider {
