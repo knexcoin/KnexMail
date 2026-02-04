@@ -1,0 +1,909 @@
+<!-- ============================================ -->
+<!-- EMOJI RESERVATION SECTION FOR MAIN INDEX.HTML -->
+<!-- Add this BEFORE the Waitlist Section -->
+<!-- ============================================ -->
+
+<section class="emoji-reservation" id="emoji-reservation">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <span class="section-tag">// RESERVE YOUR HANDLE</span>
+      <h2 class="section-title">
+        Claim Your <span class="gradient-text">Emoji Handle</span> Today
+      </h2>
+      <p class="section-subtitle">
+        Be among the first to reserve your unique emoji email address. Choose from 1,854 emojis and create billions of combinations.
+      </p>
+    </div>
+
+    <!-- Two Input Methods Showcase -->
+    <div class="input-methods-showcase" data-aos="fade-up">
+      <div class="method-card desktop-method">
+        <div class="method-icon">💻</div>
+        <h3>Desktop Users</h3>
+        <p>Type emoji names with dots</p>
+        <div class="method-example">
+          <div class="example-input">rocket.fire</div>
+          <div class="example-arrow">→</div>
+          <div class="example-output">🚀🔥@knexmail.com</div>
+        </div>
+        <button class="method-btn" onclick="openEmojiReservation('desktop')">
+          <span>Browse All Emojis</span>
+          <span>📚</span>
+        </button>
+      </div>
+
+      <div class="method-card mobile-method">
+        <div class="method-icon">📱</div>
+        <h3>Mobile Users</h3>
+        <p>Input emojis directly from keyboard</p>
+        <div class="method-example">
+          <div class="example-input">🚀🔥</div>
+          <div class="example-arrow">→</div>
+          <div class="example-output">🚀🔥@knexmail.com</div>
+        </div>
+        <button class="method-btn" onclick="openEmojiReservation('mobile')">
+          <span>Start Building</span>
+          <span>✨</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="reservation-stats" data-aos="fade-up" data-aos-delay="200">
+      <div class="stat-badge">
+        <span class="stat-icon">🎨</span>
+        <div class="stat-info">
+          <div class="stat-number">1,854</div>
+          <div class="stat-label">Unique Emojis</div>
+        </div>
+      </div>
+      <div class="stat-badge">
+        <span class="stat-icon">🔢</span>
+        <div class="stat-info">
+          <div class="stat-number">1-3</div>
+          <div class="stat-label">Emojis Per Handle</div>
+        </div>
+      </div>
+      <div class="stat-badge">
+        <span class="stat-icon">🌐</span>
+        <div class="stat-info">
+          <div class="stat-number">99%</div>
+          <div class="stat-label">Compatible</div>
+        </div>
+      </div>
+      <div class="stat-badge">
+        <span class="stat-icon">🔒</span>
+        <div class="stat-info">
+          <div class="stat-number">6.4B</div>
+          <div class="stat-label">Combinations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popular Combinations -->
+    <div class="popular-combos" data-aos="fade-up" data-aos-delay="300">
+      <h3 class="combos-title">Popular Combinations</h3>
+      <div class="combos-grid">
+        <div class="combo-item" onclick="openEmojiReservationWithHandle('rocket.fire')">
+          <div class="combo-emoji">🚀🔥</div>
+          <div class="combo-name">rocket.fire</div>
+          <div class="combo-tag">Tech</div>
+        </div>
+        <div class="combo-item" onclick="openEmojiReservationWithHandle('diamond.hands')">
+          <div class="combo-emoji">💎🙌</div>
+          <div class="combo-name">diamond.hands</div>
+          <div class="combo-tag">Crypto</div>
+        </div>
+        <div class="combo-item" onclick="openEmojiReservationWithHandle('coffee.heart')">
+          <div class="combo-emoji">☕❤️</div>
+          <div class="combo-name">coffee.heart</div>
+          <div class="combo-tag">Lifestyle</div>
+        </div>
+        <div class="combo-item" onclick="openEmojiReservationWithHandle('brain.power')">
+          <div class="combo-emoji">🧠⚡</div>
+          <div class="combo-name">brain.power</div>
+          <div class="combo-tag">Smart</div>
+        </div>
+        <div class="combo-item" onclick="openEmojiReservationWithHandle('music.love')">
+          <div class="combo-emoji">🎵😍</div>
+          <div class="combo-name">music.love</div>
+          <div class="combo-tag">Creative</div>
+        </div>
+        <div class="combo-item" onclick="openEmojiReservationWithHandle('world.traveler')">
+          <div class="combo-emoji">🌍✈️</div>
+          <div class="combo-name">world.traveler</div>
+          <div class="combo-tag">Adventure</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main CTA -->
+    <div class="reservation-cta" data-aos="zoom-in">
+      <button class="btn-large btn-gradient" onclick="openEmojiReservation()">
+        <span class="btn-text">Build Your Emoji Handle</span>
+        <span class="btn-emoji">✨</span>
+      </button>
+      <p class="cta-note">Free to reserve • First come, first served</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- FULL-SCREEN EMOJI RESERVATION MODAL -->
+<!-- ============================================ -->
+
+<div class="emoji-reservation-modal" id="emojiReservationModal">
+  <div class="reservation-modal-overlay" onclick="closeEmojiReservation()"></div>
+  <div class="reservation-modal-container">
+    <!-- Modal Header -->
+    <div class="reservation-modal-header">
+      <div class="modal-header-left">
+        <img src="assets/knex-icon-cyan.png" alt="KnexMail" class="modal-logo">
+        <div>
+          <div class="modal-title">Reserve Your Emoji Handle</div>
+          <div class="modal-subtitle">Build • Preview • Reserve</div>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="closeEmojiReservation()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="reservation-modal-content">
+      <iframe
+        src="emoji-demo-ultimate.html"
+        frameborder="0"
+        id="emojiReservationFrame"
+        title="Emoji Handle Builder"
+      ></iframe>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="reservation-modal-footer">
+      <div class="footer-left">
+        <button class="btn-secondary" onclick="closeEmojiReservation()">
+          ← Back to Main Site
+        </button>
+      </div>
+      <div class="footer-right">
+        <div class="footer-info">
+          <span class="info-icon">ℹ️</span>
+          <span>Build your handle above, then join the waitlist below</span>
+        </div>
+        <button class="btn-primary" onclick="closeAndJoinWaitlist()">
+          Join Waitlist →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- STYLES -->
+<!-- ============================================ -->
+
+<style>
+/* Emoji Reservation Section */
+.emoji-reservation {
+  padding: 120px 0;
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 255, 255, 0.03) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  position: relative;
+}
+
+.emoji-reservation .section-tag {
+  display: inline-block;
+  padding: 8px 16px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #00ffff;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.emoji-reservation .section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.emoji-reservation .section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.emoji-reservation .gradient-text {
+  background: linear-gradient(135deg, #00ffff, #00ff88, #ffff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.emoji-reservation .section-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Input Methods Showcase */
+.input-methods-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto 60px;
+}
+
+.method-card {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(0, 255, 136, 0.05));
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.method-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.method-card:hover::before {
+  opacity: 1;
+}
+
+.method-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow: 0 15px 50px rgba(0, 255, 255, 0.3);
+}
+
+.method-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.desktop-method .method-icon {
+  animation-delay: 0s;
+}
+
+.mobile-method .method-icon {
+  animation-delay: 0.5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.method-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  color: #00ffff;
+  margin-bottom: 10px;
+}
+
+.method-card p {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+.method-example {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.example-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.example-arrow {
+  color: rgba(0, 255, 255, 0.5);
+  font-size: 1.5rem;
+}
+
+.example-output {
+  font-size: 1.3rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.method-btn {
+  width: 100%;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.method-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+}
+
+/* Reservation Stats */
+.reservation-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto 60px;
+}
+
+.stat-badge {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+}
+
+.stat-badge:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.2);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-number {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 5px;
+}
+
+/* Popular Combos */
+.popular-combos {
+  max-width: 1000px;
+  margin: 0 auto 60px;
+}
+
+.combos-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75rem;
+  color: #00ffff;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.combos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.combo-item {
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.combo-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.combo-item:hover::after {
+  left: 100%;
+}
+
+.combo-item:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+}
+
+.combo-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.combo-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.combo-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(0, 255, 136, 0.2);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #00ff88;
+  font-weight: 600;
+}
+
+/* Reservation CTA */
+.reservation-cta {
+  text-align: center;
+}
+
+.btn-large {
+  padding: 20px 50px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  font-family: 'Orbitron', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  color: #000;
+}
+
+.btn-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-gradient:hover::before {
+  left: 100%;
+}
+
+.btn-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 50px rgba(0, 255, 255, 0.5);
+}
+
+.btn-emoji {
+  font-size: 1.75rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.cta-note {
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+}
+
+/* Reservation Modal */
+.emoji-reservation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.emoji-reservation-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+}
+
+.reservation-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.reservation-modal-container {
+  position: relative;
+  width: 95%;
+  max-width: 1400px;
+  height: 90vh;
+  background: #0a0a0a;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 100px rgba(0, 255, 255, 0.3);
+  animation: modalSlideIn 0.4s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.reservation-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.modal-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.modal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.modal-close-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.3);
+  color: #ff0000;
+  transform: rotate(90deg);
+}
+
+/* Modal Content */
+.reservation-modal-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.reservation-modal-content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #0a0a0a;
+}
+
+/* Modal Footer */
+.reservation-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.8);
+  border-top: 1px solid rgba(0, 255, 255, 0.2);
+  gap: 20px;
+}
+
+.footer-left {
+  flex-shrink: 0;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.info-icon {
+  font-size: 1.25rem;
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: rgba(0, 255, 255, 0.5);
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .emoji-reservation {
+    padding: 80px 0;
+  }
+
+  .input-methods-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .combos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reservation-modal-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .reservation-modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer-right {
+    flex-direction: column;
+  }
+
+  .btn-secondary,
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer-info {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .reservation-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .combos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<!-- ============================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================ -->
+
+<script>
+// Open emoji reservation modal
+function openEmojiReservation(method) {
+  const modal = document.getElementById('emojiReservationModal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Track analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'emoji_reservation_open', {
+      'event_category': 'engagement',
+      'event_label': method || 'general'
+    });
+  }
+
+  // If method specified, send message to iframe (optional)
+  if (method) {
+    setTimeout(() => {
+      const iframe = document.getElementById('emojiReservationFrame');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({
+          action: 'focusInput',
+          method: method
+        }, '*');
+      }
+    }, 500);
+  }
+}
+
+// Open with pre-filled handle
+function openEmojiReservationWithHandle(handle) {
+  openEmojiReservation();
+
+  // Send handle to iframe
+  setTimeout(() => {
+    const iframe = document.getElementById('emojiReservationFrame');
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({
+        action: 'setHandle',
+        handle: handle
+      }, '*');
+    }
+  }, 500);
+
+  // Track analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'popular_combo_click', {
+      'event_category': 'engagement',
+      'event_label': handle
+    });
+  }
+}
+
+// Close emoji reservation modal
+function closeEmojiReservation() {
+  const modal = document.getElementById('emojiReservationModal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+
+  // Track analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'emoji_reservation_close', {
+      'event_category': 'engagement'
+    });
+  }
+}
+
+// Close and scroll to waitlist
+function closeAndJoinWaitlist() {
+  closeEmojiReservation();
+
+  // Scroll to waitlist section
+  setTimeout(() => {
+    const waitlist = document.getElementById('waitlist');
+    if (waitlist) {
+      waitlist.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 300);
+
+  // Track analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'join_waitlist_click', {
+      'event_category': 'conversion',
+      'event_label': 'From Emoji Reservation'
+    });
+  }
+}
+
+// Close on ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeEmojiReservation();
+  }
+});
+</script>

@@ -536,63 +536,64 @@
   <section class="demo-hero">
     <div class="container">
       <h1>Build Your Emoji Handle</h1>
-      <p>Choose your method: Type emoji names OR paste actual emojis directly!</p>
+      <p>Choose 2-3 emojis for your unique email. Desktop: type names. Mobile: use emoji keyboard!</p>
 
       <div class="handle-builder" data-aos="fade-up">
         <h3 class="builder-title">✨ Dual Input Builder</h3>
-        <p class="builder-subtitle">Pick your preferred method below</p>
+        <p class="builder-subtitle">💻 Desktop users type names • 📱 Mobile users input emojis</p>
 
         <div class="input-methods">
           <!-- Method 1: Text Names -->
           <div class="input-method">
             <div class="input-method-title">
-              <span>📝</span>
-              <span>Type Emoji Names</span>
+              <span>💻</span>
+              <span>Desktop: Type Emoji Names</span>
             </div>
             <div class="input-method-desc">
-              Type emoji names like "rocket", "fire", "heart" (easier on desktop)
+              Type emoji names with dots. Works great on desktop! 2-3 emojis recommended.
             </div>
             <input
               type="text"
               class="builder-input"
               id="textInput"
-              placeholder="rocket.fire.heart"
+              placeholder="rocket.fire"
               maxlength="64"
             >
-            <div class="input-hint">Max 64 characters, use dots to separate</div>
+            <div class="input-hint">Examples: rocket.fire, coffee.heart, diamond.hands</div>
             <button class="view-all-btn" onclick="openEmojiPicker()">
               <span>📚</span>
-              <span>View All Available Emojis</span>
+              <span>View All 1,854 Emojis</span>
             </button>
           </div>
 
           <!-- Method 2: Direct Emoji Input -->
           <div class="input-method">
             <div class="input-method-title">
-              <span>😊</span>
-              <span>Paste Emojis Directly</span>
+              <span>📱</span>
+              <span>Mobile: Input Emojis Directly</span>
             </div>
             <div class="input-method-desc">
-              Paste actual emojis from your keyboard (easier on mobile)
+              Tap field below, then use your emoji keyboard! 2-3 emojis work perfectly.
             </div>
             <input
               type="text"
               class="builder-input emoji-input"
               id="emojiInput"
-              placeholder="🚀🔥❤️"
+              placeholder="🚀🔥"
               maxlength="3"
+              inputmode="none"
             >
-            <div class="input-hint">Max 3 emojis, no other characters allowed</div>
+            <div class="input-hint">📱 Tap field → Use emoji keyboard → Paste 2-3 emojis</div>
           </div>
         </div>
 
         <!-- Live Preview -->
         <div class="builder-preview">
           <div class="builder-preview-label">Live Preview:</div>
-          <div class="builder-preview-emoji" id="previewEmoji">🚀🔥❤️</div>
-          <div class="builder-preview-handle" id="previewHandle">rocket.fire.heart@knexmail.com</div>
+          <div class="builder-preview-emoji" id="previewEmoji">🚀🔥</div>
+          <div class="builder-preview-handle" id="previewHandle">rocket.fire@knexmail.com</div>
           <div class="builder-preview-validation validation-valid" id="validationMessage">
-            ✓ Valid handle (3 emojis, 17 characters)
+            ✓ Perfect! 2 emojis, ready to reserve
           </div>
         </div>
       </div>
@@ -755,7 +756,7 @@
           handleText = 'yourhandle@knexmail.com';
         } else if (emojis.length > 3) {
           validation.className = 'builder-preview-validation validation-invalid';
-          validation.textContent = `❌ Maximum 3 emojis (you have ${emojis.length})`;
+          validation.textContent = `❌ Maximum 3 emojis allowed (you have ${emojis.length})`;
           displayEmojis = emojis.slice(0, 3).join('');
           // Find names for emojis
           const names = emojis.slice(0, 3).map(e => {
@@ -763,6 +764,16 @@
             return found ? found[0] : 'unknown';
           });
           handleText = names.join('.') + '@knexmail.com';
+        } else if (emojis.length === 1) {
+          displayEmojis = emojis.join('');
+          const names = emojis.map(e => {
+            const found = Object.entries(emojiMap).find(([k, v]) => v === e);
+            return found ? found[0] : 'unknown';
+          });
+          handleText = names.join('.') + '@knexmail.com';
+          validation.className = 'builder-preview-validation validation-valid';
+          validation.textContent = `✓ Valid! 1 emoji works (2-3 recommended)`;
+          document.getElementById('textInput').value = names.join('.');
         } else {
           displayEmojis = emojis.join('');
           // Find names for emojis
@@ -772,7 +783,7 @@
           });
           handleText = names.join('.') + '@knexmail.com';
           validation.className = 'builder-preview-validation validation-valid';
-          validation.textContent = `✓ Valid! ${emojis.length} emoji${emojis.length > 1 ? 's' : ''}, ready to use`;
+          validation.textContent = `✓ Perfect! ${emojis.length} emojis, ready to reserve`;
 
           // Update text input to match
           document.getElementById('textInput').value = names.join('.');
@@ -801,11 +812,17 @@
         } else if (totalLength > 64) {
           validation.className = 'builder-preview-validation validation-invalid';
           validation.textContent = `❌ Too long (${totalLength}/64 characters)`;
+        } else if (emojiCount === 1) {
+          validation.className = 'builder-preview-validation validation-valid';
+          validation.textContent = `✓ Valid! 1 emoji works (2-3 recommended for uniqueness)`;
+          document.getElementById('emojiInput').value = emojis.join('');
+        } else if (emojiCount >= 2) {
+          validation.className = 'builder-preview-validation validation-valid';
+          validation.textContent = `✓ Perfect! ${emojiCount} emojis, ${totalLength} chars - ready to reserve`;
+          document.getElementById('emojiInput').value = emojis.join('');
         } else {
           validation.className = 'builder-preview-validation validation-valid';
           validation.textContent = `✓ Valid! ${emojiCount} emoji${emojiCount > 1 ? 's' : ''}, ${totalLength} characters`;
-
-          // Update emoji input to match
           document.getElementById('emojiInput').value = emojis.join('');
         }
       } else {
