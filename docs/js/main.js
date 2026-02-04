@@ -119,6 +119,7 @@ class Navigation {
 class WaitlistForm {
   constructor() {
     this.API_URL = `${API_BASE}/signup`;
+    this.CHECK_URL = `${API_BASE}/check`;
 
     this.form = document.getElementById('waitlistForm');
     this.handleInput = document.getElementById('handleInput');
@@ -128,6 +129,11 @@ class WaitlistForm {
     this.successHandle = document.getElementById('successHandle');
     this.referralLink = document.getElementById('referralLink');
     this.copyBtn = document.getElementById('copyReferral');
+    this.handleStatus = document.getElementById('handleStatus');
+    this.handleFeedback = document.getElementById('handleFeedback');
+
+    this.checkTimeout = null;
+    this.lastCheckedHandle = '';
 
     if (!this.form) return;
 
@@ -138,7 +144,7 @@ class WaitlistForm {
     // Check for referral code in URL
     this.checkReferralFromURL();
 
-    // Handle input formatting
+    // Handle input formatting and real-time availability check
     if (this.handleInput) {
       this.handleInput.addEventListener('input', (e) => {
         // Only allow lowercase letters, numbers, and underscores
@@ -146,6 +152,9 @@ class WaitlistForm {
           .toLowerCase()
           .replace(/[^a-z0-9_]/g, '')
           .slice(0, 20);
+
+        // Real-time availability check with debounce
+        this.debouncedCheckAvailability(e.target.value);
       });
     }
 
@@ -155,6 +164,80 @@ class WaitlistForm {
     // Copy referral link
     if (this.copyBtn) {
       this.copyBtn.addEventListener('click', () => this.copyReferralLink());
+    }
+  }
+
+  debouncedCheckAvailability(handle) {
+    // Clear existing timeout
+    if (this.checkTimeout) {
+      clearTimeout(this.checkTimeout);
+    }
+
+    // Hide status while typing
+    if (this.handleStatus) {
+      this.handleStatus.classList.remove('show');
+      this.handleFeedback.classList.remove('show');
+    }
+
+    // Don't check if handle is too short or same as last checked
+    if (!handle || handle.length < 3) {
+      return;
+    }
+
+    if (handle === this.lastCheckedHandle) {
+      return;
+    }
+
+    // Show checking status
+    if (this.handleStatus) {
+      this.handleStatus.className = 'handle-status checking show';
+      this.handleStatus.textContent = 'Checking...';
+    }
+
+    // Wait 500ms after user stops typing
+    this.checkTimeout = setTimeout(() => {
+      this.checkHandleAvailability(handle);
+    }, 500);
+  }
+
+  async checkHandleAvailability(handle) {
+    this.lastCheckedHandle = handle;
+    const fullHandle = '@' + handle;
+
+    try {
+      const response = await fetch(`${this.CHECK_URL}?handle=${encodeURIComponent(fullHandle)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (this.handleStatus && this.handleFeedback) {
+        if (data.available) {
+          // Handle is available
+          this.handleStatus.className = 'handle-status available show';
+          this.handleStatus.textContent = '✓ Available';
+          this.handleFeedback.className = 'handle-feedback available show';
+          this.handleFeedback.textContent = `${fullHandle} is available! 🎉`;
+        } else {
+          // Handle is taken
+          this.handleStatus.className = 'handle-status taken show';
+          this.handleStatus.textContent = '✗ Taken';
+          this.handleFeedback.className = 'handle-feedback taken show';
+          this.handleFeedback.textContent = `${fullHandle} is already reserved. Try another!`;
+        }
+      }
+
+    } catch (error) {
+      console.error('Error checking handle availability:', error);
+      if (this.handleStatus && this.handleFeedback) {
+        this.handleStatus.className = 'handle-status show';
+        this.handleStatus.textContent = '';
+        this.handleFeedback.className = 'handle-feedback error show';
+        this.handleFeedback.textContent = 'Unable to check availability. Please try again.';
+      }
     }
   }
 

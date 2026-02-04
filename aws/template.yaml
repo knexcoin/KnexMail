@@ -66,6 +66,19 @@ Resources:
             Path: /signup
             Method: OPTIONS
             RestApiId: !Ref WaitlistApi
+        # Check availability endpoint
+        ApiCheck:
+          Type: Api
+          Properties:
+            Path: /check
+            Method: GET
+            RestApiId: !Ref WaitlistApi
+        ApiCheckOptions:
+          Type: Api
+          Properties:
+            Path: /check
+            Method: OPTIONS
+            RestApiId: !Ref WaitlistApi
         # Stats endpoint
         ApiStats:
           Type: Api
@@ -112,6 +125,10 @@ Outputs:
   SignupUrl:
     Description: Signup endpoint
     Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/signup"
+
+  CheckUrl:
+    Description: Check availability endpoint
+    Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/check"
 
   StatsUrl:
     Description: Stats endpoint

@@ -623,6 +623,11 @@ exports.handler = async (event) => {
 
   const path = event.path || event.resource || '';
 
+  // Route: GET /check - Check handle availability
+  if (event.httpMethod === 'GET' && path.includes('/check')) {
+    return handleCheckAvailability(event);
+  }
+
   // Route: GET /stats - Get user stats by handle
   if (event.httpMethod === 'GET' && path.includes('/stats')) {
     return handleGetStats(event);
@@ -644,6 +649,47 @@ exports.handler = async (event) => {
     body: JSON.stringify({ error: 'Method not allowed' })
   };
 };
+
+// GET /check?handle=@username - Check if handle is available
+async function handleCheckAvailability(event) {
+  try {
+    let handle = event.queryStringParameters?.handle || '';
+    handle = normalizeHandle(handle);
+
+    if (!handle || !isValidHandle(handle)) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid handle format', available: false })
+      };
+    }
+
+    // Check if handle exists in database
+    const result = await docClient.send(new GetCommand({
+      TableName: TABLE_NAME,
+      Key: { handle }
+    }));
+
+    const available = !result.Item;
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        handle,
+        available
+      })
+    };
+
+  } catch (error) {
+    console.error('Check availability error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Unable to check availability', available: false })
+    };
+  }
+}
 
 // GET /stats?handle=@username
 async function handleGetStats(event) {
