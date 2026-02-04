@@ -261,15 +261,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }).observe();
   }
 
-  // Typing effect for demo email
+  // Custom typing effect with emoji conversion for demo email
   const demoEmail = document.getElementById('demoEmail');
   if (demoEmail) {
-    new TypingEffect(demoEmail, {
-      strings: ['david@knexmail.com', 'alice@knexmail.com', 'satoshi@knexmail.com'],
-      typeSpeed: 80,
-      backSpeed: 40,
-      backDelay: 3000,
-      loop: true
-    });
+    const emails = [
+      { text: 'david@knexmail.com', emoji: false },
+      { text: 'fire.rocket@knexmail.com', emoji: true, final: '🔥🚀@knexmail.com' },
+      { text: 'alice@knexmail.com', emoji: false }
+    ];
+
+    let currentIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let displayedText = ''; // Track what's actually shown
+
+    function typeEmail() {
+      const current = emails[currentIndex];
+      const fullText = current.text;
+
+      if (isDeleting) {
+        // When deleting emoji email, use the final converted version
+        const deleteText = current.emoji ? current.final : fullText;
+        charIndex--;
+        displayedText = deleteText.substring(0, charIndex);
+        demoEmail.textContent = displayedText;
+
+        if (charIndex === 0) {
+          isDeleting = false;
+          currentIndex = (currentIndex + 1) % emails.length;
+          displayedText = '';
+          setTimeout(typeEmail, 500);
+          return;
+        }
+        setTimeout(typeEmail, 40);
+      } else {
+        // Typing forward
+        if (charIndex < fullText.length) {
+          charIndex++;
+          displayedText = fullText.substring(0, charIndex);
+
+          // Apply emoji conversion for fire.rocket email
+          if (current.emoji) {
+            let convertedText = displayedText;
+
+            // Convert "fire." to 🔥 (remove dot)
+            if (displayedText.includes('fire.')) {
+              convertedText = convertedText.replace('fire.', '🔥');
+            }
+
+            // Convert "rocket" to 🚀 after it's fully typed
+            if (displayedText.includes('rocket')) {
+              convertedText = convertedText.replace('rocket', '🚀');
+            }
+
+            demoEmail.textContent = convertedText;
+          } else {
+            demoEmail.textContent = displayedText;
+          }
+
+          setTimeout(typeEmail, 80);
+        } else {
+          // Finished typing, wait then delete
+          setTimeout(() => {
+            isDeleting = true;
+            typeEmail();
+          }, 3000);
+        }
+      }
+    }
+
+    typeEmail();
   }
 });

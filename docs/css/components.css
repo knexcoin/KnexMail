@@ -316,6 +316,10 @@
   color: var(--neon-red);
 }
 
+.handle-status.invalid {
+  color: var(--yellow);
+}
+
 .handle-status::before {
   content: '';
   width: 8px;
@@ -335,6 +339,11 @@
 
 .handle-status.taken::before {
   background: var(--neon-red);
+  animation: none;
+}
+
+.handle-status.invalid::before {
+  background: var(--yellow);
   animation: none;
 }
 
@@ -368,6 +377,10 @@
 
 .handle-feedback.taken {
   color: var(--neon-red);
+}
+
+.handle-feedback.invalid {
+  color: var(--yellow);
 }
 
 .handle-feedback.error {

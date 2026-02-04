@@ -420,6 +420,28 @@ class WaitlistForm {
     this.lastCheckedHandle = handle;
     const fullHandle = '@' + handle;
 
+    // Validate handle format first
+    if (handle.startsWith('.') || handle.endsWith('.')) {
+      if (this.handleStatus && this.handleFeedback) {
+        this.handleStatus.className = 'handle-status invalid show';
+        this.handleStatus.textContent = '✗ Invalid';
+        this.handleFeedback.className = 'handle-feedback invalid show';
+        this.handleFeedback.textContent = 'Handle cannot start or end with a period (.)';
+      }
+      return;
+    }
+
+    // Check for consecutive dots
+    if (handle.includes('..')) {
+      if (this.handleStatus && this.handleFeedback) {
+        this.handleStatus.className = 'handle-status invalid show';
+        this.handleStatus.textContent = '✗ Invalid';
+        this.handleFeedback.className = 'handle-feedback invalid show';
+        this.handleFeedback.textContent = 'Handle cannot contain consecutive periods (..)';
+      }
+      return;
+    }
+
     try {
       const response = await fetch(`${this.CHECK_URL}?handle=${encodeURIComponent(fullHandle)}`, {
         method: 'GET',
