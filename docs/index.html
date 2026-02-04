@@ -2040,17 +2040,10 @@ function generateRandomCombo() {
   document.getElementById('comboTextName').textContent = combo.name;
   document.getElementById('comboEmail').textContent = `${combo.emojis}@knexmail.com`;
 
-  // Randomly show as available (90% chance) or taken (10% chance) for demo
-  const isAvailable = Math.random() < 0.9;
+  // All combinations are available since waitlist is empty
   const availabilityEl = document.getElementById('comboAvailability');
-
-  if (isAvailable) {
-    availabilityEl.textContent = '✓ Available';
-    availabilityEl.className = 'combo-availability';
-  } else {
-    availabilityEl.textContent = '✗ Taken - Generate Another';
-    availabilityEl.className = 'combo-availability taken';
-  }
+  availabilityEl.textContent = '✓ Available';
+  availabilityEl.className = 'combo-availability';
 
   // Track analytics
   if (typeof gtag !== 'undefined') {
@@ -2064,12 +2057,6 @@ function generateRandomCombo() {
 // Copy combo to input fields
 function copyComboToInputs() {
   const availabilityEl = document.getElementById('comboAvailability');
-
-  // Check if taken
-  if (availabilityEl.className.includes('taken')) {
-    alert('This handle is taken! Generate a new one.');
-    return;
-  }
 
   // Find the handle input in waitlist form
   const handleInput = document.getElementById('handleInput');
