@@ -1,0 +1,77 @@
+KNEXMAIL COOKIE POLICY
+Last Updated: [INSERT DATE]
+
+This Cookie Policy explains how KnexMail (“KnexMail,” “we,” “us,” or “our”) uses cookies and similar technologies when you visit https://knexmail.com (the “Site”). This policy should be read together with our Privacy Policy.
+
+KnexMail is currently in a waitlist/pre-launch phase. The Site currently allows users to join a waitlist by providing an email address and selecting a username handle. Additional product features described on the Site are “in development” and may change prior to launch.
+
+1. WHAT ARE COOKIES?
+Cookies are small text files placed on your device (computer, phone, or tablet) when you visit a website. Cookies help websites function properly, improve performance, remember preferences, and (in some cases) measure traffic and usage. We may also use similar technologies such as pixels, tags, local storage, and server logs. For simplicity, we refer to all of these as “cookies.”
+
+2. COOKIES WE USE (AND WHY)
+We use the following categories of cookies:
+
+2.1 Strictly Necessary Cookies (Required)
+These cookies are necessary to operate the Site and to provide basic functionality and security. Without these cookies, the Site may not work properly.
+Examples of purposes:
+• Maintaining basic page functionality
+• Protecting the Site (e.g., security, fraud prevention, rate limiting)
+• Remembering essential settings during a browsing session
+
+Storage duration:
+• Typically session-based (deleted when you close your browser) or short-term persistent (up to 30 days), depending on the function.
+
+2.2 Functional / Preference Cookies (Optional)
+These cookies remember choices you make (such as language or display preferences) to improve your experience.
+Storage duration:
+• Typically persistent (up to 12 months), unless you delete them sooner.
+
+2.3 Analytics / Performance Cookies (Optional)
+These cookies help us understand how visitors use the Site so we can improve performance and user experience. They may collect information such as pages visited, time on site, general device/browser information, and approximate location derived from IP address.
+
+If enabled, we may use Google Analytics or similar analytics services. These services may set their own cookies and collect usage data.
+Storage duration:
+• Typically persistent (up to 24 months) depending on the analytics provider’s settings.
+
+2.4 Advertising Cookies (Not Used)
+We do not currently use cookies for behavioral advertising, cross-site tracking, or ad targeting, and we do not sell personal information.
+
+3. THIRD-PARTY COOKIES
+If we enable third-party analytics tools (such as Google Analytics), those third parties may set cookies on your device. We do not control third-party cookies. Please review the third party’s policies for details about how they use cookies and process personal data.
+
+4. HOW LONG COOKIES ARE STORED
+Cookie lifetimes vary based on type:
+• Session cookies: Deleted when you close your browser.
+• Persistent cookies: Remain until they expire or you delete them. Persistent cookie durations are typically up to 12–24 months for preference and analytics cookies, as described above.
+
+5. YOUR CHOICES AND CONTROLS
+5.1 Cookie Banner / Consent (GDPR/EEA/UK)
+Where required by law, we will request your consent before placing non-essential cookies (such as analytics cookies) on your device. You can withdraw your consent at any time by updating your cookie preferences (if available) or by deleting cookies in your browser.
+
+5.2 Browser Controls
+Most browsers let you control cookies through their settings. You can:
+• Delete existing cookies
+• Block cookies
+• Configure your browser to notify you when cookies are being set
+
+If you disable cookies, some parts of the Site may not function properly.
+
+Helpful browser links (examples):
+• Chrome: Settings → Privacy and security → Cookies and other site data
+• Safari: Settings/Preferences → Privacy
+• Firefox: Settings → Privacy & Security
+• Edge: Settings → Cookies and site permissions
+
+5.3 Do Not Track
+Some browsers offer a “Do Not Track” (“DNT”) signal. There is no uniform industry standard for how DNT signals should be interpreted. We currently do not respond to DNT signals.
+
+6. CALIFORNIA PRIVACY NOTICE (CCPA/CPRA)
+We do not “sell” or “share” personal information as those terms are defined under the California Consumer Privacy Act as amended by the California Privacy Rights Act (“CCPA/CPRA”). Because we do not use advertising cookies for cross-context behavioral advertising, we do not offer an opt-out preference signal for “sale” or “sharing” at this time.
+
+7. UPDATES TO THIS COOKIE POLICY
+We may update this Cookie Policy from time to time. If we make material changes, we will post the updated policy on the Site and update the “Last Updated” date. Where required by law, we will provide additional notice.
+
+8. CONTACT US
+If you have questions about this Cookie Policy or our use of cookies, contact us at:
+Email: noreply@knexmail.com
+Company Location/Jurisdiction: [INSERT YOUR LOCATION/JURISDICTION]

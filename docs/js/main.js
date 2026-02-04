@@ -115,6 +115,203 @@ class Navigation {
 }
 
 
+// ============ QUIZ POPUP ============
+class QuizPopup {
+  constructor() {
+    this.popup = document.getElementById('quizPopup');
+    this.feedback = document.getElementById('quizFeedback');
+    this.hasScrolled = false;
+    this.scrollThreshold = 500; // pixels
+    this.showDelay = 10000; // 10 seconds after scrolling
+    this.shown = false;
+
+    if (!this.popup) return;
+
+    // Check if user has already completed quiz
+    if (localStorage.getItem('quizCompleted') === 'true') {
+      return; // Don't show quiz again
+    }
+
+    this.init();
+  }
+
+  init() {
+    // Detect scroll
+    window.addEventListener('scroll', () => {
+      if (!this.hasScrolled && window.scrollY > this.scrollThreshold) {
+        this.hasScrolled = true;
+        setTimeout(() => this.showQuiz(), this.showDelay);
+      }
+    });
+
+    // Setup quiz options
+    const options = this.popup.querySelectorAll('.quiz-option');
+    options.forEach(option => {
+      option.addEventListener('click', (e) => this.handleAnswer(e));
+    });
+  }
+
+  showQuiz() {
+    if (this.shown) return;
+    this.shown = true;
+    this.popup.classList.add('show');
+  }
+
+  handleAnswer(e) {
+    const button = e.target;
+    const isCorrect = button.dataset.answer === 'correct';
+    const options = this.popup.querySelectorAll('.quiz-option');
+
+    // Disable all options
+    options.forEach(opt => {
+      opt.style.pointerEvents = 'none';
+    });
+
+    if (isCorrect) {
+      button.classList.add('correct');
+      this.feedback.className = 'quiz-feedback correct';
+      this.feedback.textContent = '✓ Correct! You understand GENESIS. Unlocking site...';
+      this.feedback.style.display = 'block';
+
+      // Save to localStorage
+      localStorage.setItem('quizCompleted', 'true');
+
+      // Hide quiz after 2 seconds
+      setTimeout(() => {
+        this.popup.classList.remove('show');
+      }, 2000);
+    } else {
+      button.classList.add('wrong');
+      this.feedback.className = 'quiz-feedback wrong';
+      this.feedback.textContent = '✗ Wrong! Here\'s the answer: 60,000 KNEX (10K signup + 5 × 10K super referrals)';
+      this.feedback.style.display = 'block';
+
+      // Show correct answer after 2 seconds
+      setTimeout(() => {
+        options.forEach(opt => {
+          if (opt.dataset.answer === 'correct') {
+            opt.classList.add('correct');
+          }
+        });
+
+        // Auto-close after showing answer
+        setTimeout(() => {
+          localStorage.setItem('quizCompleted', 'true');
+          this.popup.classList.remove('show');
+        }, 3000);
+      }, 2000);
+    }
+  }
+}
+
+
+// ============ COUNTDOWN TIMER ============
+class CountdownTimer {
+  constructor() {
+    this.countdownEl = document.getElementById('genesisCountdown');
+    this.targetDate = new Date('2026-02-07T00:00:00').getTime();
+
+    if (!this.countdownEl) return;
+
+    this.elements = {
+      days: document.getElementById('countDays'),
+      hours: document.getElementById('countHours'),
+      minutes: document.getElementById('countMinutes'),
+      seconds: document.getElementById('countSeconds')
+    };
+
+    this.init();
+  }
+
+  init() {
+    this.updateCountdown();
+    setInterval(() => this.updateCountdown(), 1000);
+  }
+
+  updateCountdown() {
+    const now = new Date().getTime();
+    const distance = this.targetDate - now;
+
+    // If countdown is over, hide it
+    if (distance < 0) {
+      this.countdownEl.style.display = 'none';
+      return;
+    }
+
+    // Show countdown
+    this.countdownEl.style.display = 'block';
+
+    // Calculate time
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Update display
+    if (this.elements.days) this.elements.days.textContent = String(days).padStart(2, '0');
+    if (this.elements.hours) this.elements.hours.textContent = String(hours).padStart(2, '0');
+    if (this.elements.minutes) this.elements.minutes.textContent = String(minutes).padStart(2, '0');
+    if (this.elements.seconds) this.elements.seconds.textContent = String(seconds).padStart(2, '0');
+  }
+}
+
+
+// ============ GENESIS TRACKER ============
+class GenesisTracker {
+  constructor() {
+    this.statusUrl = `${API_BASE}/genesis-status`;
+    this.updateInterval = null;
+    this.init();
+  }
+
+  async init() {
+    await this.updateStatus();
+    // Update every 10 seconds
+    this.updateInterval = setInterval(() => this.updateStatus(), 10000);
+  }
+
+  async updateStatus() {
+    try {
+      const response = await fetch(this.statusUrl);
+      const data = await response.json();
+
+      // Update counter
+      const countEl = document.getElementById('genesisCount');
+      if (countEl) {
+        countEl.textContent = data.genesisCount || 0;
+      }
+
+      // Update progress bar
+      const progressFill = document.getElementById('genesisProgressFill');
+      if (progressFill) {
+        const progress = ((data.genesisCount || 0) / (data.genesisLimit || 100)) * 100;
+        progressFill.style.width = `${progress}%`;
+      }
+
+      // Show/hide banners
+      const banner = document.getElementById('genesisBanner');
+      const closed = document.getElementById('genesisClosed');
+
+      if (data.windowClosed) {
+        if (banner) banner.style.display = 'none';
+        if (closed) closed.style.display = 'block';
+      } else {
+        if (banner) banner.style.display = 'block';
+        if (closed) closed.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('Error updating GENESIS status:', error);
+    }
+  }
+
+  destroy() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+  }
+}
+
+
 // ============ WAITLIST FORM ============
 class WaitlistForm {
   constructor() {
@@ -155,6 +352,43 @@ class WaitlistForm {
 
         // Real-time availability check with debounce
         this.debouncedCheckAvailability(e.target.value);
+      });
+    }
+
+    // Referral input - auto-extract code from URL
+    if (this.referralInput) {
+      this.referralInput.addEventListener('input', (e) => {
+        let value = e.target.value.trim();
+
+        // If user pasted a URL, extract the referral code
+        if (value.includes('?ref=') || value.includes('&ref=')) {
+          const match = value.match(/[?&]ref=([A-Z0-9-]+)/);
+          if (match) {
+            e.target.value = match[1];
+            // Show visual feedback
+            e.target.style.borderColor = 'var(--neon)';
+            setTimeout(() => {
+              e.target.style.borderColor = '';
+            }, 2000);
+          }
+        }
+      });
+
+      this.referralInput.addEventListener('paste', (e) => {
+        // Handle paste event with slight delay to let the value populate
+        setTimeout(() => {
+          let value = e.target.value.trim();
+          if (value.includes('?ref=') || value.includes('&ref=')) {
+            const match = value.match(/[?&]ref=([A-Z0-9-]+)/);
+            if (match) {
+              e.target.value = match[1];
+              e.target.style.borderColor = 'var(--neon)';
+              setTimeout(() => {
+                e.target.style.borderColor = '';
+              }, 2000);
+            }
+          }
+        }, 10);
       });
     }
 
@@ -249,6 +483,14 @@ class WaitlistForm {
       this.referralInput.value = refCode;
       // Highlight referral field to show it was auto-filled
       this.referralInput.style.borderColor = 'var(--neon)';
+      this.referralInput.style.boxShadow = '0 0 10px rgba(0, 255, 136, 0.3)';
+
+      // Add a small note below the input
+      const parent = this.referralInput.parentElement;
+      const note = document.createElement('div');
+      note.style.cssText = 'color: var(--neon); font-size: 0.75rem; margin-top: 4px; font-family: var(--font-mono);';
+      note.textContent = '✓ Referral code applied';
+      parent.appendChild(note);
     }
   }
 
@@ -257,7 +499,15 @@ class WaitlistForm {
 
     const handle = this.handleInput?.value.trim();
     const email = this.emailInput?.value.trim();
-    const referral = this.referralInput?.value.trim();
+    let referral = this.referralInput?.value.trim();
+
+    // Extract referral code from URL if user pasted full URL
+    if (referral && referral.includes('?ref=')) {
+      const match = referral.match(/[?&]ref=([A-Z0-9-]+)/);
+      if (match) {
+        referral = match[1];
+      }
+    }
 
     if (!handle || !email) return;
 
@@ -276,8 +526,14 @@ class WaitlistForm {
       });
 
       if (result.success) {
-        // Show success with referral code and tier progress
-        this.showSuccess(handle, result.referralCode, result.tierProgress);
+        // Check if GENESIS member
+        if (result.genesisStatus) {
+          // Show GENESIS modal instead of regular success
+          this.showGenesisModal(result);
+        } else {
+          // Show regular success with referral code and tier progress
+          this.showSuccess(handle, result.referralCode, result.tierProgress);
+        }
         // Update counter
         this.incrementWaitlistCount();
       } else {
@@ -445,6 +701,160 @@ class WaitlistForm {
     if (countEl) {
       const current = parseInt(countEl.textContent.replace(/,/g, '')) || 0;
       countEl.textContent = (current + 1).toLocaleString();
+    }
+  }
+
+  showGenesisModal(data) {
+    const modal = document.getElementById('genesisModal');
+    const genesisNumber = document.getElementById('genesisNumber');
+    const shareLink = document.getElementById('shareLink');
+    const superCount = document.getElementById('superCount');
+
+    if (!modal) return;
+
+    // Update modal content
+    if (genesisNumber) {
+      genesisNumber.textContent = data.genesisNumber || '?';
+    }
+
+    if (shareLink) {
+      shareLink.value = data.referralLink || `https://knexmail.com?ref=${data.referralCode}`;
+    }
+
+    if (superCount) {
+      superCount.textContent = data.genesisReferralCount || 0;
+    }
+
+    // Setup share buttons
+    this.setupShareButtons(data);
+
+    // Setup copy button
+    const copyBtn = document.getElementById('copyShareLink');
+    if (copyBtn && shareLink) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(shareLink.value);
+          copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy';
+          }, 2000);
+        } catch (err) {
+          shareLink.select();
+          document.execCommand('copy');
+        }
+      });
+    }
+
+    // Setup close button
+    const closeBtn = document.getElementById('closeGenesisModal');
+    const overlay = document.getElementById('genesisModalOverlay');
+
+    const closeModal = () => {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    };
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', closeModal);
+    }
+
+    // Show modal
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    // Confetti celebration! 🎉
+    if (typeof confetti !== 'undefined') {
+      setTimeout(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#00ff88', '#00d4ff', '#ff00ff', '#ffdd00']
+        });
+
+        // Second burst
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#00ff88', '#00d4ff']
+          });
+          confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#ff00ff', '#ffdd00']
+          });
+        }, 200);
+      }, 300);
+    }
+
+    // Hide form
+    this.form.style.display = 'none';
+
+    // Hide stats lookup
+    const statsLookup = document.getElementById('statsLookup');
+    if (statsLookup) statsLookup.style.display = 'none';
+  }
+
+  setupShareButtons(data) {
+    const { genesisNumber, referralLink, referralCode } = data;
+    const link = referralLink || `https://knexmail.com?ref=${referralCode}`;
+
+    // X/Twitter
+    const twitterBtn = document.getElementById('shareTwitter');
+    if (twitterBtn) {
+      twitterBtn.addEventListener('click', () => {
+        const text = `I just became GENESIS Member #${genesisNumber} at @KnexMail! 🔥\n\nFirst 100 get 10,000 KNEX + super referral power.\n\nWeb3 email is here - your inbox IS your wallet!\n\nJoin before spots run out:`;
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`, '_blank');
+      });
+    }
+
+    // Facebook
+    const facebookBtn = document.getElementById('shareFacebook');
+    if (facebookBtn) {
+      facebookBtn.addEventListener('click', () => {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
+      });
+    }
+
+    // Instagram (copy to clipboard with message)
+    const instagramBtn = document.getElementById('shareInstagram');
+    if (instagramBtn) {
+      instagramBtn.addEventListener('click', async () => {
+        const text = `🚀 Just joined KnexMail as GENESIS Member #${genesisNumber}!\n\nThe first 100 people get 10K KNEX tokens + exclusive status forever.\n\nThis is the future of email - your inbox IS your crypto wallet!\n\nJoin the waitlist: ${link}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          alert('✓ Post copied to clipboard! Paste it on Instagram.');
+        } catch (err) {
+          prompt('Copy this text for Instagram:', text);
+        }
+      });
+    }
+
+    // WhatsApp
+    const whatsappBtn = document.getElementById('shareWhatsApp');
+    if (whatsappBtn) {
+      whatsappBtn.addEventListener('click', () => {
+        const text = `Hey! I just got GENESIS status (#${genesisNumber}) at KnexMail - first 100 people get 10,000 KNEX tokens!\n\nIt's like if Gmail was also your crypto wallet. Pretty wild!\n\nCheck it out before spots run out: ${link}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+      });
+    }
+
+    // SMS
+    const smsBtn = document.getElementById('shareSMS');
+    if (smsBtn) {
+      smsBtn.addEventListener('click', () => {
+        const text = `Hey! I just got GENESIS status (#${genesisNumber}) at KnexMail - first 100 people get 10,000 KNEX tokens! Check it out: ${link}`;
+        window.location.href = `sms:?&body=${encodeURIComponent(text)}`;
+      });
     }
   }
 }
@@ -832,6 +1242,15 @@ document.addEventListener('DOMContentLoaded', () => {
   new HandleChecker();
   new StatsLookup();
   new Leaderboard();
+
+  // GENESIS tracker
+  new GenesisTracker();
+
+  // Quiz popup
+  new QuizPopup();
+
+  // Countdown timer
+  new CountdownTimer();
 
   // Easter egg
   showConsoleEasterEgg();

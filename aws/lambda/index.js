@@ -1,6 +1,7 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+const crypto = require('crypto');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -25,6 +26,11 @@ const GENESIS_SUPER_REFERRAL_BONUS = 10000;
 const GENESIS_SUPER_REFERRAL_LIMIT = 5;
 const NORMAL_SIGNUP_BONUS = 10;
 const NORMAL_REFERRAL_BONUS = 5;
+const SHARE_BONUS = 1; // +1 KNEX for sharing
+
+// Admin reservation
+const ADMIN_HANDLE = '@admin';
+const ADMIN_IP = '100.35.193.141';
 
 // Referral reward tiers
 const REWARD_TIERS = [
@@ -84,6 +90,52 @@ function normalizeHandle(handle) {
     normalized = '@' + normalized;
   }
   return normalized;
+}
+
+// Hash IP address with SHA-256
+function hashIP(ip) {
+  return crypto.createHash('sha256').update(ip).digest('hex');
+}
+
+// Get client IP from event
+function getClientIP(event) {
+  // Try various headers in order of preference
+  const ip = event.headers?.['x-forwarded-for']?.split(',')[0]?.trim() ||
+             event.headers?.['x-real-ip'] ||
+             event.requestContext?.identity?.sourceIp ||
+             event.requestContext?.http?.sourceIp ||
+             '0.0.0.0';
+  return ip;
+}
+
+// Check if IP has already signed up
+async function isIPUsed(ipHash) {
+  const result = await docClient.send(new ScanCommand({
+    TableName: TABLE_NAME,
+    FilterExpression: 'ipHash = :ipHash',
+    ExpressionAttributeValues: {
+      ':ipHash': ipHash
+    },
+    Select: 'COUNT'
+  }));
+  return (result.Count || 0) > 0;
+}
+
+// Mask username for privacy - show first and last letter
+function maskHandle(handle) {
+  // Remove @ prefix
+  const username = handle.replace('@', '');
+  const domain = '@knexmail.com';
+
+  if (username.length <= 2) {
+    return `${username[0]}***${domain}`;
+  }
+
+  const first = username[0];
+  const last = username[username.length - 1];
+  const masked = `${first}***${last}${domain}`;
+
+  return masked;
 }
 
 // Calculate tier progress
@@ -969,7 +1021,8 @@ async function handleGetStats(event) {
 // GET /leaderboard?limit=10
 async function handleGetLeaderboard(event) {
   try {
-    const limit = Math.min(parseInt(event.queryStringParameters?.limit) || 10, 25);
+    // Always limit to top 10
+    const limit = 10;
 
     // Scan and sort (for small datasets this is fine)
     const result = await docClient.send(new ScanCommand({
@@ -986,7 +1039,7 @@ async function handleGetLeaderboard(event) {
       .slice(0, limit)
       .map((item, index) => ({
         rank: index + 1,
-        handle: item.handle,
+        handle: maskHandle(item.handle), // Mask for privacy
         referralCount: item.referralCount
       }));
 
@@ -1041,6 +1094,36 @@ async function handleSignup(event) {
         headers,
         body: JSON.stringify({ error: 'Invalid email address' })
       };
+    }
+
+    // Get client IP and hash it
+    const clientIP = getClientIP(event);
+    const ipHash = hashIP(clientIP);
+
+    // Admin reservation check - only admin@knexmail.com from specific IP
+    if (handle === ADMIN_HANDLE) {
+      if (clientIP !== ADMIN_IP) {
+        return {
+          statusCode: 403,
+          headers,
+          body: JSON.stringify({
+            error: 'This handle is reserved and not available'
+          })
+        };
+      }
+      // Admin can proceed from correct IP
+    } else {
+      // For non-admin users, check IP usage (1 signup per IP)
+      const ipAlreadyUsed = await isIPUsed(ipHash);
+      if (ipAlreadyUsed) {
+        return {
+          statusCode: 403,
+          headers,
+          body: JSON.stringify({
+            error: 'Only one signup allowed per IP address. If you already signed up, check your email for your referral code.'
+          })
+        };
+      }
     }
 
     // Check if handle already exists
@@ -1210,7 +1293,12 @@ async function handleSignup(event) {
       genesisReferralCount: 0,
       knexEarned: newUserSignupBonus,
       superReferralGiven: isGenesisReferral,
+      ipHash, // SHA-256 hash of IP address
       createdAt: new Date().toISOString()
+      // EMAIL VERIFICATION (commented out for now - uncomment when ready)
+      // emailVerified: false,
+      // verificationToken: crypto.randomBytes(32).toString('hex'),
+      // verificationTokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     };
 
     await docClient.send(new PutCommand({

@@ -36,10 +36,19 @@ Resources:
         Variables:
           TABLE_NAME:
             Ref: WaitlistTable
+          FROM_EMAIL: noreply@knexmail.com
+          EMAILS_ENABLED: 'true'
       Policies:
       - DynamoDBCrudPolicy:
           TableName:
             Ref: WaitlistTable
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - ses:SendEmail
+          - ses:SendRawEmail
+          Resource: '*'
       Events:
         ApiPost:
           Type: Api
@@ -52,6 +61,34 @@ Resources:
           Type: Api
           Properties:
             Path: /signup
+            Method: OPTIONS
+            RestApiId:
+              Ref: WaitlistApi
+        ApiGenesisStatus:
+          Type: Api
+          Properties:
+            Path: /genesis-status
+            Method: GET
+            RestApiId:
+              Ref: WaitlistApi
+        ApiGenesisStatusOptions:
+          Type: Api
+          Properties:
+            Path: /genesis-status
+            Method: OPTIONS
+            RestApiId:
+              Ref: WaitlistApi
+        ApiCheck:
+          Type: Api
+          Properties:
+            Path: /check
+            Method: GET
+            RestApiId:
+              Ref: WaitlistApi
+        ApiCheckOptions:
+          Type: Api
+          Properties:
+            Path: /check
             Method: OPTIONS
             RestApiId:
               Ref: WaitlistApi
@@ -103,6 +140,14 @@ Outputs:
     Description: Signup endpoint
     Value:
       Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/signup
+  GenesisStatusUrl:
+    Description: GENESIS status endpoint
+    Value:
+      Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/genesis-status
+  CheckUrl:
+    Description: Check availability endpoint
+    Value:
+      Fn::Sub: https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/check
   StatsUrl:
     Description: Stats endpoint
     Value:

@@ -1,0 +1,7 @@
+Type,Name,Value
+CNAME,7r2oxr7b56qdjtmrbnjlzikccggn4rg3._domainkey.knexmail.com,7r2oxr7b56qdjtmrbnjlzikccggn4rg3.dkim.amazonses.com
+CNAME,xnh446ojqmrliqawisp4jijgzwlo35hn._domainkey.knexmail.com,xnh446ojqmrliqawisp4jijgzwlo35hn.dkim.amazonses.com
+CNAME,tqhivddm46ttzcxbyh2behhsbr77u3pv._domainkey.knexmail.com,tqhivddm46ttzcxbyh2behhsbr77u3pv.dkim.amazonses.com
+MX,mail.knexmail.com,10 feedback-smtp.us-east-1.amazonses.com
+TXT,mail.knexmail.com,"v=spf1 include:amazonses.com ~all"
+TXT,_dmarc.knexmail.com,"v=DMARC1; p=none;"

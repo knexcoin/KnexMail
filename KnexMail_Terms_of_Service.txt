@@ -1,0 +1,122 @@
+KNEXMAIL TERMS OF SERVICE
+Last Updated: [INSERT DATE]
+
+These Terms of Service (“Terms”) govern your access to and use of https://knexmail.com (the “Site”) and KnexMail’s pre-launch waitlist (collectively, the “Services”). The Services are provided by KnexMail (“KnexMail,” “we,” “us,” or “our”).
+
+PLEASE READ THESE TERMS CAREFULLY. BY ACCESSING OR USING THE SITE OR JOINING THE WAITLIST, YOU AGREE TO BE BOUND BY THESE TERMS AND OUR PRIVACY POLICY. IF YOU DO NOT AGREE, DO NOT USE THE SERVICES.
+
+1. THE SERVICES (PRE-LAUNCH / WAITLIST)
+1.1 Current Phase
+KnexMail is currently in a waitlist/pre-launch phase. The blockchain-based email platform and related features are not yet launched. The Site presently allows users to:
+• Join a waitlist by submitting an email address and selecting a username/handle
+• Receive transactional email updates related to the waitlist and referrals
+• Share a referral link/code (if provided)
+
+1.2 No Guarantee of Launch or Availability
+We do not guarantee that KnexMail will launch on any particular timeline or at all. Any launch targets, roadmaps, or feature descriptions are informational only and may change.
+
+2. ELIGIBILITY
+You must be at least 13 years old to use the Services. If you are under the age of majority in your jurisdiction, you may use the Services only with the consent of a parent or legal guardian.
+
+You represent and warrant that:
+• The information you provide is accurate and belongs to you
+• Your use of the Services will comply with these Terms and all applicable laws
+
+3. ACCEPTABLE USE
+You agree not to:
+• Use the Services in any way that violates any applicable law or regulation
+• Attempt to gain unauthorized access to the Services, systems, or data
+• Interfere with or disrupt the Services (including by scraping, probing, or automated signups)
+• Upload or transmit malicious code or attempt to bypass security measures
+• Use the Services to harass, threaten, impersonate, or defraud others
+• Use the Services in connection with spam or unsolicited communications
+
+We may suspend or restrict access to the Services to protect users, the Site, or our systems.
+
+4. USERNAME/HANDLE RULES
+4.1 Handle Requirements
+When joining the waitlist, you may select a username/handle subject to availability and these rules:
+• No impersonation of individuals or organizations
+• No use of trademarks or brand names in a way that creates confusion
+• No offensive, hateful, harassing, or illegal terms
+• No misleading or deceptive handles
+
+4.2 Reservation Not Guaranteed
+Submitting a handle reserves it for waitlist purposes only and does not guarantee that the handle will be available at launch. We may reclaim, reassign, or modify handles in our discretion to:
+• Enforce these Terms
+• Prevent impersonation or infringement
+• Resolve disputes
+• Maintain system integrity
+
+5. REFERRAL PROGRAM
+5.1 General
+We may offer a referral program that allows you to invite others to join the waitlist using a referral link or code (“Referral Program”). Referral rewards, milestones, and eligibility requirements may be described on the Site or in communications from us.
+
+5.2 Limits and Abuse
+You agree not to abuse the Referral Program. Prohibited conduct includes:
+• Creating multiple accounts or using multiple emails to generate referrals
+• Using bots, scripts, or automated systems to sign up or refer
+• Misrepresenting KnexMail or spamming others
+• Any fraudulent or deceptive activity
+
+We may withhold, cancel, or modify referral credit or rewards if we suspect abuse or violations.
+
+5.3 Rewards Are Subject to Change
+Any rewards or benefits (including any token-based or points-based rewards described on the Site) are:
+• Not guaranteed
+• Subject to change, suspension, or cancellation at any time
+• Not redeemable for cash unless expressly stated by us in writing
+• Potentially subject to eligibility checks and legal/compliance requirements
+
+Rewards, if offered, may be delivered only after launch and may depend on additional actions or verification.
+
+6. COMMUNICATIONS CONSENT
+By joining the waitlist, you consent to receive transactional emails from KnexMail related to your signup, waitlist status, and referral activity. These emails are sent through our email service provider (AWS SES).
+
+You may request removal from the waitlist at any time by contacting noreply@knexmail.com.
+
+7. INTELLECTUAL PROPERTY
+The Services, including the KnexMail name, logos, design, text, graphics, and other content, are owned by KnexMail or its licensors and are protected by intellectual property laws. You may not use our trademarks or content without our prior written permission, except as permitted by law.
+
+8. FEEDBACK
+If you provide suggestions or feedback, you grant KnexMail a worldwide, royalty-free, irrevocable license to use, modify, and incorporate that feedback without compensation to you.
+
+9. TERMINATION
+9.1 By KnexMail
+We may suspend or terminate your access to the Services and/or remove you from the waitlist at any time if we believe you violated these Terms or if we determine it is necessary to protect the Services or other users.
+
+9.2 By You
+You may request removal from the waitlist at any time by emailing noreply@knexmail.com.
+
+10. DISCLAIMERS
+THE SERVICES ARE PROVIDED “AS IS” AND “AS AVAILABLE.” TO THE MAXIMUM EXTENT PERMITTED BY LAW, KNEXMAIL DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND THAT THE SERVICES WILL BE UNINTERRUPTED, SECURE, OR ERROR-FREE.
+
+11. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL KNEXMAIL OR ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR GOODWILL, ARISING OUT OF OR RELATED TO YOUR USE OF (OR INABILITY TO USE) THE SERVICES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, KNEXMAIL’S TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO THE SERVICES SHALL NOT EXCEED ONE HUNDRED U.S. DOLLARS (US $100) OR THE AMOUNT YOU PAID TO KNEXMAIL FOR THE SERVICES IN THE TWELVE (12) MONTHS BEFORE THE EVENT GIVING RISE TO THE CLAIM, WHICHEVER IS GREATER.
+
+SOME JURISDICTIONS DO NOT ALLOW CERTAIN LIMITATIONS, SO SOME OF THE ABOVE MAY NOT APPLY TO YOU.
+
+12. INDEMNIFICATION
+You agree to defend, indemnify, and hold harmless KnexMail and its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys’ fees) arising out of or related to:
+• Your use of the Services
+• Your violation of these Terms
+• Your violation of any law or the rights of any third party
+
+13. GOVERNING LAW AND DISPUTE RESOLUTION
+13.1 Governing Law
+These Terms are governed by the laws of [INSERT YOUR JURISDICTION], without regard to conflict-of-law principles.
+
+13.2 Dispute Resolution
+Before filing a claim, you agree to try to resolve disputes informally by contacting us at noreply@knexmail.com. If the dispute is not resolved within a reasonable time, either party may bring a claim in the courts located in [INSERT YOUR JURISDICTION], and you consent to personal jurisdiction and venue in those courts, except where prohibited by law.
+
+(OPTIONAL: If you prefer binding arbitration and a class action waiver, we can add an arbitration clause tailored to your jurisdiction.)
+
+14. CHANGES TO THESE TERMS
+We may update these Terms from time to time. If we make material changes, we will post the updated Terms on the Site, update the “Last Updated”n date, and may notify waitlist users by email. Your continued use of the Services after the changes become effective means you accept the updated Terms.
+
+15. CONTACT INFORMATION
+Questions about these Terms can be sent to:
+Email: noreply@knexmail.com
+Company Location/Jurisdiction: [INSERT YOUR LOCATION/JURISDICTION]

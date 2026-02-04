@@ -1,0 +1,140 @@
+KNEXMAIL PRIVACY POLICY
+Last Updated: [INSERT DATE]
+
+This Privacy Policy explains how KnexMail (“KnexMail,” “we,” “us,” or “our”) collects, uses, discloses, and protects information when you visit https://knexmail.com (the “Site”) and join our waitlist.
+
+KnexMail is currently in a waitlist/pre-launch phase. The Site currently allows users to join a waitlist by providing an email address and selecting a username handle. The blockchain-based email platform is not yet launched. This policy applies to the waitlist and Site only, unless and until we publish an updated policy for the full product at launch.
+
+1. WHO WE ARE (CONTROLLER INFORMATION)
+Controller: KnexMail
+Contact Email: noreply@knexmail.com
+Company Location/Jurisdiction: [INSERT YOUR LOCATION/JURISDICTION]
+
+If you are in the European Economic Area (“EEA”), United Kingdom, or Switzerland, KnexMail is the “data controller” of your personal data for the purposes of applicable data protection laws.
+
+2. INFORMATION WE COLLECT
+2.1 Information You Provide Voluntarily
+When you join our waitlist, we collect:
+• Email address
+• Chosen username/handle
+
+If you participate in referrals, we also process:
+• Referral codes and referral relationships (e.g., who referred whom, referral counts)
+
+2.2 Information Collected Automatically
+When you visit the Site and/or join the waitlist, we may collect:
+• IP address
+• Device and browser information (such as user agent and approximate location derived from IP)
+• Signup timestamps
+• Basic site activity and logs (for security and performance)
+
+2.3 Cookies and Similar Technologies
+We may use cookies and similar technologies as described in our Cookie Policy to operate the Site and (if enabled) to measure traffic and usage.
+
+3. HOW WE COLLECT INFORMATION
+We collect information:
+• Directly from you when you submit the waitlist signup form
+• Automatically through server logs and (if enabled) analytics tools when you access the Site
+
+4. WHY WE COLLECT INFORMATION (PURPOSES)
+We collect and use your information to:
+• Operate and administer the waitlist (including handle reservations)
+• Send transactional emails related to the waitlist (e.g., confirmation/welcome emails, referral notifications)
+• Track referral activity and waitlist status
+• Maintain the security and integrity of the Site (fraud prevention, abuse detection, rate limiting)
+• Analyze usage and improve the Site (where analytics are enabled)
+
+5. LEGAL BASES FOR PROCESSING (GDPR/EEA/UK)
+If you are in the EEA/UK/Switzerland, we rely on the following legal bases:
+• Contract / steps prior to contract: Processing necessary to manage your waitlist signup and provide requested communications
+• Legitimate interests: Protecting the Site, preventing fraud/abuse, and improving our services (where such interests are not overridden by your rights)
+• Consent: For non-essential cookies and similar technologies where required (e.g., analytics cookies)
+
+6. HOW WE USE INFORMATION
+We use your information to:
+• Create and manage your waitlist record (email + handle + referral data)
+• Generate and send waitlist communications via AWS Simple Email Service (SES)
+• Store waitlist data in AWS DynamoDB (US-EAST-1 region)
+• Investigate and prevent suspicious or abusive activity
+• Produce aggregated analytics and metrics that do not directly identify you
+
+We do not use your waitlist information for targeted advertising, and we do not sell personal information.
+
+7. HOW WE SHARE INFORMATION
+We share information only as needed to operate the Site and waitlist:
+• AWS (Amazon Web Services) as our hosting and infrastructure provider, including DynamoDB for database storage and SES for transactional email delivery
+
+We may also disclose information:
+• To comply with law, legal process, or government requests
+• To protect the rights, property, and safety of KnexMail, our users, or others
+• In connection with a corporate transaction (e.g., merger, acquisition, financing, or sale of assets), subject to appropriate confidentiality protections
+
+8. DATA STORAGE, LOCATION, AND INTERNATIONAL TRANSFERS
+Waitlist data is stored in AWS DynamoDB in the US-EAST-1 region (United States). If you access the Site from outside the United States, your information may be transferred to and processed in the United States and other locations where our service providers operate.
+
+For EEA/UK/Swiss users, where required, we use appropriate safeguards for international transfers, such as Standard Contractual Clauses or other lawful transfer mechanisms.
+
+9. DATA RETENTION
+We retain waitlist information:
+• Until the product launches or as long as needed to manage the waitlist and related communications; or
+• Until you request deletion, whichever comes first
+
+We may retain limited information for longer periods if required for legal compliance, security, fraud prevention, or to resolve disputes.
+
+10. SECURITY
+We use reasonable administrative, technical, and organizational measures designed to protect your information, such as:
+• Encryption in transit (TLS) for data submitted to the Site
+• Encryption at rest for stored data (including AWS-managed encryption for DynamoDB where configured)
+• Access controls and least-privilege permissions
+• Logging and monitoring for abuse detection and operational security
+
+No method of transmission or storage is 100% secure, and we cannot guarantee absolute security.
+
+11. DATA BREACHES
+If we become aware of a data breach that affects your personal information, we will take reasonable steps to investigate, mitigate harm, and notify affected users and/or regulators when required by applicable law (including GDPR’s notification requirements).
+
+12. YOUR PRIVACY RIGHTS
+12.1 GDPR/EEA/UK/Switzerland
+Subject to applicable law, you may have the right to:
+• Access your personal data
+• Correct inaccurate or incomplete data
+• Request deletion (“right to be forgotten”)
+• Restrict or object to certain processing
+• Request portability (receive a copy in a structured, commonly used format)
+• Withdraw consent (where processing is based on consent)
+
+You also have the right to lodge a complaint with your local data protection authority.
+
+12.2 California (CCPA/CPRA)
+If you are a California resident, you may have the right to:
+• Know the categories and specific pieces of personal information we collected
+• Know the sources of personal information, purposes for collection, and categories of third parties we disclose to
+• Request deletion of personal information (subject to exceptions)
+• Correct inaccurate personal information
+• Opt out of “sale” or “sharing” (we do not sell/share as defined by CCPA/CPRA)
+• Limit the use of “sensitive personal information” (we do not intentionally collect sensitive personal information for waitlist signups)
+• Not be discriminated against for exercising your rights
+
+Authorized agent: You may designate an authorized agent to submit requests on your behalf. We may require proof of authorization and verification of your identity.
+
+13. HOW TO EXERCISE YOUR RIGHTS
+To request access, deletion, correction, or a copy of your information, email us at:
+noreply@knexmail.com
+
+Please include:
+• The email address you used to sign up
+• The handle you chose (if available)
+• Your request (access, deletion, correction, export)
+
+We will respond within the timeframes required by applicable law.
+
+14. CHILDREN’S PRIVACY
+The Site is not intended for children under 13, and we do not knowingly collect personal information from children under 13. If you believe a child has provided personal information, contact us and we will take steps to delete it.
+
+15. CHANGES TO THIS PRIVACY POLICY
+We may update this Privacy Policy from time to time. If we make material changes, we will post the updated policy on the Site and update the “Last Updated” date. Where appropriate, we may also notify you by email (for example, if you are on our waitlist) before changes take effect.
+
+16. CONTACT US
+If you have questions about this Privacy Policy, contact:
+Email: noreply@knexmail.com
+Company Location/Jurisdiction: [INSERT YOUR LOCATION/JURISDICTION]
