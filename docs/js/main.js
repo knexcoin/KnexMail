@@ -326,11 +326,11 @@ class WaitlistForm {
     // Handle input formatting and real-time availability check
     if (this.handleInput) {
       this.handleInput.addEventListener('input', (e) => {
-        // Only allow lowercase letters, numbers, and underscores
+        // Only allow lowercase letters, numbers, and dots (for emoji handles)
         e.target.value = e.target.value
           .toLowerCase()
-          .replace(/[^a-z0-9_]/g, '')
-          .slice(0, 20);
+          .replace(/[^a-z0-9.]/g, '')
+          .slice(0, 64);
 
         // Real-time availability check with debounce
         this.debouncedCheckAvailability(e.target.value);
