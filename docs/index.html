@@ -795,8 +795,9 @@
 
         <div class="footer-links">
           <h4>Legal</h4>
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="cookies.html">Cookie Policy</a>
         </div>
       </div>
 
@@ -807,9 +808,33 @@
     </div>
   </footer>
 
+  <!-- Cookie Banner -->
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-content">
+      <div class="cookie-text">
+        <h4>
+          <svg class="cookie-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/>
+            <circle cx="8.5" cy="8.5" r="0.5" fill="currentColor"/>
+            <circle cx="12.5" cy="11.5" r="0.5" fill="currentColor"/>
+            <circle cx="9.5" cy="14.5" r="0.5" fill="currentColor"/>
+            <circle cx="14.5" cy="14.5" r="0.5" fill="currentColor"/>
+          </svg>
+          We Use Cookies
+        </h4>
+        <p>We use essential cookies to make our site work. With your consent, we may also use analytics cookies to improve your experience. See our <a href="cookies.html">Cookie Policy</a> for details.</p>
+      </div>
+      <div class="cookie-actions">
+        <button class="btn btn-small btn-secondary" id="cookieEssential">Essential Only</button>
+        <button class="btn btn-small btn-primary" id="cookieAccept">Accept All</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/particles.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/cookies.js"></script>
 </body>
 </html>

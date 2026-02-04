@@ -1,0 +1,242 @@
+/* Policy Pages Styles */
+
+/* Navigation Override for Policy Pages */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px 30px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+}
+
+.policy-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 120px 20px 60px;
+  min-height: 100vh;
+}
+
+.policy-content {
+  background: rgba(3, 3, 3, 0.6);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.policy-content h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.last-updated {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.policy-content section {
+  margin-bottom: 40px;
+}
+
+.policy-content h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--cyan);
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+
+.policy-content h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 25px;
+  margin-bottom: 12px;
+}
+
+.policy-content h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.policy-content p {
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.policy-content ul,
+.policy-content ol {
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 15px;
+  padding-left: 30px;
+}
+
+.policy-content li {
+  margin-bottom: 8px;
+}
+
+.policy-content a {
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.policy-content a:hover {
+  border-bottom-color: var(--cyan);
+}
+
+.policy-content strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.policy-content code {
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--cyan);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+}
+
+.cookie-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.cookie-table th,
+.cookie-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cookie-table th {
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--cyan);
+  font-weight: 600;
+  font-family: 'Orbitron', monospace;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.cookie-table td {
+  color: var(--text-muted);
+}
+
+.cookie-table code {
+  background: rgba(0, 255, 255, 0.15);
+  color: var(--cyan);
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+}
+
+.policy-footer {
+  background: rgba(3, 3, 3, 0.95);
+  border-top: 1px solid rgba(0, 255, 255, 0.2);
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.policy-footer .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.policy-footer p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.policy-footer .footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.policy-footer .footer-links a {
+  color: var(--cyan);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.policy-footer .footer-links a:hover {
+  color: var(--text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .policy-container {
+    padding: 100px 15px 40px;
+  }
+
+  .policy-content {
+    padding: 25px;
+  }
+
+  .policy-content h1 {
+    font-size: 2rem;
+  }
+
+  .policy-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .policy-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .cookie-table {
+    font-size: 0.85rem;
+  }
+
+  .cookie-table th,
+  .cookie-table td {
+    padding: 8px;
+  }
+}
