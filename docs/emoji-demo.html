@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KnexMail Emoji Handles - Demo</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Background Effects */
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        transparent 50%,
+        rgba(0, 255, 255, 0.02) 50%
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: -1;
+      animation: scanline 8s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
+    }
+
+    /* Emoji Showcase Section */
+    .emoji-showcase {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #00ffff, #00ff88, #ffff00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Emoji Examples */
+    .emoji-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 80px;
+    }
+
+    .emoji-card {
+      background: rgba(0, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .emoji-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(0, 255, 255, 0.1),
+        transparent
+      );
+      transition: left 0.5s ease;
+    }
+
+    .emoji-card:hover::before {
+      left: 100%;
+    }
+
+    .emoji-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 10px 40px rgba(0, 255, 255, 0.2);
+    }
+
+    .emoji-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .emoji-handle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .emoji-arrow {
+      color: rgba(0, 255, 255, 0.5);
+      font-size: 1.5rem;
+      font-weight: 300;
+    }
+
+    .emoji-visual {
+      font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.05em;
+    }
+
+    .emoji-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+    }
+
+    /* Explainer Grid */
+    .emoji-explainer {
+      margin-bottom: 80px;
+    }
+
+    .explainer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+
+    .explainer-card {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .explainer-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .explainer-card:nth-child(2) .explainer-icon {
+      animation-delay: 0.5s;
+    }
+
+    .explainer-card:nth-child(3) .explainer-icon {
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .explainer-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #00ffff;
+    }
+
+    .explainer-card p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .explainer-example {
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .explainer-example code {
+      font-family: 'JetBrains Mono', monospace;
+      color: #00ff88;
+      font-size: 1rem;
+    }
+
+    .emoji-large {
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .emoji-result {
+      font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #00ffff, #ffff00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .compatibility-check {
+      color: #00ff88;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    /* Security Highlight */
+    .security-highlight {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(0, 255, 136, 0.05));
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 60px 40px;
+      margin-bottom: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .security-highlight::before {
+      content: '🔒';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 8rem;
+      opacity: 0.05;
+    }
+
+    .security-content {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .security-icon {
+      font-size: 4rem;
+      flex-shrink: 0;
+    }
+
+    .security-text h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #00ffff;
+    }
+
+    .security-text p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.8;
+      font-size: 1.1rem;
+    }
+
+    .security-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 30px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .stat-number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Categories */
+    .emoji-categories {
+      margin-bottom: 80px;
+      text-align: center;
+    }
+
+    .categories-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.75rem;
+      margin-bottom: 30px;
+      color: #00ffff;
+    }
+
+    .categories-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .category-chip {
+      padding: 12px 24px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 50px;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .category-chip:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-color: rgba(0, 255, 255, 0.5);
+      transform: scale(1.05);
+      color: #00ffff;
+    }
+
+    /* Playground */
+    .emoji-playground {
+      margin-bottom: 80px;
+    }
+
+    .playground-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.75rem;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #00ffff;
+    }
+
+    .playground-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .combo-example {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .combo-example:hover {
+      border-color: rgba(0, 255, 255, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 255, 255, 0.15);
+    }
+
+    .combo-input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 12px;
+    }
+
+    .combo-output {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    /* CTA */
+    .emoji-cta {
+      text-align: center;
+      padding: 60px 40px;
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 136, 0.1));
+      border-radius: 20px;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+    }
+
+    .emoji-cta h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .emoji-cta p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      color: #000;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
+    }
+
+    .btn-emoji {
+      font-size: 1.5rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .emoji-showcase {
+        padding: 80px 0;
+      }
+
+      .section-header {
+        margin-bottom: 50px;
+      }
+
+      .emoji-examples {
+        gap: 20px;
+      }
+
+      .explainer-grid {
+        gap: 30px;
+      }
+
+      .security-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .security-stats {
+        gap: 20px;
+      }
+
+      .playground-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .emoji-cta {
+        padding: 40px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .emoji-examples {
+        grid-template-columns: 1fr;
+      }
+
+      .playground-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+
+  <!-- Emoji Showcase Section -->
+  <section class="emoji-showcase" id="emoji-handles">
+    <div class="container">
+      <!-- Section Header -->
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="gradient-text">Express Yourself with Emojis</span>
+        </h2>
+        <p class="section-subtitle">
+          Your email address, as unique as you are. Choose from 1,800+ emojis and create 6.4 billion possible combinations.
+        </p>
+      </div>
+
+      <!-- Visual Examples -->
+      <div class="emoji-examples">
+        <div class="emoji-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="emoji-display">
+            <div class="emoji-handle">rocket.fire@knexmail.com</div>
+            <div class="emoji-arrow">→</div>
+            <div class="emoji-visual">🚀🔥@knexmail.com</div>
+          </div>
+          <div class="emoji-label">Tech Enthusiast</div>
+        </div>
+
+        <div class="emoji-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="emoji-display">
+            <div class="emoji-handle">coffee.heart@knexmail.com</div>
+            <div class="emoji-arrow">→</div>
+            <div class="emoji-visual">☕❤️@knexmail.com</div>
+          </div>
+          <div class="emoji-label">Coffee Lover</div>
+        </div>
+
+        <div class="emoji-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="emoji-display">
+            <div class="emoji-handle">diamond.hands@knexmail.com</div>
+            <div class="emoji-arrow">→</div>
+            <div class="emoji-visual">💎🙌@knexmail.com</div>
+          </div>
+          <div class="emoji-label">Crypto Holder</div>
+        </div>
+
+        <div class="emoji-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="emoji-display">
+            <div class="emoji-handle">music.lover@knexmail.com</div>
+            <div class="emoji-arrow">→</div>
+            <div class="emoji-visual">🎵❤️@knexmail.com</div>
+          </div>
+          <div class="emoji-label">Music Fan</div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="emoji-explainer">
+        <div class="explainer-grid">
+          <div class="explainer-card" data-aos="fade-right">
+            <div class="explainer-icon">✍️</div>
+            <h3>1. Choose Your Emojis</h3>
+            <p>Pick up to 3 emojis that represent you. Type them as words separated by dots.</p>
+            <div class="explainer-example">
+              <code>rocket.fire.heart</code>
+            </div>
+          </div>
+
+          <div class="explainer-card" data-aos="fade-up">
+            <div class="explainer-icon">✨</div>
+            <h3>2. Get Your Visual Email</h3>
+            <p>Your handle automatically displays as beautiful emojis in KnexMail.</p>
+            <div class="explainer-example emoji-large">
+              <span class="emoji-result">🚀🔥❤️@knexmail.com</span>
+            </div>
+          </div>
+
+          <div class="explainer-card" data-aos="fade-left">
+            <div class="explainer-icon">🌐</div>
+            <h3>3. Works Everywhere</h3>
+            <p>Your email works with Gmail, Outlook, and all major email providers.</p>
+            <div class="explainer-example">
+              <span class="compatibility-check">✓ 99% Compatible</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Highlight -->
+      <div class="security-highlight" data-aos="fade-up">
+        <div class="security-content">
+          <div class="security-icon">🔒</div>
+          <div class="security-text">
+            <h3>Enhanced Security Built-In</h3>
+            <p>With 6.4 billion possible combinations, emoji handles are nearly impossible to guess or fake. Your unique combination protects you from phishing and impersonation.</p>
+          </div>
+        </div>
+        <div class="security-stats">
+          <div class="stat">
+            <div class="stat-number">1,854</div>
+            <div class="stat-label">Emojis Available</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">6.4B</div>
+            <div class="stat-label">Combinations</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">99%</div>
+            <div class="stat-label">Compatible</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular Emoji Categories -->
+      <div class="emoji-categories">
+        <h3 class="categories-title">Popular Emoji Categories</h3>
+        <div class="categories-grid">
+          <div class="category-chip">😀 Faces & Emotions</div>
+          <div class="category-chip">❤️ Hearts & Love</div>
+          <div class="category-chip">🐶 Animals & Nature</div>
+          <div class="category-chip">🍕 Food & Drink</div>
+          <div class="category-chip">⚽ Sports & Activities</div>
+          <div class="category-chip">🚀 Travel & Places</div>
+          <div class="category-chip">💎 Objects & Symbols</div>
+          <div class="category-chip">🇺🇸 Flags & Countries</div>
+        </div>
+      </div>
+
+      <!-- Interactive Examples -->
+      <div class="emoji-playground" data-aos="fade-up">
+        <h3 class="playground-title">Try Some Combinations</h3>
+        <div class="playground-grid">
+          <div class="combo-example">
+            <div class="combo-input">pizza.delivery</div>
+            <div class="combo-output">🍕🚚</div>
+          </div>
+          <div class="combo-example">
+            <div class="combo-input">world.traveler</div>
+            <div class="combo-output">🌍✈️</div>
+          </div>
+          <div class="combo-example">
+            <div class="combo-input">star.struck</div>
+            <div class="combo-output">⭐😍</div>
+          </div>
+          <div class="combo-example">
+            <div class="combo-input">ninja.warrior</div>
+            <div class="combo-output">🥷⚔️</div>
+          </div>
+          <div class="combo-example">
+            <div class="combo-input">party.time</div>
+            <div class="combo-output">🎉⏰</div>
+          </div>
+          <div class="combo-example">
+            <div class="combo-input">brain.power</div>
+            <div class="combo-output">🧠⚡</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="emoji-cta" data-aos="zoom-in">
+        <h3>Ready to Create Your Unique Email?</h3>
+        <p>Join the waitlist and be among the first to claim your emoji handle.</p>
+        <a href="https://knexmail.com/#waitlist" class="btn">
+          <span>Get Early Access</span>
+          <span class="btn-emoji">🚀</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AOS Animation Library -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+  </script>
+</body>
+</html>
