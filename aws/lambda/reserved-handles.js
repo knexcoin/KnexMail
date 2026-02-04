@@ -292,11 +292,9 @@ function validateHandleFormat(handle) {
     return { valid: false, normalized: null, error: 'Handle cannot contain consecutive dots (..)' };
   }
 
-  // Limit dots to max 3
-  const dotCount = (normalized.match(/\./g) || []).length;
-  if (dotCount > 3) {
-    return { valid: false, normalized: null, error: 'Handle cannot contain more than 3 dots' };
-  }
+  // No limit on dots - allow up to 3 emoji combinations
+  // Emoji handles can be long (e.g., flag.united.states.fire.heart = 2 emojis)
+  // Max length enforced above (64 chars) is sufficient constraint
 
   // Block IP address patterns
   if (/^\d+\.\d+\.\d+\.\d+$/.test(normalized)) {
@@ -430,6 +428,95 @@ function getReservationReason(handle) {
   return null;
 }
 
+/**
+ * Load emoji translation map from JSON
+ * In production, this should load from EMOJI_HANDLES.json
+ * For now, we'll include core emojis inline for Lambda deployment
+ */
+const EMOJI_MAP = require('./emoji-map.json');
+
+/**
+ * Translate handle to emoji display format
+ * @param {string} handle - The handle (e.g., "rocket.fire.heart")
+ * @returns {object} Translation result with emoji display
+ */
+function translateToEmoji(handle) {
+  if (!handle || typeof handle !== 'string') {
+    return { success: false, error: 'Invalid handle' };
+  }
+
+  const normalized = handle.toLowerCase().trim().replace(/^@/, '');
+
+  // Split by dots to get individual emoji names
+  const parts = normalized.split('.');
+
+  // Translate each part
+  const emojis = [];
+  const notFound = [];
+
+  for (const part of parts) {
+    if (EMOJI_MAP[part]) {
+      emojis.push(EMOJI_MAP[part]);
+    } else {
+      // This part doesn't map to an emoji
+      // Could be a regular handle like "john.doe"
+      notFound.push(part);
+    }
+  }
+
+  // If we found at least one emoji, return the translation
+  if (emojis.length > 0) {
+    return {
+      success: true,
+      handle: normalized,
+      emoji: emojis.join(''),
+      emojiCount: emojis.length,
+      parts: parts,
+      isEmojiHandle: notFound.length === 0
+    };
+  }
+
+  // No emojis found - this is a regular text handle
+  return {
+    success: true,
+    handle: normalized,
+    emoji: null,
+    emojiCount: 0,
+    parts: parts,
+    isEmojiHandle: false
+  };
+}
+
+/**
+ * Validate emoji handle rules
+ * - Maximum 3 emojis
+ * - Maximum 64 characters total
+ * @param {string} handle - The handle to validate
+ * @returns {object} Validation result
+ */
+function validateEmojiHandle(handle) {
+  const translation = translateToEmoji(handle);
+
+  if (!translation.success) {
+    return { valid: false, error: translation.error };
+  }
+
+  // If this is an emoji handle, enforce emoji-specific rules
+  if (translation.isEmojiHandle && translation.emojiCount > 3) {
+    return {
+      valid: false,
+      error: 'Maximum 3 emojis allowed per handle',
+      emojiCount: translation.emojiCount
+    };
+  }
+
+  // Length already validated in validateHandleFormat
+  return {
+    valid: true,
+    translation: translation
+  };
+}
+
 // Export for use in Lambda
 module.exports = {
   RESERVED_HANDLES,
@@ -437,7 +524,9 @@ module.exports = {
   getSuggestion,
   getReservedCount,
   getReservationReason,
-  validateHandleFormat  // Export new validation function
+  validateHandleFormat,
+  translateToEmoji,
+  validateEmojiHandle
 };
 
 // For debugging

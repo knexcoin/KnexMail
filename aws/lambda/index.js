@@ -2,7 +2,7 @@ const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 const crypto = require('crypto');
-const { isReserved, validateHandleFormat, getSuggestion, getReservationReason } = require('./reserved-handles');
+const { isReserved, validateHandleFormat, getSuggestion, getReservationReason, translateToEmoji, validateEmojiHandle } = require('./reserved-handles');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -1262,6 +1262,22 @@ async function handleSignup(event) {
       };
     }
 
+    // Validate emoji handle rules (max 3 emojis)
+    const emojiValidation = validateEmojiHandle(withoutAt);
+    if (!emojiValidation.valid) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: emojiValidation.error,
+          emojiCount: emojiValidation.emojiCount
+        })
+      };
+    }
+
+    // Get emoji translation for display
+    const emojiTranslation = translateToEmoji(withoutAt);
+
     if (!email || !isValidEmail(email)) {
       return {
         statusCode: 400,
@@ -1471,7 +1487,11 @@ async function handleSignup(event) {
       superReferralGiven: isGenesisReferral,
       ipHash, // SHA-256 hash of IP address
       createdAt: new Date().toISOString(),
-      vestingStartDate: rewardCalc.vested ? new Date().toISOString() : null
+      vestingStartDate: rewardCalc.vested ? new Date().toISOString() : null,
+      // Emoji translation fields
+      displayHandle: emojiTranslation.emoji || handle,
+      isEmojiHandle: emojiTranslation.isEmojiHandle || false,
+      emojiCount: emojiTranslation.emojiCount || 0
       // EMAIL VERIFICATION (commented out for now - uncomment when ready)
       // emailVerified: false,
       // verificationToken: crypto.randomBytes(32).toString('hex'),
@@ -1538,6 +1558,11 @@ async function handleSignup(event) {
       body: JSON.stringify({
         success: true,
         handle,
+        displayHandle: emojiTranslation.emoji || handle,
+        email: `${handle}@knexmail.com`,
+        displayEmail: emojiTranslation.emoji ? `${emojiTranslation.emoji}@knexmail.com` : `${handle}@knexmail.com`,
+        isEmojiHandle: emojiTranslation.isEmojiHandle || false,
+        emojiCount: emojiTranslation.emojiCount || 0,
         referralCode,
         referralLink: `https://knexmail.com?ref=${referralCode}`,
         referralCount: 0,
