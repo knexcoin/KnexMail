@@ -669,6 +669,115 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Emoji Reserve Card in Rewards Grid */
+.emoji-reserve-card {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.1)) !important;
+  border-color: rgba(138, 43, 226, 0.4) !important;
+}
+
+.emoji-combo-generator {
+  margin-top: 20px;
+}
+
+.combo-display {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.combo-emoji-large {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  line-height: 1;
+  animation: emojiPop 0.5s ease-out;
+}
+
+@keyframes emojiPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.combo-text-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.combo-email {
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #8a2be2, #9370db);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.combo-availability {
+  text-align: center;
+  padding: 8px 16px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 20px;
+  color: #00ff88;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.combo-availability.taken {
+  background: rgba(255, 100, 100, 0.1);
+  border-color: rgba(255, 100, 100, 0.3);
+  color: #ff6464;
+}
+
+.combo-generate-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.2));
+  border: 1px solid rgba(138, 43, 226, 0.4);
+  border-radius: 8px;
+  color: #b19cd9;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.combo-generate-btn:hover {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(75, 0, 130, 0.3));
+  border-color: rgba(138, 43, 226, 0.6);
+  transform: translateY(-2px);
+}
+
+.combo-copy-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #8a2be2, #9370db);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.combo-copy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(138, 43, 226, 0.4);
+}
+
+.combo-copy-btn:active {
+  transform: scale(0.98);
+}
   </style>
 </head>
 <body>
@@ -1065,140 +1174,7 @@
     </div>
   </section>
 
-  <!-- ============================================ -->
-  <!-- EMOJI RESERVATION SECTION -->
-  <!-- ============================================ -->
-
-  <section class="emoji-reservation" id="emoji-reservation">
-    <div class="container">
-      <!-- Section Header -->
-      <div class="section-header">
-        <span class="section-tag">// RESERVE YOUR HANDLE</span>
-        <h2 class="section-title">
-          Claim Your <span class="gradient-text">Emoji Handle</span> Today
-        </h2>
-        <p class="section-subtitle">
-          Be among the first to reserve your unique emoji email address. Choose from 1,854 emojis and create billions of combinations.
-        </p>
-      </div>
-
-      <!-- Two Input Methods Showcase -->
-      <div class="input-methods-showcase" data-aos="fade-up">
-        <div class="method-card desktop-method">
-          <div class="method-icon">💻</div>
-          <h3>Desktop Users</h3>
-          <p>Type emoji names with dots</p>
-          <div class="method-example">
-            <div class="example-input">rocket.fire</div>
-            <div class="example-arrow">→</div>
-            <div class="example-output">🚀🔥@knexmail.com</div>
-          </div>
-          <button class="method-btn" onclick="openEmojiReservation('desktop')">
-            <span>Browse All Emojis</span>
-            <span>📚</span>
-          </button>
-        </div>
-
-        <div class="method-card mobile-method">
-          <div class="method-icon">📱</div>
-          <h3>Mobile Users</h3>
-          <p>Input emojis directly from keyboard</p>
-          <div class="method-example">
-            <div class="example-input">🚀🔥</div>
-            <div class="example-arrow">→</div>
-            <div class="example-output">🚀🔥@knexmail.com</div>
-          </div>
-          <button class="method-btn" onclick="openEmojiReservation('mobile')">
-            <span>Start Building</span>
-            <span>✨</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Quick Stats -->
-      <div class="reservation-stats" data-aos="fade-up" data-aos-delay="200">
-        <div class="stat-badge">
-          <span class="stat-icon">🎨</span>
-          <div class="stat-info">
-            <div class="stat-number">1,854</div>
-            <div class="stat-label">Unique Emojis</div>
-          </div>
-        </div>
-        <div class="stat-badge">
-          <span class="stat-icon">🔢</span>
-          <div class="stat-info">
-            <div class="stat-number">1-3</div>
-            <div class="stat-label">Emojis Per Handle</div>
-          </div>
-        </div>
-        <div class="stat-badge">
-          <span class="stat-icon">🌐</span>
-          <div class="stat-info">
-            <div class="stat-number">99%</div>
-            <div class="stat-label">Compatible</div>
-          </div>
-        </div>
-        <div class="stat-badge">
-          <span class="stat-icon">🔒</span>
-          <div class="stat-info">
-            <div class="stat-number">6.4B</div>
-            <div class="stat-label">Combinations</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Popular Combinations -->
-      <div class="popular-combos" data-aos="fade-up" data-aos-delay="300">
-        <h3 class="combos-title">Popular Combinations</h3>
-        <div class="combos-grid">
-          <div class="combo-item" onclick="openEmojiReservationWithHandle('rocket.fire')">
-            <div class="combo-emoji">🚀🔥</div>
-            <div class="combo-name">rocket.fire</div>
-            <div class="combo-tag">Tech</div>
-          </div>
-          <div class="combo-item" onclick="openEmojiReservationWithHandle('diamond.hands')">
-            <div class="combo-emoji">💎🙌</div>
-            <div class="combo-name">diamond.hands</div>
-            <div class="combo-tag">Crypto</div>
-          </div>
-          <div class="combo-item" onclick="openEmojiReservationWithHandle('coffee.heart')">
-            <div class="combo-emoji">☕❤️</div>
-            <div class="combo-name">coffee.heart</div>
-            <div class="combo-tag">Lifestyle</div>
-          </div>
-          <div class="combo-item" onclick="openEmojiReservationWithHandle('brain.power')">
-            <div class="combo-emoji">🧠⚡</div>
-            <div class="combo-name">brain.power</div>
-            <div class="combo-tag">Smart</div>
-          </div>
-          <div class="combo-item" onclick="openEmojiReservationWithHandle('music.love')">
-            <div class="combo-emoji">🎵😍</div>
-            <div class="combo-name">music.love</div>
-            <div class="combo-tag">Creative</div>
-          </div>
-          <div class="combo-item" onclick="openEmojiReservationWithHandle('world.traveler')">
-            <div class="combo-emoji">🌍✈️</div>
-            <div class="combo-name">world.traveler</div>
-            <div class="combo-tag">Adventure</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main CTA -->
-      <div class="reservation-cta" data-aos="zoom-in">
-        <button class="btn-large btn-gradient" onclick="openEmojiReservation()">
-          <span class="btn-text">Build Your Emoji Handle</span>
-          <span class="btn-emoji">✨</span>
-        </button>
-        <p class="cta-note">Free to reserve • First come, first served</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================ -->
-  <!-- FULL-SCREEN EMOJI RESERVATION MODAL -->
-  <!-- ============================================ -->
-
+  <!-- Emoji Reservation Modal (hidden by default) -->
   <div class="emoji-reservation-modal" id="emojiReservationModal">
     <div class="reservation-modal-overlay" onclick="closeEmojiReservation()"></div>
     <div class="reservation-modal-container">
@@ -1277,6 +1253,26 @@
           <div class="reward-amount">0.1-20 <span class="reward-unit">KNEX</span></div>
           <div class="reward-label">Auto-Adjusting Rewards</div>
           <div class="reward-desc">Live ticker adjusts based on signups</div>
+        </div>
+
+        <div class="reward-card emoji-reserve-card">
+          <div class="reward-badge">✨ EMOJI HANDLES</div>
+          <div class="emoji-combo-generator">
+            <div class="combo-display" id="randomComboDisplay">
+              <div class="combo-emoji-large" id="comboEmojis">🚀🔥</div>
+              <div class="combo-text-name" id="comboTextName">rocket.fire</div>
+              <div class="combo-email" id="comboEmail">🚀🔥@knexmail.com</div>
+            </div>
+            <div class="combo-availability" id="comboAvailability">
+              ✓ Available
+            </div>
+            <button class="combo-generate-btn" onclick="generateRandomCombo()">
+              🎲 Generate New
+            </button>
+            <button class="combo-copy-btn" onclick="copyComboToInputs()">
+              📋 Reserve This Handle
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1919,6 +1915,193 @@ document.addEventListener('keydown', function(e) {
     closeEmojiReservation();
   }
 });
+
+// ===== EMOJI COMBO GENERATOR =====
+
+// Popular 2-emoji combinations (curated list)
+const popularCombos = [
+  { name: 'rocket.fire', emojis: '🚀🔥', category: 'Tech' },
+  { name: 'diamond.hands', emojis: '💎🙌', category: 'Crypto' },
+  { name: 'coffee.heart', emojis: '☕❤️', category: 'Lifestyle' },
+  { name: 'brain.power', emojis: '🧠⚡', category: 'Smart' },
+  { name: 'music.love', emojis: '🎵😍', category: 'Creative' },
+  { name: 'world.traveler', emojis: '🌍✈️', category: 'Adventure' },
+  { name: 'pizza.party', emojis: '🍕🎉', category: 'Fun' },
+  { name: 'star.struck', emojis: '⭐😍', category: 'Celebrity' },
+  { name: 'ninja.warrior', emojis: '🥷⚔️', category: 'Gaming' },
+  { name: 'money.bag', emojis: '💰💼', category: 'Business' },
+  { name: 'sun.beach', emojis: '☀️🏖️', category: 'Summer' },
+  { name: 'rainbow.unicorn', emojis: '🌈🦄', category: 'Magic' },
+  { name: 'crown.king', emojis: '👑🤴', category: 'Royalty' },
+  { name: 'fire.dragon', emojis: '🔥🐉', category: 'Fantasy' },
+  { name: 'moon.stars', emojis: '🌙⭐', category: 'Night' },
+  { name: 'book.nerd', emojis: '📚🤓', category: 'Study' },
+  { name: 'workout.flex', emojis: '💪🏋️', category: 'Fitness' },
+  { name: 'camera.photo', emojis: '📷📸', category: 'Photography' },
+  { name: 'game.controller', emojis: '🎮🕹️', category: 'Gaming' },
+  { name: 'chef.cooking', emojis: '👨‍🍳🍳', category: 'Cooking' },
+  { name: 'laptop.code', emojis: '💻👨‍💻', category: 'Developer' },
+  { name: 'mountain.hiking', emojis: '⛰️🥾', category: 'Outdoor' },
+  { name: 'art.paint', emojis: '🎨🖌️', category: 'Artist' },
+  { name: 'plant.green', emojis: '🌱🌿', category: 'Nature' },
+  { name: 'zen.peace', emojis: '🧘‍♂️☮️', category: 'Meditation' },
+  { name: 'tech.robot', emojis: '🤖⚙️', category: 'AI' },
+  { name: 'space.alien', emojis: '🚀👽', category: 'SciFi' },
+  { name: 'ocean.wave', emojis: '🌊🏄', category: 'Surfing' },
+  { name: 'snow.ski', emojis: '❄️⛷️', category: 'Winter' },
+  { name: 'desert.cactus', emojis: '🏜️🌵', category: 'Southwest' }
+];
+
+// Extended emoji map (top 200 most popular emojis for random generation)
+const topEmojis = {
+  'rocket': '🚀', 'fire': '🔥', 'heart': '❤️', 'star': '⭐', 'diamond': '💎',
+  'hands': '🙌', 'coffee': '☕', 'brain': '🧠', 'power': '⚡', 'music': '🎵',
+  'love': '😍', 'world': '🌍', 'traveler': '✈️', 'pizza': '🍕', 'party': '🎉',
+  'struck': '😍', 'ninja': '🥷', 'warrior': '⚔️', 'money': '💰', 'bag': '💼',
+  'sun': '☀️', 'beach': '🏖️', 'rainbow': '🌈', 'unicorn': '🦄', 'crown': '👑',
+  'king': '🤴', 'dragon': '🐉', 'moon': '🌙', 'book': '📚', 'nerd': '🤓',
+  'workout': '💪', 'flex': '🏋️', 'camera': '📷', 'photo': '📸', 'game': '🎮',
+  'controller': '🕹️', 'chef': '👨‍🍳', 'cooking': '🍳', 'laptop': '💻', 'code': '👨‍💻',
+  'mountain': '⛰️', 'hiking': '🥾', 'art': '🎨', 'paint': '🖌️', 'plant': '🌱',
+  'green': '🌿', 'zen': '🧘‍♂️', 'peace': '☮️', 'tech': '🤖', 'robot': '⚙️',
+  'space': '🚀', 'alien': '👽', 'ocean': '🌊', 'wave': '🏄', 'snow': '❄️',
+  'ski': '⛷️', 'desert': '🏜️', 'cactus': '🌵', 'cat': '🐱', 'dog': '🐶',
+  'panda': '🐼', 'tiger': '🐯', 'lion': '🦁', 'bear': '🐻', 'koala': '🐨',
+  'monkey': '🐵', 'fox': '🦊', 'wolf': '🐺', 'owl': '🦉', 'eagle': '🦅',
+  'butterfly': '🦋', 'bee': '🐝', 'shark': '🦈', 'whale': '🐋', 'dolphin': '🐬',
+  'tree': '🌲', 'flower': '🌸', 'rose': '🌹', 'tulip': '🌷', 'cherry': '🌸',
+  'leaf': '🍃', 'maple': '🍁', 'sparkles': '✨', 'boom': '💥', 'zap': '⚡',
+  'thunder': '⚡', 'cloud': '☁️', 'storm': '⛈️', 'tornado': '🌪️', 'wind': '💨',
+  'gem': '💎', 'ring': '💍', 'trophy': '🏆', 'medal': '🏅', 'sports': '⚽',
+  'basketball': '🏀', 'football': '🏈', 'tennis': '🎾', 'baseball': '⚾', 'golf': '⛳',
+  'bike': '🚴', 'swim': '🏊', 'run': '🏃', 'dance': '💃', 'sing': '🎤',
+  'guitar': '🎸', 'piano': '🎹', 'drum': '🥁', 'trumpet': '🎺', 'violin': '🎻',
+  'mic': '🎤', 'headphones': '🎧', 'radio': '📻', 'tv': '📺', 'film': '🎬',
+  'popcorn': '🍿', 'clapper': '🎬', 'ticket': '🎫', 'mask': '🎭', 'circus': '🎪',
+  'balloon': '🎈', 'gift': '🎁', 'confetti': '🎊', 'tada': '🎉', 'flags': '🎏',
+  'wind.chime': '🎐', 'red.envelope': '🧧', 'ribbon': '🎀', 'wrapped': '🎁',
+  'burger': '🍔', 'fries': '🍟', 'hotdog': '🌭', 'taco': '🌮', 'burrito': '🌯',
+  'sushi': '🍣', 'ramen': '🍜', 'curry': '🍛', 'rice': '🍚', 'noodles': '🍝',
+  'pasta': '🍝', 'bread': '🍞', 'croissant': '🥐', 'bagel': '🥯', 'donut': '🍩',
+  'cookie': '🍪', 'cake': '🎂', 'cupcake': '🧁', 'pie': '🥧', 'chocolate': '🍫',
+  'candy': '🍬', 'lollipop': '🍭', 'honey': '🍯', 'milk': '🥛', 'beer': '🍺',
+  'wine': '🍷', 'cocktail': '🍹', 'champagne': '🍾', 'sake': '🍶', 'tea': '🍵',
+  'juice': '🧃', 'bubble.tea': '🧋', 'ice.cream': '🍦', 'shaved.ice': '🍧',
+  'apple': '🍎', 'orange': '🍊', 'lemon': '🍋', 'banana': '🍌', 'watermelon': '🍉',
+  'grapes': '🍇', 'strawberry': '🍓', 'melon': '🍈', 'cherries': '🍒', 'peach': '🍑',
+  'pear': '🍐', 'pineapple': '🍍', 'kiwi': '🥝', 'avocado': '🥑', 'tomato': '🍅',
+  'eggplant': '🍆', 'broccoli': '🥦', 'carrot': '🥕', 'corn': '🌽', 'pepper': '🌶️'
+};
+
+let currentCombo = { name: 'rocket.fire', emojis: '🚀🔥', email: '🚀🔥@knexmail.com' };
+let usedCombos = new Set();
+
+// Generate random emoji combination
+function generateRandomCombo() {
+  // Choose from popular combos with 70% probability, or generate truly random
+  let combo;
+
+  if (Math.random() < 0.7) {
+    // Use popular combo
+    const available = popularCombos.filter(c => !usedCombos.has(c.name));
+    if (available.length === 0) {
+      usedCombos.clear(); // Reset if all used
+    }
+    const availableList = available.length > 0 ? available : popularCombos;
+    combo = availableList[Math.floor(Math.random() * availableList.length)];
+    usedCombos.add(combo.name);
+  } else {
+    // Generate random combo
+    const emojiKeys = Object.keys(topEmojis);
+    const emoji1Key = emojiKeys[Math.floor(Math.random() * emojiKeys.length)];
+    let emoji2Key;
+    do {
+      emoji2Key = emojiKeys[Math.floor(Math.random() * emojiKeys.length)];
+    } while (emoji2Key === emoji1Key);
+
+    combo = {
+      name: `${emoji1Key}.${emoji2Key}`,
+      emojis: topEmojis[emoji1Key] + topEmojis[emoji2Key]
+    };
+  }
+
+  // Update display
+  currentCombo = {
+    name: combo.name,
+    emojis: combo.emojis,
+    email: `${combo.emojis}@knexmail.com`
+  };
+
+  document.getElementById('comboEmojis').textContent = combo.emojis;
+  document.getElementById('comboTextName').textContent = combo.name;
+  document.getElementById('comboEmail').textContent = `${combo.emojis}@knexmail.com`;
+
+  // Randomly show as available (90% chance) or taken (10% chance) for demo
+  const isAvailable = Math.random() < 0.9;
+  const availabilityEl = document.getElementById('comboAvailability');
+
+  if (isAvailable) {
+    availabilityEl.textContent = '✓ Available';
+    availabilityEl.className = 'combo-availability';
+  } else {
+    availabilityEl.textContent = '✗ Taken - Generate Another';
+    availabilityEl.className = 'combo-availability taken';
+  }
+
+  // Track analytics
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'combo_generated', {
+      'event_category': 'engagement',
+      'event_label': combo.name
+    });
+  }
+}
+
+// Copy combo to input fields
+function copyComboToInputs() {
+  const availabilityEl = document.getElementById('comboAvailability');
+
+  // Check if taken
+  if (availabilityEl.className.includes('taken')) {
+    alert('This handle is taken! Generate a new one.');
+    return;
+  }
+
+  // Find the handle input in waitlist form
+  const handleInput = document.getElementById('handleInput');
+
+  if (handleInput) {
+    handleInput.value = currentCombo.name;
+
+    // Smooth scroll to waitlist
+    const waitlistSection = document.getElementById('waitlist');
+    if (waitlistSection) {
+      waitlistSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Flash success
+    availabilityEl.textContent = '✓ Copied to Waitlist Form!';
+    availabilityEl.style.background = 'rgba(0, 255, 136, 0.2)';
+
+    setTimeout(() => {
+      availabilityEl.textContent = '✓ Available';
+      availabilityEl.style.background = 'rgba(0, 255, 136, 0.1)';
+    }, 2000);
+
+    // Track analytics
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'combo_reserved', {
+        'event_category': 'conversion',
+        'event_label': currentCombo.name
+      });
+    }
+  }
+}
+
+// Generate initial combo on page load
+if (document.getElementById('randomComboDisplay')) {
+  generateRandomCombo();
+}
   </script>
 </body>
 </html>
