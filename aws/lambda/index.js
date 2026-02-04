@@ -19,18 +19,33 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
-// GENESIS 100 Constants
+// ============================================================================
+// DYNAMIC REWARD ALGORITHM - 50M KNEX Budget for 500M Users
+// ============================================================================
+// VISION: "When we get this right. Not if."
+// Target: 500M crypto users onboard before end of year
+// Budget: 50M KNEX (16.1% of 310M max supply)
+// Strategy: Auto-adjusting rewards with vesting for sustainable viral growth
+// ============================================================================
 const GENESIS_LIMIT = 100;
 const GENESIS_SIGNUP_BONUS = 10000;
 const GENESIS_SUPER_REFERRAL_BONUS = 10000;
 const GENESIS_SUPER_REFERRAL_LIMIT = 5;
-const NORMAL_SIGNUP_BONUS = 10;
-const NORMAL_REFERRAL_BONUS = 5;
 const SHARE_BONUS = 1; // +1 KNEX for sharing
 
-// Admin reservation
-const ADMIN_HANDLE = '@admin';
-const ADMIN_IP = '100.35.193.141';
+// Dynamic reward budget (50M KNEX = 16.7% of 310M total supply)
+const TOTAL_REWARD_BUDGET = 50000000; // 50 Million KNEX
+const GENESIS_ALLOCATED = GENESIS_LIMIT * GENESIS_SIGNUP_BONUS; // 1M KNEX for Genesis
+const DYNAMIC_BUDGET = TOTAL_REWARD_BUDGET - GENESIS_ALLOCATED; // 49M KNEX for dynamic rewards
+
+// Vesting configuration (for rewards > 100 KNEX)
+const VESTING_THRESHOLD = 100;
+const VESTING_SCHEDULE = {
+  immediate: 0.25,    // 25% unlocked immediately
+  month1: 0.25,       // 25% after 30 days of activity
+  month2: 0.25,       // 25% after 60 days
+  month3: 0.25        // 25% after 90 days
+};
 
 // Referral reward tiers
 const REWARD_TIERS = [
@@ -39,6 +54,110 @@ const REWARD_TIERS = [
   { count: 25, reward: '1 Year Premium Free', icon: '💎' },
   { count: 50, reward: 'Lifetime VIP Status', icon: '👑' }
 ];
+
+// Calculate dynamic reward based on user number and remaining budget
+function calculateDynamicReward(userNumber, totalUsers, budgetRemaining) {
+  // GENESIS 100 - Always fixed at 10,000 KNEX
+  if (userNumber <= GENESIS_LIMIT) {
+    return {
+      baseReward: GENESIS_SIGNUP_BONUS,
+      tier: 'GENESIS',
+      vested: false,
+      referralBonus: GENESIS_SUPER_REFERRAL_BONUS
+    };
+  }
+
+  // Calculate exponential decay factor
+  // Early users get significantly more, tapers off as user base grows
+  const progress = (userNumber - GENESIS_LIMIT) / (500000000 - GENESIS_LIMIT); // 500M target
+  const decayFactor = Math.exp(-4 * progress); // Exponential decay
+
+  // Calculate base allocation per remaining user
+  const usersRemaining = Math.max(500000000 - userNumber, 1);
+  const budgetPerUser = budgetRemaining / usersRemaining;
+
+  // Tiered multipliers based on user milestones
+  let multiplier;
+  let tier;
+
+  if (userNumber <= 10000) {
+    // Users 101-10,000: Ultra Early Adopters (250 KNEX avg)
+    multiplier = 3.0;
+    tier = 'ULTRA_EARLY';
+  } else if (userNumber <= 100000) {
+    // Users 10,001-100,000: Early Adopters (80 KNEX avg)
+    multiplier = 1.8;
+    tier = 'EARLY';
+  } else if (userNumber <= 1000000) {
+    // Users 100,001-1M: Growth Phase (20 KNEX avg)
+    multiplier = 1.2;
+    tier = 'GROWTH';
+  } else if (userNumber <= 10000000) {
+    // Users 1M-10M: Mainstream (5 KNEX avg)
+    multiplier = 0.8;
+    tier = 'MAINSTREAM';
+  } else if (userNumber <= 100000000) {
+    // Users 10M-100M: Mass Adoption (1 KNEX avg)
+    multiplier = 0.4;
+    tier = 'MASS';
+  } else {
+    // Users 100M+: Sustainability Phase (0.1-0.5 KNEX)
+    multiplier = 0.2;
+    tier = 'SUSTAINABILITY';
+  }
+
+  // Calculate final reward with decay
+  let baseReward = budgetPerUser * multiplier * decayFactor;
+
+  // Floor at 0.1 KNEX minimum (maintain psychological value)
+  baseReward = Math.max(baseReward, 0.1);
+
+  // Round to 2 decimal places
+  baseReward = Math.round(baseReward * 100) / 100;
+
+  // Determine if vesting applies
+  const requiresVesting = baseReward > VESTING_THRESHOLD;
+
+  // Referral bonus is 5% of signup bonus (minimum 0.05 KNEX)
+  const referralBonus = Math.max(baseReward * 0.05, 0.05);
+
+  return {
+    baseReward,
+    tier,
+    vested: requiresVesting,
+    referralBonus: Math.round(referralBonus * 100) / 100,
+    vestingSchedule: requiresVesting ? VESTING_SCHEDULE : null
+  };
+}
+
+// Get current budget status
+async function getBudgetStatus() {
+  const totalCount = await getTotalWaitlistCount();
+
+  // Calculate total KNEX distributed so far
+  const allUsers = await docClient.send(new ScanCommand({
+    TableName: TABLE_NAME,
+    ProjectionExpression: 'knexEarned',
+    FilterExpression: 'attribute_not_exists(reserved) OR reserved = :false',
+    ExpressionAttributeValues: {
+      ':false': false
+    }
+  }));
+
+  const totalDistributed = (allUsers.Items || []).reduce((sum, user) => {
+    return sum + (user.knexEarned || 0);
+  }, 0);
+
+  const budgetRemaining = TOTAL_REWARD_BUDGET - totalDistributed;
+
+  return {
+    totalBudget: TOTAL_REWARD_BUDGET,
+    totalDistributed,
+    budgetRemaining,
+    totalUsers: totalCount,
+    utilizationPercent: Math.round((totalDistributed / TOTAL_REWARD_BUDGET) * 100 * 100) / 100
+  };
+}
 
 // Generate unique referral code: KNEX-XXXXXX
 function generateReferralCode() {
@@ -169,6 +288,20 @@ async function getGenesisCount() {
   return result.Count || 0;
 }
 
+// Get total waitlist count (all real users, excluding reserved handles)
+async function getTotalWaitlistCount() {
+  const result = await docClient.send(new ScanCommand({
+    TableName: TABLE_NAME,
+    FilterExpression: 'attribute_not_exists(reserved) OR reserved = :false',
+    ExpressionAttributeValues: {
+      ':false': false
+    },
+    Select: 'COUNT'
+  }));
+
+  return result.Count || 0;
+}
+
 // Check if GENESIS window is still open
 async function isGenesisWindowOpen() {
   const count = await getGenesisCount();
@@ -223,9 +356,14 @@ function getWelcomeEmailHtml(handle, email, referralCode, referralLink) {
               <p style="margin: 0 0 15px; color: #e0e0e0; font-size: 16px; line-height: 1.7;">
                 Congratulations! You've successfully reserved <strong style="color: #00d4ff;">${handle}</strong> on KnexMail.
               </p>
-              <p style="margin: 0 0 20px; color: #b0b0b0; font-size: 15px; line-height: 1.7;">
+              <p style="margin: 0 0 15px; color: #b0b0b0; font-size: 15px; line-height: 1.7;">
                 When we launch, <strong style="color: #ffffff;">${email}</strong> will become:
               </p>
+              <div style="background: rgba(0, 255, 136, 0.1); border-left: 4px solid #00ff88; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+                <p style="margin: 0; color: #00ff88; font-size: 14px; line-height: 1.6;">
+                  <strong>💰 Dynamic Rewards Active!</strong> Your signup bonus adjusts based on real-time user growth. Early adopters get significantly more KNEX—join now to maximize your rewards before they decrease!
+                </p>
+              </div>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td style="padding: 10px 0;">
@@ -899,6 +1037,7 @@ exports.handler = async (event) => {
 async function handleGetGenesisStatus(event) {
   try {
     const genesisCount = await getGenesisCount();
+    const totalCount = await getTotalWaitlistCount();
     const isOpen = genesisCount < GENESIS_LIMIT;
     const spotsLeft = Math.max(0, GENESIS_LIMIT - genesisCount);
 
@@ -908,6 +1047,7 @@ async function handleGetGenesisStatus(event) {
       body: JSON.stringify({
         genesisCount,
         genesisLimit: GENESIS_LIMIT,
+        totalWaitlistCount: totalCount,
         isOpen,
         spotsLeft,
         windowClosed: !isOpen
@@ -1100,30 +1240,16 @@ async function handleSignup(event) {
     const clientIP = getClientIP(event);
     const ipHash = hashIP(clientIP);
 
-    // Admin reservation check - only admin@knexmail.com from specific IP
-    if (handle === ADMIN_HANDLE) {
-      if (clientIP !== ADMIN_IP) {
-        return {
-          statusCode: 403,
-          headers,
-          body: JSON.stringify({
-            error: 'This handle is reserved and not available'
-          })
-        };
-      }
-      // Admin can proceed from correct IP
-    } else {
-      // For non-admin users, check IP usage (1 signup per IP)
-      const ipAlreadyUsed = await isIPUsed(ipHash);
-      if (ipAlreadyUsed) {
-        return {
-          statusCode: 403,
-          headers,
-          body: JSON.stringify({
-            error: 'Only one signup allowed per IP address. If you already signed up, check your email for your referral code.'
-          })
-        };
-      }
+    // Check IP usage (1 signup per IP)
+    const ipAlreadyUsed = await isIPUsed(ipHash);
+    if (ipAlreadyUsed) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'Only one signup allowed per IP address. If you already signed up, check your email for your referral code.'
+        })
+      };
     }
 
     // Check if handle already exists
@@ -1216,12 +1342,24 @@ async function handleSignup(event) {
       attempts++;
     }
 
+    // Get current budget status for dynamic reward calculation
+    const budgetStatus = await getBudgetStatus();
+    const totalUsers = budgetStatus.totalUsers;
+    const nextUserNumber = totalUsers + 1;
+
+    // Calculate dynamic reward for this user
+    const rewardCalc = calculateDynamicReward(
+      nextUserNumber,
+      totalUsers,
+      budgetStatus.budgetRemaining
+    );
+
     // Validate referral code if provided
     let referredBy = null;
     let referrerToNotify = null;
     let isGenesisReferral = false;
-    let newUserSignupBonus = genesisWindowOpen ? GENESIS_SIGNUP_BONUS : NORMAL_SIGNUP_BONUS;
-    let referrerBonus = NORMAL_REFERRAL_BONUS;
+    let newUserSignupBonus = rewardCalc.baseReward;
+    let referrerBonus = rewardCalc.referralBonus;
 
     if (referral && referral.startsWith('KNEX-')) {
       const referrerQuery = await docClient.send(new QueryCommand({
@@ -1261,7 +1399,7 @@ async function handleSignup(event) {
               }
             }));
           } else {
-            // Normal referral
+            // Dynamic referral bonus (uses calculated referrerBonus)
             await docClient.send(new UpdateCommand({
               TableName: TABLE_NAME,
               Key: { handle: referrer.handle },
@@ -1269,7 +1407,7 @@ async function handleSignup(event) {
               ExpressionAttributeValues: {
                 ':inc': 1,
                 ':zero': 0,
-                ':bonus': NORMAL_REFERRAL_BONUS
+                ':bonus': referrerBonus
               }
             }));
           }
@@ -1281,7 +1419,7 @@ async function handleSignup(event) {
     const isGenesisMember = genesisWindowOpen;
     const genesisNumber = isGenesisMember ? genesisCount + 1 : null;
 
-    // Create new waitlist entry
+    // Create new waitlist entry with vesting data
     const newUser = {
       handle,
       email,
@@ -1292,9 +1430,14 @@ async function handleSignup(event) {
       genesisNumber: genesisNumber,
       genesisReferralCount: 0,
       knexEarned: newUserSignupBonus,
+      knexVested: rewardCalc.vested,
+      knexImmediate: rewardCalc.vested ? Math.round(newUserSignupBonus * VESTING_SCHEDULE.immediate * 100) / 100 : newUserSignupBonus,
+      rewardTier: rewardCalc.tier,
+      userNumber: nextUserNumber,
       superReferralGiven: isGenesisReferral,
       ipHash, // SHA-256 hash of IP address
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      vestingStartDate: rewardCalc.vested ? new Date().toISOString() : null
       // EMAIL VERIFICATION (commented out for now - uncomment when ready)
       // emailVerified: false,
       // verificationToken: crypto.randomBytes(32).toString('hex'),
@@ -1352,7 +1495,7 @@ async function handleSignup(event) {
       }
     }
 
-    // Return success with referral code, GENESIS info, and tier info
+    // Return success with referral code, GENESIS info, tier info, and vesting details
     const tierProgress = getTierProgress(0);
 
     return {
@@ -1366,9 +1509,19 @@ async function handleSignup(event) {
         referralCount: 0,
         genesisStatus: isGenesisMember,
         genesisNumber: genesisNumber,
+        userNumber: nextUserNumber,
+        rewardTier: rewardCalc.tier,
         knexEarned: newUserSignupBonus,
+        knexImmediate: rewardCalc.vested ? Math.round(newUserSignupBonus * VESTING_SCHEDULE.immediate * 100) / 100 : newUserSignupBonus,
+        vested: rewardCalc.vested,
+        vestingSchedule: rewardCalc.vestingSchedule,
         superReferralGiven: isGenesisReferral,
         tierProgress,
+        budgetStatus: {
+          totalBudget: budgetStatus.totalBudget,
+          budgetRemaining: budgetStatus.budgetRemaining,
+          utilizationPercent: budgetStatus.utilizationPercent
+        },
         message: referredBy
           ? 'Welcome! You were referred by a friend.'
           : 'Welcome to the KnexMail waitlist!'
