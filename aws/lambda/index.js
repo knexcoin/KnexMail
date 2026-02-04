@@ -2,6 +2,7 @@ const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand, UpdateCommand, QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 const crypto = require('crypto');
+const { isReserved, validateHandleFormat, getSuggestion, getReservationReason } = require('./reserved-handles');
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -196,15 +197,30 @@ function isValidEmail(email) {
   return ALLOWED_EMAIL_DOMAINS.includes(domain);
 }
 
-// Validate handle format (@username)
+// Validate handle format (uses strict a-z, 0-9, dot only validation)
 function isValidHandle(handle) {
-  const handleRegex = /^@[a-zA-Z0-9_]{1,30}$/;
-  return handleRegex.test(handle);
+  // Remove @ prefix for validation
+  const withoutAt = handle.replace(/^@/, '');
+  const validation = validateHandleFormat(withoutAt);
+  return validation.valid;
 }
 
 // Normalize handle (lowercase, ensure @ prefix)
 function normalizeHandle(handle) {
   let normalized = handle.trim().toLowerCase();
+
+  // Remove @ prefix temporarily for validation
+  const withoutAt = normalized.replace(/^@/, '');
+
+  // Validate and get normalized version
+  const validation = validateHandleFormat(withoutAt);
+
+  // Return with @ prefix
+  if (validation.valid && validation.normalized) {
+    return '@' + validation.normalized;
+  }
+
+  // Fallback: just add @ if not present
   if (!normalized.startsWith('@')) {
     normalized = '@' + normalized;
   }
@@ -1217,13 +1233,31 @@ async function handleSignup(event) {
     email = (email || '').trim().toLowerCase();
     referral = (referral || '').trim().toUpperCase();
 
-    // Validation
-    if (!handle || !isValidHandle(handle)) {
+    // Validation - check format first
+    const withoutAt = handle.replace(/^@/, '');
+    const validation = validateHandleFormat(withoutAt);
+
+    if (!validation.valid) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
-          error: 'Invalid handle. Use @username format (letters, numbers, underscores only)'
+          error: validation.error || 'Invalid handle format',
+          suggestion: validation.error ? getSuggestion(withoutAt) : null
+        })
+      };
+    }
+
+    // Check if handle is reserved
+    if (isReserved(withoutAt)) {
+      const reason = getReservationReason(withoutAt);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'Handle is not available',
+          reason: reason,
+          suggestion: getSuggestion(withoutAt)
         })
       };
     }
