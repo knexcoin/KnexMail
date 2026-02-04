@@ -848,6 +848,31 @@ async function handleSignup(event) {
       };
     }
 
+    // Check if email is already used (scan for duplicate emails)
+    const emailCheck = await docClient.send(new ScanCommand({
+      TableName: TABLE_NAME,
+      FilterExpression: 'email = :email AND #reserved <> :true',
+      ExpressionAttributeNames: {
+        '#reserved': 'reserved'
+      },
+      ExpressionAttributeValues: {
+        ':email': email,
+        ':true': true
+      },
+      Limit: 1
+    }));
+
+    if (emailCheck.Items && emailCheck.Items.length > 0) {
+      const existingHandle = emailCheck.Items[0].handle;
+      return {
+        statusCode: 409,
+        headers,
+        body: JSON.stringify({
+          error: `This email is already registered with handle ${existingHandle}. Each email can only reserve one handle.`
+        })
+      };
+    }
+
     // Generate unique referral code (with collision check)
     let referralCode;
     let isUnique = false;
@@ -889,12 +914,15 @@ async function handleSignup(event) {
           referredBy = referral;
           referrerToNotify = referrer;
 
-          // Increment referrer's count
+          // Increment referrer's count (handle case where referralCount doesn't exist yet)
           await docClient.send(new UpdateCommand({
             TableName: TABLE_NAME,
             Key: { handle: referrer.handle },
-            UpdateExpression: 'SET referralCount = referralCount + :inc',
-            ExpressionAttributeValues: { ':inc': 1 }
+            UpdateExpression: 'SET referralCount = if_not_exists(referralCount, :zero) + :inc',
+            ExpressionAttributeValues: {
+              ':inc': 1,
+              ':zero': 0
+            }
           }));
         }
       }
