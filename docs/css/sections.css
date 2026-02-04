@@ -2021,11 +2021,84 @@
 
 /* ============ COUNTDOWN TIMER ============ */
 .genesis-countdown {
+  position: relative;
   margin-top: var(--space-4);
   padding: var(--space-4);
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid var(--neon-yellow);
   border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.genesis-countdown.minimized {
+  padding: var(--space-2) var(--space-4);
+}
+
+.countdown-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--neon-yellow);
+  border-radius: 50%;
+  color: var(--neon-yellow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  z-index: 10;
+}
+
+.countdown-toggle:hover {
+  background: var(--neon-yellow);
+  color: var(--black);
+  transform: scale(1.1);
+}
+
+.countdown-toggle .toggle-icon {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.3s ease;
+}
+
+.genesis-countdown.minimized .countdown-toggle .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.countdown-full {
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.genesis-countdown.minimized .countdown-full {
+  display: none;
+}
+
+.countdown-mini {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.genesis-countdown.minimized .countdown-mini {
+  display: flex;
+}
+
+.mini-label {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neon-yellow);
+}
+
+.mini-time {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neon);
 }
 
 .countdown-label {

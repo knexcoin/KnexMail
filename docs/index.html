@@ -112,26 +112,39 @@
       </div>
 
       <div class="genesis-countdown" id="genesisCountdown" style="display:none;">
-        <p class="countdown-label">⏰ GENESIS STARTS IN:</p>
-        <div class="countdown-timer">
-          <div class="time-block">
-            <span class="time-value" id="countDays">00</span>
-            <span class="time-label">Days</span>
+        <button class="countdown-toggle" id="countdownToggle" title="Minimize/Expand">
+          <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <div class="countdown-full" id="countdownFull">
+          <p class="countdown-label">⏰ GENESIS STARTS IN:</p>
+          <div class="countdown-timer">
+            <div class="time-block">
+              <span class="time-value" id="countDays">00</span>
+              <span class="time-label">Days</span>
+            </div>
+            <div class="time-block">
+              <span class="time-value" id="countHours">00</span>
+              <span class="time-label">Hours</span>
+            </div>
+            <div class="time-block">
+              <span class="time-value" id="countMinutes">00</span>
+              <span class="time-label">Minutes</span>
+            </div>
+            <div class="time-block">
+              <span class="time-value" id="countSeconds">00</span>
+              <span class="time-label">Seconds</span>
+            </div>
           </div>
-          <div class="time-block">
-            <span class="time-value" id="countHours">00</span>
-            <span class="time-label">Hours</span>
-          </div>
-          <div class="time-block">
-            <span class="time-value" id="countMinutes">00</span>
-            <span class="time-label">Minutes</span>
-          </div>
-          <div class="time-block">
-            <span class="time-value" id="countSeconds">00</span>
-            <span class="time-label">Seconds</span>
-          </div>
+          <p class="countdown-warning">⚡ Expected to fill in 5 minutes! Set your alarm! ⚡</p>
         </div>
-        <p class="countdown-warning">⚡ Expected to fill in 5 minutes! Set your alarm! ⚡</p>
+
+        <div class="countdown-mini" id="countdownMini" style="display:none;">
+          <span class="mini-label">⏰ GENESIS:</span>
+          <span class="mini-time"><span id="miniDays">0</span>d <span id="miniHours">0</span>h <span id="miniMinutes">0</span>m</span>
+        </div>
       </div>
     </div>
   </div>

@@ -210,6 +210,8 @@ class CountdownTimer {
   constructor() {
     this.countdownEl = document.getElementById('genesisCountdown');
     this.targetDate = new Date('2026-02-07T00:00:00').getTime();
+    this.toggleBtn = document.getElementById('countdownToggle');
+    this.hasScrolled = false;
 
     if (!this.countdownEl) return;
 
@@ -217,7 +219,10 @@ class CountdownTimer {
       days: document.getElementById('countDays'),
       hours: document.getElementById('countHours'),
       minutes: document.getElementById('countMinutes'),
-      seconds: document.getElementById('countSeconds')
+      seconds: document.getElementById('countSeconds'),
+      miniDays: document.getElementById('miniDays'),
+      miniHours: document.getElementById('miniHours'),
+      miniMinutes: document.getElementById('miniMinutes')
     };
 
     this.init();
@@ -226,6 +231,39 @@ class CountdownTimer {
   init() {
     this.updateCountdown();
     setInterval(() => this.updateCountdown(), 1000);
+
+    // Auto-minimize on scroll
+    window.addEventListener('scroll', () => {
+      if (!this.hasScrolled && window.scrollY > 100) {
+        this.hasScrolled = true;
+        this.minimize();
+      }
+    });
+
+    // Manual toggle
+    if (this.toggleBtn) {
+      this.toggleBtn.addEventListener('click', () => this.toggle());
+    }
+  }
+
+  minimize() {
+    if (this.countdownEl) {
+      this.countdownEl.classList.add('minimized');
+    }
+  }
+
+  expand() {
+    if (this.countdownEl) {
+      this.countdownEl.classList.remove('minimized');
+    }
+  }
+
+  toggle() {
+    if (this.countdownEl.classList.contains('minimized')) {
+      this.expand();
+    } else {
+      this.minimize();
+    }
   }
 
   updateCountdown() {
@@ -247,11 +285,16 @@ class CountdownTimer {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Update display
+    // Update full display
     if (this.elements.days) this.elements.days.textContent = String(days).padStart(2, '0');
     if (this.elements.hours) this.elements.hours.textContent = String(hours).padStart(2, '0');
     if (this.elements.minutes) this.elements.minutes.textContent = String(minutes).padStart(2, '0');
     if (this.elements.seconds) this.elements.seconds.textContent = String(seconds).padStart(2, '0');
+
+    // Update mini display
+    if (this.elements.miniDays) this.elements.miniDays.textContent = days;
+    if (this.elements.miniHours) this.elements.miniHours.textContent = hours;
+    if (this.elements.miniMinutes) this.elements.miniMinutes.textContent = minutes;
   }
 }
 
