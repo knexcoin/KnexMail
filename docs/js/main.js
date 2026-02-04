@@ -210,8 +210,6 @@ class CountdownTimer {
   constructor() {
     this.countdownEl = document.getElementById('genesisCountdown');
     this.targetDate = new Date('2026-02-07T00:00:00').getTime();
-    this.toggleBtn = document.getElementById('countdownToggle');
-    this.hasScrolled = false;
 
     if (!this.countdownEl) return;
 
@@ -219,10 +217,7 @@ class CountdownTimer {
       days: document.getElementById('countDays'),
       hours: document.getElementById('countHours'),
       minutes: document.getElementById('countMinutes'),
-      seconds: document.getElementById('countSeconds'),
-      miniDays: document.getElementById('miniDays'),
-      miniHours: document.getElementById('miniHours'),
-      miniMinutes: document.getElementById('miniMinutes')
+      seconds: document.getElementById('countSeconds')
     };
 
     this.init();
@@ -231,39 +226,6 @@ class CountdownTimer {
   init() {
     this.updateCountdown();
     setInterval(() => this.updateCountdown(), 1000);
-
-    // Auto-minimize on scroll
-    window.addEventListener('scroll', () => {
-      if (!this.hasScrolled && window.scrollY > 100) {
-        this.hasScrolled = true;
-        this.minimize();
-      }
-    });
-
-    // Manual toggle
-    if (this.toggleBtn) {
-      this.toggleBtn.addEventListener('click', () => this.toggle());
-    }
-  }
-
-  minimize() {
-    if (this.countdownEl) {
-      this.countdownEl.classList.add('minimized');
-    }
-  }
-
-  expand() {
-    if (this.countdownEl) {
-      this.countdownEl.classList.remove('minimized');
-    }
-  }
-
-  toggle() {
-    if (this.countdownEl.classList.contains('minimized')) {
-      this.expand();
-    } else {
-      this.minimize();
-    }
   }
 
   updateCountdown() {
@@ -285,16 +247,11 @@ class CountdownTimer {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Update full display
+    // Update display
     if (this.elements.days) this.elements.days.textContent = String(days).padStart(2, '0');
     if (this.elements.hours) this.elements.hours.textContent = String(hours).padStart(2, '0');
     if (this.elements.minutes) this.elements.minutes.textContent = String(minutes).padStart(2, '0');
     if (this.elements.seconds) this.elements.seconds.textContent = String(seconds).padStart(2, '0');
-
-    // Update mini display
-    if (this.elements.miniDays) this.elements.miniDays.textContent = days;
-    if (this.elements.miniHours) this.elements.miniHours.textContent = hours;
-    if (this.elements.miniMinutes) this.elements.miniMinutes.textContent = minutes;
   }
 }
 
@@ -304,6 +261,7 @@ class GenesisTracker {
   constructor() {
     this.statusUrl = `${API_BASE}/genesis-status`;
     this.updateInterval = null;
+    this.hasScrolled = false;
     this.init();
   }
 
@@ -318,29 +276,10 @@ class GenesisTracker {
       const response = await fetch(this.statusUrl);
       const data = await response.json();
 
-      // Update counter
-      const countEl = document.getElementById('genesisCount');
-      if (countEl) {
-        countEl.textContent = data.genesisCount || 0;
-      }
-
-      // Update progress bar
-      const progressFill = document.getElementById('genesisProgressFill');
-      if (progressFill) {
-        const progress = ((data.genesisCount || 0) / (data.genesisLimit || 100)) * 100;
-        progressFill.style.width = `${progress}%`;
-      }
-
-      // Show/hide banners
-      const banner = document.getElementById('genesisBanner');
-      const closed = document.getElementById('genesisClosed');
-
-      if (data.windowClosed) {
-        if (banner) banner.style.display = 'none';
-        if (closed) closed.style.display = 'block';
-      } else {
-        if (banner) banner.style.display = 'block';
-        if (closed) closed.style.display = 'none';
+      // Update total waitlist counter
+      const waitlistCountEl = document.getElementById('waitlistCount');
+      if (waitlistCountEl && data.totalWaitlistCount !== undefined) {
+        waitlistCountEl.textContent = data.totalWaitlistCount.toLocaleString();
       }
     } catch (error) {
       console.error('Error updating GENESIS status:', error);
@@ -577,8 +516,11 @@ class WaitlistForm {
           // Show regular success with referral code and tier progress
           this.showSuccess(handle, result.referralCode, result.tierProgress);
         }
-        // Update counter
-        this.incrementWaitlistCount();
+        // GenesisTracker will auto-update the counts every 10 seconds
+        // Trigger immediate update if needed
+        if (window.genesisTracker && window.genesisTracker.updateStatus) {
+          window.genesisTracker.updateStatus();
+        }
       } else {
         throw new Error(result.error || 'Submission failed');
       }
@@ -739,13 +681,6 @@ class WaitlistForm {
     }
   }
 
-  incrementWaitlistCount() {
-    const countEl = document.getElementById('waitlistCount');
-    if (countEl) {
-      const current = parseInt(countEl.textContent.replace(/,/g, '')) || 0;
-      countEl.textContent = (current + 1).toLocaleString();
-    }
-  }
 
   showGenesisModal(data) {
     const modal = document.getElementById('genesisModal');
@@ -1286,8 +1221,8 @@ document.addEventListener('DOMContentLoaded', () => {
   new StatsLookup();
   new Leaderboard();
 
-  // GENESIS tracker
-  new GenesisTracker();
+  // GENESIS tracker - store globally so WaitlistForm can trigger updates
+  window.genesisTracker = new GenesisTracker();
 
   // Quiz popup
   new QuizPopup();

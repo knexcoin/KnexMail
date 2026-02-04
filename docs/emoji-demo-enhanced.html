@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KnexMail Emoji Handles - Interactive Demo</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Background Effects */
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        transparent 50%,
+        rgba(0, 255, 255, 0.02) 50%
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: -1;
+      animation: scanline 8s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(4px); }
+    }
+
+    /* Top Navigation Bar */
+    .demo-nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+      padding: 15px 0;
+      z-index: 1000;
+    }
+
+    .demo-nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .demo-nav-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .demo-nav-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-btn-primary {
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      color: #000;
+    }
+
+    .nav-btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+    }
+
+    .nav-btn-secondary {
+      background: rgba(0, 255, 255, 0.1);
+      color: #00ffff;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+    }
+
+    .nav-btn-secondary:hover {
+      background: rgba(0, 255, 255, 0.2);
+    }
+
+    /* Hero Section with Interactive Builder */
+    .demo-hero {
+      padding: 80px 0 40px;
+      text-align: center;
+    }
+
+    .demo-hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #00ffff, #00ff88, #ffff00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .demo-hero p {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+
+    /* Interactive Handle Builder */
+    .handle-builder {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.05), rgba(0, 255, 136, 0.05));
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 60px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .builder-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: #00ffff;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .builder-input-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .builder-input {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: #00ff88;
+      transition: all 0.3s ease;
+    }
+
+    .builder-input:focus {
+      outline: none;
+      border-color: rgba(0, 255, 255, 0.8);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .builder-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .builder-preview {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(0, 255, 255, 0.4);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 20px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .builder-preview-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .builder-preview-emoji {
+      font-size: 3.5rem;
+      line-height: 1;
+      animation: emojiPop 0.5s ease-out;
+    }
+
+    @keyframes emojiPop {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .builder-preview-handle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      color: #00ffff;
+    }
+
+    .builder-preview-validation {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-weight: 600;
+    }
+
+    .validation-valid {
+      background: rgba(0, 255, 136, 0.2);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .validation-invalid {
+      background: rgba(255, 0, 0, 0.2);
+      color: #ff6666;
+      border: 1px solid rgba(255, 0, 0, 0.3);
+    }
+
+    .quick-picks {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .quick-picks-title {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .quick-picks-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .quick-pick-btn {
+      padding: 8px 16px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 50px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .quick-pick-btn:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-color: rgba(0, 255, 255, 0.5);
+      color: #00ffff;
+      transform: scale(1.05);
+    }
+
+    /* Rest of previous styles... */
+    .emoji-showcase {
+      padding: 60px 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #00ffff, #00ff88, #ffff00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Categories Browser */
+    .categories-browser {
+      background: rgba(0, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 60px;
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .category-tab {
+      padding: 12px 24px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 50px;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .category-tab:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-color: rgba(0, 255, 255, 0.4);
+      color: #00ffff;
+    }
+
+    .category-tab.active {
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      border-color: transparent;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .category-content {
+      display: none;
+    }
+
+    .category-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 15px;
+    }
+
+    .emoji-item {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(0, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .emoji-item:hover {
+      background: rgba(0, 255, 255, 0.1);
+      border-color: rgba(0, 255, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .emoji-item-icon {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+
+    .emoji-item-name {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Random Generator */
+    .random-generator {
+      background: linear-gradient(135deg, rgba(255, 255, 0, 0.05), rgba(255, 136, 0, 0.05));
+      border: 2px solid rgba(255, 255, 0, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .random-generator h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.75rem;
+      color: #ffff00;
+      margin-bottom: 20px;
+    }
+
+    .random-result {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(255, 255, 0, 0.4);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 20px 0;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .random-result-emoji {
+      font-size: 3rem;
+      animation: spin 0.5s ease-out;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg) scale(0); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+
+    .random-result-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      color: #ffff00;
+    }
+
+    .random-btn {
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #ffff00, #ff8800);
+      color: #000;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .random-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(255, 255, 0, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .demo-nav-title {
+        font-size: 1rem;
+      }
+
+      .nav-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+
+      .demo-hero h1 {
+        font-size: 2rem;
+      }
+
+      .handle-builder {
+        padding: 30px 20px;
+      }
+
+      .builder-input-group {
+        flex-direction: column;
+      }
+
+      .emoji-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 10px;
+      }
+
+      .category-tabs {
+        gap: 8px;
+      }
+
+      .category-tab {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="grid-overlay"></div>
+  <div class="scanlines"></div>
+
+  <!-- Top Navigation -->
+  <nav class="demo-nav">
+    <div class="demo-nav-content">
+      <div class="demo-nav-title">🎨 EMOJI HANDLES DEMO</div>
+      <div class="demo-nav-actions">
+        <button class="nav-btn nav-btn-secondary" onclick="window.parent.closeEmojiDemo ? window.parent.closeEmojiDemo() : window.location.href='index.html'">
+          ← Back
+        </button>
+        <a href="index.html#waitlist" class="nav-btn nav-btn-primary">
+          Join Waitlist 🚀
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero with Interactive Builder -->
+  <section class="demo-hero">
+    <div class="container">
+      <h1>Build Your Emoji Handle</h1>
+      <p>Try it out! Type emoji names below and watch them transform in real-time.</p>
+
+      <div class="handle-builder" data-aos="fade-up">
+        <h3 class="builder-title">✨ Live Handle Builder</h3>
+
+        <div class="builder-input-group">
+          <input
+            type="text"
+            class="builder-input"
+            id="emoji1"
+            placeholder="rocket"
+            maxlength="20"
+          >
+          <input
+            type="text"
+            class="builder-input"
+            id="emoji2"
+            placeholder="fire"
+            maxlength="20"
+          >
+          <input
+            type="text"
+            class="builder-input"
+            id="emoji3"
+            placeholder="heart"
+            maxlength="20"
+          >
+        </div>
+
+        <div class="builder-preview">
+          <div class="builder-preview-label">Your Handle Becomes:</div>
+          <div class="builder-preview-emoji" id="previewEmoji">🚀🔥❤️</div>
+          <div class="builder-preview-handle" id="previewHandle">rocket.fire.heart@knexmail.com</div>
+          <div class="builder-preview-validation validation-valid" id="validationMessage">
+            ✓ Valid handle (3 emojis, 17 characters)
+          </div>
+        </div>
+
+        <div class="quick-picks">
+          <div class="quick-picks-title">Quick Picks:</div>
+          <div class="quick-picks-grid">
+            <button class="quick-pick-btn" onclick="setHandle('coffee', 'heart', '')">☕❤️ coffee.heart</button>
+            <button class="quick-pick-btn" onclick="setHandle('diamond', 'hands', '')">💎🙌 diamond.hands</button>
+            <button class="quick-pick-btn" onclick="setHandle('pizza', 'delivery', '')">🍕🚚 pizza.delivery</button>
+            <button class="quick-pick-btn" onclick="setHandle('brain', 'power', '')">🧠⚡ brain.power</button>
+            <button class="quick-pick-btn" onclick="setHandle('star', 'struck', '')">⭐😍 star.struck</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Browser -->
+  <section class="emoji-showcase">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="gradient-text">Browse Emoji Categories</span>
+        </h2>
+        <p class="section-subtitle">
+          Explore 1,800+ emojis organized by category. Click any emoji to add it to your handle!
+        </p>
+      </div>
+
+      <div class="categories-browser" data-aos="fade-up">
+        <div class="category-tabs">
+          <button class="category-tab active" onclick="showCategory('faces')">😀 Faces</button>
+          <button class="category-tab" onclick="showCategory('hearts')">❤️ Hearts</button>
+          <button class="category-tab" onclick="showCategory('animals')">🐶 Animals</button>
+          <button class="category-tab" onclick="showCategory('food')">🍕 Food</button>
+          <button class="category-tab" onclick="showCategory('travel')">🚀 Travel</button>
+          <button class="category-tab" onclick="showCategory('objects')">💎 Objects</button>
+        </div>
+
+        <div class="category-content active" id="cat-faces">
+          <div class="emoji-grid" id="faces-grid"></div>
+        </div>
+        <div class="category-content" id="cat-hearts">
+          <div class="emoji-grid" id="hearts-grid"></div>
+        </div>
+        <div class="category-content" id="cat-animals">
+          <div class="emoji-grid" id="animals-grid"></div>
+        </div>
+        <div class="category-content" id="cat-food">
+          <div class="emoji-grid" id="food-grid"></div>
+        </div>
+        <div class="category-content" id="cat-travel">
+          <div class="emoji-grid" id="travel-grid"></div>
+        </div>
+        <div class="category-content" id="cat-objects">
+          <div class="emoji-grid" id="objects-grid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Random Generator -->
+  <section class="emoji-showcase">
+    <div class="container">
+      <div class="random-generator" data-aos="zoom-in">
+        <h3>🎲 Feeling Lucky?</h3>
+        <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">
+          Let us generate a random emoji handle for you!
+        </p>
+
+        <div class="random-result" id="randomResult">
+          <div class="random-result-emoji" id="randomEmoji">🎲</div>
+          <div class="random-result-text" id="randomText">Click the button below!</div>
+        </div>
+
+        <button class="random-btn" onclick="generateRandom()">
+          <span>🎲</span>
+          <span>Generate Random Handle</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- AOS Animation Library -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100
+    });
+
+    // Emoji mappings (sample - matches your emoji-map.json)
+    const emojiMap = {
+      'rocket': '🚀', 'fire': '🔥', 'heart': '❤️', 'coffee': '☕',
+      'diamond': '💎', 'hands': '🙌', 'pizza': '🍕', 'delivery': '🚚',
+      'brain': '🧠', 'power': '⚡', 'star': '⭐', 'struck': '😍',
+      'music': '🎵', 'sparkles': '✨', 'love': '😍', 'smile': '😊',
+      'cool': '😎', 'party': '🎉', 'time': '⏰', 'world': '🌍',
+      'traveler': '✈️', 'ninja': '🥷', 'warrior': '⚔️', 'moon': '🌙',
+      'sun': '☀️', 'tree': '🌲', 'flower': '🌸', 'cat': '🐱',
+      'dog': '🐶', 'lion': '🦁', 'unicorn': '🦄', 'butterfly': '🦋',
+      'crown': '👑', 'gem': '💎', 'key': '🔑', 'lock': '🔒',
+      'lightning': '⚡', 'flame': '🔥', 'wave': '🌊', 'snowflake': '❄️'
+    };
+
+    const categories = {
+      faces: [
+        {name: 'smile', emoji: '😊'}, {name: 'cool', emoji: '😎'},
+        {name: 'love', emoji: '😍'}, {name: 'grin', emoji: '😁'},
+        {name: 'wink', emoji: '😉'}, {name: 'laugh', emoji: '😂'},
+        {name: 'happy', emoji: '😃'}, {name: 'star.struck', emoji: '🤩'}
+      ],
+      hearts: [
+        {name: 'heart', emoji: '❤️'}, {name: 'orange.heart', emoji: '🧡'},
+        {name: 'yellow.heart', emoji: '💛'}, {name: 'green.heart', emoji: '💚'},
+        {name: 'blue.heart', emoji: '💙'}, {name: 'purple.heart', emoji: '💜'},
+        {name: 'sparkles', emoji: '✨'}, {name: 'fire', emoji: '🔥'}
+      ],
+      animals: [
+        {name: 'cat', emoji: '🐱'}, {name: 'dog', emoji: '🐶'},
+        {name: 'lion', emoji: '🦁'}, {name: 'unicorn', emoji: '🦄'},
+        {name: 'butterfly', emoji: '🦋'}, {name: 'panda', emoji: '🐼'},
+        {name: 'koala', emoji: '🐨'}, {name: 'tiger', emoji: '🐯'}
+      ],
+      food: [
+        {name: 'pizza', emoji: '🍕'}, {name: 'coffee', emoji: '☕'},
+        {name: 'cake', emoji: '🎂'}, {name: 'burger', emoji: '🍔'},
+        {name: 'taco', emoji: '🌮'}, {name: 'sushi', emoji: '🍣'},
+        {name: 'ice.cream', emoji: '🍦'}, {name: 'donut', emoji: '🍩'}
+      ],
+      travel: [
+        {name: 'rocket', emoji: '🚀'}, {name: 'airplane', emoji: '✈️'},
+        {name: 'car', emoji: '🚗'}, {name: 'bike', emoji: '🚲'},
+        {name: 'ship', emoji: '🚢'}, {name: 'helicopter', emoji: '🚁'},
+        {name: 'skateboard', emoji: '🛹'}, {name: 'scooter', emoji: '🛴'}
+      ],
+      objects: [
+        {name: 'diamond', emoji: '💎'}, {name: 'crown', emoji: '👑'},
+        {name: 'key', emoji: '🔑'}, {name: 'lock', emoji: '🔒'},
+        {name: 'trophy', emoji: '🏆'}, {name: 'medal', emoji: '🥇'},
+        {name: 'gem', emoji: '💎'}, {name: 'gift', emoji: '🎁'}
+      ]
+    };
+
+    // Populate category grids
+    Object.keys(categories).forEach(cat => {
+      const grid = document.getElementById(`${cat}-grid`);
+      categories[cat].forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'emoji-item';
+        div.onclick = () => addToBuilder(item.name);
+        div.innerHTML = `
+          <div class="emoji-item-icon">${item.emoji}</div>
+          <div class="emoji-item-name">${item.name}</div>
+        `;
+        grid.appendChild(div);
+      });
+    });
+
+    // Handle builder live preview
+    function updatePreview() {
+      const e1 = document.getElementById('emoji1').value.toLowerCase().trim();
+      const e2 = document.getElementById('emoji2').value.toLowerCase().trim();
+      const e3 = document.getElementById('emoji3').value.toLowerCase().trim();
+
+      const parts = [e1, e2, e3].filter(e => e);
+      const emojis = parts.map(p => emojiMap[p] || '❓').join('');
+      const handle = parts.join('.') || 'yourhandle';
+
+      const totalLength = handle.length;
+      const emojiCount = parts.length;
+
+      document.getElementById('previewEmoji').textContent = emojis || '👋';
+      document.getElementById('previewHandle').textContent = `${handle}@knexmail.com`;
+
+      const validation = document.getElementById('validationMessage');
+      if (emojiCount === 0) {
+        validation.className = 'builder-preview-validation validation-invalid';
+        validation.textContent = 'ℹ️ Enter at least one emoji name';
+      } else if (emojiCount > 3) {
+        validation.className = 'builder-preview-validation validation-invalid';
+        validation.textContent = '❌ Maximum 3 emojis allowed';
+      } else if (totalLength > 64) {
+        validation.className = 'builder-preview-validation validation-invalid';
+        validation.textContent = `❌ Too long (${totalLength}/64 characters)`;
+      } else {
+        validation.className = 'builder-preview-validation validation-valid';
+        validation.textContent = `✓ Valid handle (${emojiCount} emoji${emojiCount > 1 ? 's' : ''}, ${totalLength} characters)`;
+      }
+    }
+
+    // Event listeners for inputs
+    ['emoji1', 'emoji2', 'emoji3'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    // Set handle function
+    function setHandle(e1, e2, e3) {
+      document.getElementById('emoji1').value = e1;
+      document.getElementById('emoji2').value = e2;
+      document.getElementById('emoji3').value = e3;
+      updatePreview();
+    }
+
+    // Add emoji to next empty slot
+    function addToBuilder(name) {
+      if (!document.getElementById('emoji1').value) {
+        document.getElementById('emoji1').value = name;
+      } else if (!document.getElementById('emoji2').value) {
+        document.getElementById('emoji2').value = name;
+      } else if (!document.getElementById('emoji3').value) {
+        document.getElementById('emoji3').value = name;
+      } else {
+        document.getElementById('emoji1').value = name;
+        document.getElementById('emoji2').value = '';
+        document.getElementById('emoji3').value = '';
+      }
+      updatePreview();
+    }
+
+    // Category switching
+    function showCategory(cat) {
+      // Remove active from all tabs and contents
+      document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.category-content').forEach(content => content.classList.remove('active'));
+
+      // Add active to selected
+      event.target.classList.add('active');
+      document.getElementById(`cat-${cat}`).classList.add('active');
+    }
+
+    // Random generator
+    function generateRandom() {
+      const allEmojis = Object.keys(emojiMap);
+      const count = Math.floor(Math.random() * 3) + 1; // 1-3 emojis
+      const selected = [];
+
+      for (let i = 0; i < count; i++) {
+        const random = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+        selected.push(random);
+      }
+
+      const emojis = selected.map(s => emojiMap[s]).join('');
+      const handle = selected.join('.');
+
+      document.getElementById('randomEmoji').textContent = emojis;
+      document.getElementById('randomText').textContent = `${handle}@knexmail.com`;
+
+      // Also update builder
+      setHandle(selected[0] || '', selected[1] || '', selected[2] || '');
+
+      // Scroll to builder
+      setTimeout(() => {
+        document.querySelector('.handle-builder').scrollIntoView({behavior: 'smooth', block: 'center'});
+      }, 500);
+    }
+
+    // Initialize
+    updatePreview();
+  </script>
+</body>
+</html>

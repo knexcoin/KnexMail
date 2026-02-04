@@ -3,138 +3,7 @@
    Hero, Features, Waitlist, etc.
    ============================================ */
 
-/* ============ GENESIS BANNER ============ */
-.genesis-banner {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background: linear-gradient(135deg, rgba(255, 0, 255, 0.15) 0%, rgba(0, 255, 136, 0.15) 100%);
-  border-bottom: 2px solid var(--neon);
-  backdrop-filter: blur(10px);
-  animation: glow-pulse 2s ease-in-out infinite;
-}
 
-.genesis-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-6);
-  text-align: center;
-}
-
-.genesis-content h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
-  font-weight: 900;
-  color: var(--neon);
-  text-shadow: var(--glow-neon);
-  margin-bottom: var(--space-3);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.genesis-rewards {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-3);
-}
-
-.reward-item {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--cyan);
-  padding: var(--space-2) var(--space-3);
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid var(--cyan);
-  border-radius: 4px;
-}
-
-.genesis-progress {
-  max-width: 500px;
-  margin: 0 auto var(--space-3);
-}
-
-.progress-bar {
-  height: 12px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: var(--space-2);
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--neon-magenta), var(--neon), var(--cyan));
-  border-radius: 6px;
-  transition: width 0.5s ease;
-  animation: shimmer 2s linear infinite;
-  box-shadow: 0 0 10px var(--neon);
-}
-
-@keyframes shimmer {
-  0% { background-position: -500px 0; }
-  100% { background-position: 500px 0; }
-}
-
-.progress-text {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 0.05em;
-}
-
-.progress-text span {
-  color: var(--neon);
-  text-shadow: var(--glow-neon-soft);
-}
-
-.genesis-warning {
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: 700;
-  color: var(--neon-orange);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  animation: pulse-warning 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-warning {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.genesis-closed {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background: linear-gradient(135deg, rgba(255, 0, 0, 0.2) 0%, rgba(100, 0, 0, 0.2) 100%);
-  border-bottom: 2px solid var(--neon-red);
-  backdrop-filter: blur(10px);
-  padding: var(--space-4) var(--space-6);
-  text-align: center;
-}
-
-.genesis-closed h2 {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 900;
-  color: var(--neon-red);
-  margin-bottom: var(--space-2);
-}
-
-.genesis-closed p {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  margin: var(--space-1) 0;
-}
 
 /* ============ GENESIS MODAL ============ */
 .genesis-modal {
@@ -601,6 +470,75 @@
 }
 
 /* Hero CTA */
+/* Hero Countdown */
+.hero-countdown {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 140, 0, 0.1) 100%);
+  border: 2px solid var(--neon-yellow);
+  border-radius: 16px;
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  text-align: center;
+  animation: glow-pulse-gold 2s ease-in-out infinite;
+}
+
+.countdown-label {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--neon-yellow);
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.countdown-timer {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.time-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.time-value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.time-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.countdown-warning {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--neon-orange);
+  margin-bottom: var(--space-2);
+  animation: pulse-warning 1.5s ease-in-out infinite;
+}
+
+.countdown-info {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
 .hero-cta {
   margin-bottom: var(--space-12);
 }
@@ -2154,20 +2092,6 @@
 
 /* ============ RESPONSIVE - GENESIS ============ */
 @media (max-width: 768px) {
-  .genesis-content h2 {
-    font-size: 1rem;
-  }
-
-  .genesis-rewards {
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .reward-item {
-    font-size: var(--text-xs);
-    padding: var(--space-1) var(--space-2);
-  }
-
   .modal-content {
     padding: var(--space-6);
   }
@@ -2212,8 +2136,11 @@
     gap: var(--space-2);
   }
 
+  .time-block {
+    min-width: 60px;
+  }
+
   .time-value {
-    font-size: var(--text-xl);
-    min-width: 40px;
+    font-size: 1.5rem;
   }
 }
