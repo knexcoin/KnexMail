@@ -40,8 +40,8 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref WaitlistTable
-          FROM_EMAIL: hello@knexmail.com
-          EMAILS_ENABLED: 'false'
+          FROM_EMAIL: noreply@knexmail.com
+          EMAILS_ENABLED: 'true'
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref WaitlistTable
