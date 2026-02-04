@@ -18,6 +18,14 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
+// GENESIS 100 Constants
+const GENESIS_LIMIT = 100;
+const GENESIS_SIGNUP_BONUS = 10000;
+const GENESIS_SUPER_REFERRAL_BONUS = 10000;
+const GENESIS_SUPER_REFERRAL_LIMIT = 5;
+const NORMAL_SIGNUP_BONUS = 10;
+const NORMAL_REFERRAL_BONUS = 5;
+
 // Referral reward tiers
 const REWARD_TIERS = [
   { count: 5, reward: 'Priority Access', icon: '⚡' },
@@ -93,6 +101,26 @@ function getTierProgress(referralCount) {
     } : null,
     allTiers: REWARD_TIERS
   };
+}
+
+// Get current GENESIS count
+async function getGenesisCount() {
+  const result = await docClient.send(new ScanCommand({
+    TableName: TABLE_NAME,
+    FilterExpression: 'genesisStatus = :true',
+    ExpressionAttributeValues: {
+      ':true': true
+    },
+    Select: 'COUNT'
+  }));
+
+  return result.Count || 0;
+}
+
+// Check if GENESIS window is still open
+async function isGenesisWindowOpen() {
+  const count = await getGenesisCount();
+  return count < GENESIS_LIMIT;
 }
 
 // Email Templates
@@ -582,6 +610,166 @@ function getReferralNotificationHtml(handle, newReferralCount, referrerCode) {
 </html>`;
 }
 
+// GENESIS Welcome Email Template
+function getGenesisWelcomeEmailHtml(handle, genesisNumber, referralCode, referralLink) {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔥 YOU'RE A GENESIS MEMBER!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%); min-height: 100vh;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+        <table width="600" cellpadding="0" cellspacing="0" style="background: rgba(10, 10, 10, 0.95); border: 2px solid #00FF88; border-radius: 16px; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);">
+          <!-- Header -->
+          <tr>
+            <td style="padding: 40px 40px 30px; text-align: center; background: linear-gradient(135deg, #00FF88 0%, #00D4FF 100%); border-radius: 14px 14px 0 0;">
+              <h1 style="margin: 0; color: #000000; font-size: 32px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">
+                🔥 TODAY IS YOUR LUCKY DAY! 🔥
+              </h1>
+            </td>
+          </tr>
+
+          <!-- GENESIS Badge -->
+          <tr>
+            <td style="padding: 30px 40px; text-align: center;">
+              <div style="display: inline-block; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); padding: 20px 40px; border-radius: 50px; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);">
+                <p style="margin: 0; color: #000000; font-size: 24px; font-weight: 900;">
+                  👑 GENESIS MEMBER #${genesisNumber}
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 20px 40px;">
+              <p style="margin: 0 0 20px; color: #FFFFFF; font-size: 18px; font-weight: 600; text-align: center;">
+                Welcome to KnexMail, <span style="color: #00FF88;">${handle}</span>!
+              </p>
+
+              <p style="margin: 0 0 30px; color: #CCCCCC; font-size: 16px; line-height: 1.6; text-align: center;">
+                You just became one of the first 100 people EVER to join KnexMail. This is HUGE! 🚀
+              </p>
+
+              <!-- Rewards Box -->
+              <div style="background: rgba(0, 255, 136, 0.1); border: 2px solid #00FF88; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                <h2 style="margin: 0 0 20px; color: #00FF88; font-size: 20px; font-weight: 700; text-align: center;">
+                  🎁 YOUR GENESIS REWARDS
+                </h2>
+
+                <div style="margin-bottom: 15px;">
+                  <p style="margin: 0 0 5px; color: #FFFFFF; font-size: 16px; font-weight: 600;">
+                    ✓ Instant Reward: 10,000 KNEX
+                  </p>
+                  <p style="margin: 0; color: #999999; font-size: 14px;">
+                    (That's 1,000x the normal signup bonus!)
+                  </p>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                  <p style="margin: 0 0 5px; color: #FFFFFF; font-size: 16px; font-weight: 600;">
+                    ✓ GENESIS Badge: Forever
+                  </p>
+                  <p style="margin: 0; color: #999999; font-size: 14px;">
+                    Exclusive status that can NEVER be earned again
+                  </p>
+                </div>
+
+                <div>
+                  <p style="margin: 0 0 5px; color: #FFFFFF; font-size: 16px; font-weight: 600;">
+                    ✓ Super Referral Power: 5x 10,000 KNEX
+                  </p>
+                  <p style="margin: 0; color: #999999; font-size: 14px;">
+                    Your first 5 referrals ALSO get 10,000 KNEX each!
+                  </p>
+                </div>
+              </div>
+
+              <!-- Total Potential -->
+              <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: center;">
+                <p style="margin: 0 0 5px; color: #000000; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                  Total Potential Earnings
+                </p>
+                <p style="margin: 0; color: #000000; font-size: 32px; font-weight: 900;">
+                  60,000 KNEX
+                </p>
+                <p style="margin: 5px 0 0; color: #000000; font-size: 12px;">
+                  (10K signup + 5 referrals × 10K each)
+                </p>
+              </div>
+
+              <!-- Referral Link -->
+              <div style="background: rgba(0, 212, 255, 0.1); border: 2px solid #00D4FF; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                <h3 style="margin: 0 0 15px; color: #00D4FF; font-size: 18px; font-weight: 700; text-align: center;">
+                  🎯 YOUR SUPER REFERRAL LINK
+                </h3>
+
+                <p style="margin: 0 0 15px; color: #CCCCCC; font-size: 14px; line-height: 1.6; text-align: center;">
+                  Share this link with friends. The first 5 people who sign up get 10,000 KNEX too!
+                </p>
+
+                <div style="background: rgba(0, 0, 0, 0.5); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                  <p style="margin: 0; color: #00FF88; font-size: 14px; font-family: monospace; word-break: break-all; text-align: center;">
+                    ${referralLink}
+                  </p>
+                </div>
+
+                <div style="text-align: center;">
+                  <p style="margin: 0 0 10px; color: #FFFFFF; font-size: 16px; font-weight: 600;">
+                    Referral Code: <span style="color: #00D4FF;">${referralCode}</span>
+                  </p>
+                  <p style="margin: 0; color: #999999; font-size: 12px;">
+                    Super Referrals Used: 0 / 5
+                  </p>
+                </div>
+              </div>
+
+              <!-- Important Note -->
+              <div style="background: rgba(255, 215, 0, 0.1); border-left: 4px solid #FFD700; padding: 15px; margin-bottom: 30px;">
+                <p style="margin: 0 0 10px; color: #FFD700; font-size: 14px; font-weight: 600;">
+                  ⚡ IMPORTANT: Window Closing Soon!
+                </p>
+                <p style="margin: 0; color: #CCCCCC; font-size: 13px; line-height: 1.5;">
+                  After 100 signups, the waitlist goes invite-only. Your friends will NEED a referral code to join. Share your link NOW while the window is still open!
+                </p>
+              </div>
+
+              <!-- After 5 Referrals -->
+              <div style="text-align: center; margin-bottom: 20px;">
+                <p style="margin: 0 0 5px; color: #999999; font-size: 13px;">
+                  After your 5 super referrals:
+                </p>
+                <p style="margin: 0; color: #CCCCCC; font-size: 14px;">
+                  Continue earning <span style="color: #00FF88; font-weight: 600;">5 KNEX</span> per referral (unlimited)
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+              <p style="margin: 0 0 10px; color: #00FF88; font-size: 16px; font-weight: 700;">
+                Welcome to the future of email 🚀
+              </p>
+              <p style="margin: 0; color: #666666; font-size: 12px;">
+                © 2026 KnexMail. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 // Send email via SES
 async function sendEmail(toEmail, subject, htmlBody) {
   if (!EMAILS_ENABLED) {
@@ -623,6 +811,11 @@ exports.handler = async (event) => {
 
   const path = event.path || event.resource || '';
 
+  // Route: GET /genesis-status - Get GENESIS window status
+  if (event.httpMethod === 'GET' && path.includes('/genesis-status')) {
+    return handleGetGenesisStatus(event);
+  }
+
   // Route: GET /check - Check handle availability
   if (event.httpMethod === 'GET' && path.includes('/check')) {
     return handleCheckAvailability(event);
@@ -649,6 +842,35 @@ exports.handler = async (event) => {
     body: JSON.stringify({ error: 'Method not allowed' })
   };
 };
+
+// GET /genesis-status - Get GENESIS window status
+async function handleGetGenesisStatus(event) {
+  try {
+    const genesisCount = await getGenesisCount();
+    const isOpen = genesisCount < GENESIS_LIMIT;
+    const spotsLeft = Math.max(0, GENESIS_LIMIT - genesisCount);
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        genesisCount,
+        genesisLimit: GENESIS_LIMIT,
+        isOpen,
+        spotsLeft,
+        windowClosed: !isOpen
+      })
+    };
+
+  } catch (error) {
+    console.error('Genesis status error:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Unable to get GENESIS status' })
+    };
+  }
+}
 
 // GET /check?handle=@username - Check if handle is available
 async function handleCheckAvailability(event) {
@@ -873,6 +1095,22 @@ async function handleSignup(event) {
       };
     }
 
+    // Check GENESIS window status
+    const genesisWindowOpen = await isGenesisWindowOpen();
+    const genesisCount = await getGenesisCount();
+
+    // If window closed and no referral code, reject
+    if (!genesisWindowOpen && !referral) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'GENESIS window closed. Waitlist is now invite-only. You need a referral code to join.',
+          genesisWindowClosed: true
+        })
+      };
+    }
+
     // Generate unique referral code (with collision check)
     let referralCode;
     let isUnique = false;
@@ -898,6 +1136,10 @@ async function handleSignup(event) {
     // Validate referral code if provided
     let referredBy = null;
     let referrerToNotify = null;
+    let isGenesisReferral = false;
+    let newUserSignupBonus = genesisWindowOpen ? GENESIS_SIGNUP_BONUS : NORMAL_SIGNUP_BONUS;
+    let referrerBonus = NORMAL_REFERRAL_BONUS;
+
     if (referral && referral.startsWith('KNEX-')) {
       const referrerQuery = await docClient.send(new QueryCommand({
         TableName: TABLE_NAME,
@@ -914,19 +1156,47 @@ async function handleSignup(event) {
           referredBy = referral;
           referrerToNotify = referrer;
 
-          // Increment referrer's count (handle case where referralCount doesn't exist yet)
-          await docClient.send(new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: { handle: referrer.handle },
-            UpdateExpression: 'SET referralCount = if_not_exists(referralCount, :zero) + :inc',
-            ExpressionAttributeValues: {
-              ':inc': 1,
-              ':zero': 0
-            }
-          }));
+          // Check if referrer is GENESIS and has super referrals left
+          const isReferrerGenesis = referrer.genesisStatus === true;
+          const referrerGenesisCount = referrer.genesisReferralCount || 0;
+
+          if (isReferrerGenesis && referrerGenesisCount < GENESIS_SUPER_REFERRAL_LIMIT) {
+            // This is a super referral!
+            isGenesisReferral = true;
+            newUserSignupBonus = GENESIS_SUPER_REFERRAL_BONUS;
+            referrerBonus = GENESIS_SUPER_REFERRAL_BONUS;
+
+            // Increment referrer's GENESIS referral count
+            await docClient.send(new UpdateCommand({
+              TableName: TABLE_NAME,
+              Key: { handle: referrer.handle },
+              UpdateExpression: 'SET genesisReferralCount = if_not_exists(genesisReferralCount, :zero) + :inc, referralCount = if_not_exists(referralCount, :zero) + :inc, knexEarned = if_not_exists(knexEarned, :zero) + :bonus',
+              ExpressionAttributeValues: {
+                ':inc': 1,
+                ':zero': 0,
+                ':bonus': GENESIS_SUPER_REFERRAL_BONUS
+              }
+            }));
+          } else {
+            // Normal referral
+            await docClient.send(new UpdateCommand({
+              TableName: TABLE_NAME,
+              Key: { handle: referrer.handle },
+              UpdateExpression: 'SET referralCount = if_not_exists(referralCount, :zero) + :inc, knexEarned = if_not_exists(knexEarned, :zero) + :bonus',
+              ExpressionAttributeValues: {
+                ':inc': 1,
+                ':zero': 0,
+                ':bonus': NORMAL_REFERRAL_BONUS
+              }
+            }));
+          }
         }
       }
     }
+
+    // Determine if this user is GENESIS
+    const isGenesisMember = genesisWindowOpen;
+    const genesisNumber = isGenesisMember ? genesisCount + 1 : null;
 
     // Create new waitlist entry
     const newUser = {
@@ -935,6 +1205,11 @@ async function handleSignup(event) {
       referralCode,
       referredBy,
       referralCount: 0,
+      genesisStatus: isGenesisMember,
+      genesisNumber: genesisNumber,
+      genesisReferralCount: 0,
+      knexEarned: newUserSignupBonus,
+      superReferralGiven: isGenesisReferral,
       createdAt: new Date().toISOString()
     };
 
@@ -943,13 +1218,24 @@ async function handleSignup(event) {
       Item: newUser
     }));
 
-    // Send welcome email to new user
+    // Send appropriate welcome email
     const referralLink = `https://knexmail.com?ref=${referralCode}`;
-    await sendEmail(
-      email,
-      `🎉 Welcome to KnexMail, ${handle}!`,
-      getWelcomeEmailHtml(handle, email, referralCode, referralLink)
-    );
+
+    if (isGenesisMember) {
+      // Send GENESIS welcome email
+      await sendEmail(
+        email,
+        `🔥 YOU'RE GENESIS MEMBER #${genesisNumber}!`,
+        getGenesisWelcomeEmailHtml(handle, genesisNumber, referralCode, referralLink)
+      );
+    } else {
+      // Send regular welcome email
+      await sendEmail(
+        email,
+        `🎉 Welcome to KnexMail, ${handle}!`,
+        getWelcomeEmailHtml(handle, email, referralCode, referralLink)
+      );
+    }
 
     // Send notification to referrer if applicable
     if (referrerToNotify && referrerToNotify.email && !referrerToNotify.reserved) {
@@ -978,7 +1264,7 @@ async function handleSignup(event) {
       }
     }
 
-    // Return success with referral code and tier info
+    // Return success with referral code, GENESIS info, and tier info
     const tierProgress = getTierProgress(0);
 
     return {
@@ -990,6 +1276,10 @@ async function handleSignup(event) {
         referralCode,
         referralLink: `https://knexmail.com?ref=${referralCode}`,
         referralCount: 0,
+        genesisStatus: isGenesisMember,
+        genesisNumber: genesisNumber,
+        knexEarned: newUserSignupBonus,
+        superReferralGiven: isGenesisReferral,
         tierProgress,
         message: referredBy
           ? 'Welcome! You were referred by a friend.'

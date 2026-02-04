@@ -66,6 +66,19 @@ Resources:
             Path: /signup
             Method: OPTIONS
             RestApiId: !Ref WaitlistApi
+        # GENESIS status endpoint
+        ApiGenesisStatus:
+          Type: Api
+          Properties:
+            Path: /genesis-status
+            Method: GET
+            RestApiId: !Ref WaitlistApi
+        ApiGenesisStatusOptions:
+          Type: Api
+          Properties:
+            Path: /genesis-status
+            Method: OPTIONS
+            RestApiId: !Ref WaitlistApi
         # Check availability endpoint
         ApiCheck:
           Type: Api
@@ -125,6 +138,10 @@ Outputs:
   SignupUrl:
     Description: Signup endpoint
     Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/signup"
+
+  GenesisStatusUrl:
+    Description: GENESIS status endpoint
+    Value: !Sub "https://${WaitlistApi}.execute-api.${AWS::Region}.amazonaws.com/prod/genesis-status"
 
   CheckUrl:
     Description: Check availability endpoint
