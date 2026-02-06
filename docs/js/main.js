@@ -209,7 +209,7 @@ class QuizPopup {
 class CountdownTimer {
   constructor() {
     this.countdownEl = document.getElementById('genesisCountdown');
-    this.targetDate = new Date('2026-02-07T00:00:00').getTime();
+    this.targetDate = new Date('2026-02-11T00:00:00').getTime();
 
     if (!this.countdownEl) return;
 

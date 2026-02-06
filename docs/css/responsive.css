@@ -340,11 +340,13 @@
   .hero-title {
     font-size: 1.75rem;
     margin-bottom: var(--space-4);
+    line-height: 1.2;
   }
 
   .hero-subtitle {
     font-size: var(--text-sm);
     margin-bottom: var(--space-6);
+    line-height: 1.5;
   }
 
   .demo-content {
@@ -360,10 +362,48 @@
     padding: var(--space-3) var(--space-6);
     font-size: var(--text-xs);
     width: 100%;
+    min-height: 44px; /* Better touch target */
   }
 
   .hero-bonus {
     font-size: var(--text-xs);
+  }
+
+  /* Emoji combo generator mobile optimization */
+  .combo-emoji-large {
+    font-size: 3rem !important;
+  }
+
+  .combo-text-name {
+    font-size: var(--text-sm) !important;
+  }
+
+  .combo-email {
+    font-size: var(--text-xs) !important;
+    word-break: break-all;
+  }
+
+  .emoji-reserve-card button {
+    font-size: var(--text-xs);
+    padding: var(--space-2) var(--space-4);
+    min-height: 40px;
+  }
+
+  /* Countdown timer mobile */
+  .countdown-timer {
+    gap: var(--space-2);
+  }
+
+  .countdown-item {
+    min-width: 60px;
+  }
+
+  .countdown-number {
+    font-size: 1.75rem !important;
+  }
+
+  .countdown-label {
+    font-size: 10px !important;
   }
 
   /* Section Headers */
@@ -420,11 +460,23 @@
   .input-group input {
     font-size: var(--text-sm);
     padding: var(--space-3) var(--space-4);
+    min-height: 48px; /* Better touch target */
   }
 
   .input-suffix {
     font-size: var(--text-xs);
     right: var(--space-3);
+  }
+
+  /* Handle status mobile */
+  .handle-status {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .handle-feedback {
+    font-size: var(--text-xs);
+    margin-top: var(--space-1);
   }
 
   /* Footer */
@@ -509,6 +561,28 @@ input[type="search"],
 select,
 textarea {
   font-size: 16px !important;
+}
+
+/* Prevent auto-zoom on iOS */
+@media screen and (max-width: 767px) {
+  select,
+  textarea,
+  input {
+    font-size: 16px !important;
+  }
+}
+
+/* Smooth scrolling for all devices */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix viewport height on mobile browsers (accounts for address bar) */
+@supports (-webkit-touch-callout: none) {
+  .hero {
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* ============ FORM INPUT MOBILE OPTIMIZATION ============ */
@@ -631,6 +705,37 @@ textarea {
   /* Hero section padding for safe area */
   .hero {
     padding-top: calc(var(--space-16) + 64px + env(safe-area-inset-top));
+  }
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============ PERFORMANCE OPTIMIZATION FOR LOW-END DEVICES ============ */
+@media (max-width: 767px) {
+  /* Reduce background effects on mobile for better performance */
+  .grid-overlay,
+  .scanlines {
+    opacity: 0.3;
+  }
+
+  /* Simplify particle effects on mobile */
+  .particles {
+    opacity: 0.5;
+  }
+
+  /* Optimize images for mobile */
+  img {
+    image-rendering: -webkit-optimize-contrast;
   }
 }
 
