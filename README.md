@@ -41,6 +41,19 @@ Dynamic rewards adjust based on network velocity and engagement metrics.
 
 ---
 
+## Transaction Integration (Memo Type 0x05)
+
+KnexMail handles are linked to KNEX transactions via the typed memo envelope system. When a transaction references a KnexMail handle, the memo carries a type `0x05` payload:
+
+| Field | Size | Description |
+|-------|------|-------------|
+| `handle_hash` | 20B | `SHA-256(handle)[0:20]` — truncated hash of lowercase ASCII handle |
+| `context` | ≤233B | Optional UTF-8 context (payment note, invoice ref, etc.) |
+
+This allows wallets and explorers to resolve the recipient's KnexMail handle from the transaction memo, enabling human-readable transaction descriptions like "Payment to user.handle" instead of raw 50-char Base62 addresses.
+
+---
+
 ## Infrastructure
 
 | Component | Service |
